@@ -86,7 +86,7 @@ proj='stereo';
 
 %        Size:       480x241x421
 %        Dimensions: longitude,latitude,time
- addpath C:\Users\benman\matlab_lib\Data\ERA_interim
+ addpath C:\Users\Machine\matlab_lib\Data\ERA_interim
 % ncdisp('ERA_int_monthly_z500.nc') 
 % ncdisp('ERA_int_monthly_2m_T.nc');
 
@@ -336,11 +336,11 @@ if strcmp(iso,'dD')==1 || strcmp(iso,'d18O')==1
              load('C:\Users\benman\matlab_storage_of_output_files\RICE_combined_Deep_1213B_c23.mat');
              iso_season_str='annual';
         elseif iso_alt_nr==2
-            load('C:\Users\benman\matlab_storage_of_output_files\RI_combined_Deep_1213B_annual_means_no_summer_c24.mat'); % MAMJJASON 
+            load('C:\Users\Machine\matlab_storage_of_output_files\RI_combined_Deep_1213B_annual_means_no_summer_c24.mat'); % MAMJJASON 
 %             load('C:\Users\benman\matlab_storage_of_output_files\RI_combined_Deep_1213B_annual_means_no_summer_clim_c24.mat'); % clim removed, no difference
             iso_season_str='nosummer';
         elseif iso_alt_nr==3    
-            load('C:\Users\benman\matlab_storage_of_output_files\RI_combined_Deep_1213B_annual_means_no_summer_AMJJASON_c24.mat'); % AMJJASON 
+            load('C:\Users\Machine\matlab_storage_of_output_files\RI_combined_Deep_1213B_annual_means_no_summer_AMJJASON_c24.mat'); % AMJJASON 
 %             load('C:\Users\benman\matlab_storage_of_output_files\RI_combined_Deep_1213B_annual_means_no_summer_AMJJASON_clim_c24.mat'); % clim removed, no difference
             iso_season_str='nosummer';           
         end
@@ -790,7 +790,7 @@ if rcontour_pc1==1
     
     end
    
-   folder_c='C:\Users\benman\matlab_storage_of_output_files\';
+   folder_c='C:\Users\Machine\matlab_storage_of_output_files\';
    load([folder_c,filename_con]);
   
 % 1.prints  all contours 
@@ -903,11 +903,11 @@ elseif corr_label==1 % w. colorbar
         num2str(round(date_annual(start_t))),'_',num2str(round(date_annual(end_t))),proj,'_crop_c2'];
 end
 
-filedir ='C:\Users\benman\matlab_storage_of_output_files\figures\';
+filedir ='C:\Users\Machine\matlab_storage_of_output_files\figures\';
 savefilename_c=strcat(filedir,filename);
 orient landscape
-
+cd('G:\My Drive\ISO_CFA\matlab')
 export_fig('-pdf','-painters', '-depsc','-opengl', '-r190',savefilename_c); % EPS works  func needs ghostscript  
-  
+cd('G:\My Drive\ClimDyn_oct2022_R4\ClimDyn_R4_2022_Matlab\ClimDyn_R4_2022_Matlab')  
 %%%%%%%%%%%%%%%%%%%%
 
