@@ -185,14 +185,13 @@ TextBox = uicontrol('style','text');
      
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%     
-    filename='Figure_1_map_z500_SAT_SIC_EOF';
-%     qual_str='-r200';
+
     qual_str='-r250';
 
 % save fig.  [change dir folder, or stay in the matlab dir]
 % 
  
-filedir ='C:\Users\Machine\matlab_storage_of_output_files\figures\';
+
 savefilename_c=strcat(filedir,filename);
 % saveas(f1,[savefilename_c],'fig')
 
