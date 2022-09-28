@@ -206,6 +206,15 @@ set(gca,...
   h_leg=legend([ h7 h8 ],  hs7_c, hs8_c);
  %  h_leg=legend([  h8 ],   hs8_c);
   set(h_leg, 'location', 'SouthWest','EdgeColor',[0 0 0],'FontSize',18,'FontWeight','bold' ); % ,'color','none'
+  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Change to correct minus symbol
+ax=gca;
+set(ax,'ticklabelinterpreter','none')  %or 'tex' but not 'latex'
+yticklabels(ax, strrep(yticklabels(ax),'-','–'));
+xticklabels(ax, strrep(xticklabels(ax),'-','–'));
+  
+  
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   % letter
   letter_pos=[80 350 60 60];
@@ -226,8 +235,8 @@ set(gca,...
 % save fig.
 end_str='_c2';
 filename=['ADP_RICE_w_',num2str(sliding_w),'_', iso_str,'_',iso_season_str, end_str]; % poor chooise of name
-%filedir ='C:\PHD\matlab_storage_of_output_files\figures\';
-filedir ='C:\Users\Machine\matlab_storage_of_output_files\\figures\';
+
+filedir ='C:\Users\Machine\matlab_storage_of_output_files\figures\';
 
 savefilename_c=strcat(filedir,filename);
 % save as png 
@@ -260,7 +269,7 @@ for alt=1:4
 
     eof_alt_nr=1;
     if eof_alt_nr==1
-        load('C:\Users\benman\matlab_storage_of_output_files\ERA-Interim_PCs_z500_lim0-360_-20_-90_1979-2011_AMJJASON_c52_annual_mean_varimax_c2.mat') %Z500
+        load('C:\Users\Machine\matlab_storage_of_output_files\ERA-Interim_PCs_z500_lim0-360_-20_-90_1979-2011_AMJJASON_c52_annual_mean_varimax_c2.mat') %Z500
     end
         
       if alt==3
@@ -415,6 +424,14 @@ end
 
  axestext_c(x_text,y_text,['r = ',num2str(round(rp(1)*100)/100),', ',p_level(p(2)),', n_e_f_f = ',num2str(neff)],'FontWeight','bold','FontSize',14 );   
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Change to correct minus symbol
+ax=gca;
+set(ax,'ticklabelinterpreter','none')  %or 'tex' but not 'latex'
+yticklabels(ax, strrep(yticklabels(ax),'-','–'));
+xticklabels(ax, strrep(xticklabels(ax),'-','–'));
+ 
+ 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   % letter
   letter_pos=[0 485 35 65];
@@ -439,7 +456,6 @@ export_fig('-pdf','-painters', '-depsc','-opengl', '-r190',savefilename_c); % PN
 cd('G:\My Drive\ClimDyn_oct2022_R4\ClimDyn_R4_2022_Matlab\ClimDyn_R4_2022_Matlab') 
 
 end
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Z500 PCs moving corr, Fig 5a
 % 
@@ -450,7 +466,7 @@ end
 
     eof_alt_nr=1;
     if eof_alt_nr==1
-        load('C:\Users\benman\matlab_storage_of_output_files\ERA-Interim_PCs_z500_lim0-360_-20_-90_1979-2011_AMJJASON_c52_annual_mean_varimax_c2.mat') %Z500
+        load('C:\Users\Machine\matlab_storage_of_output_files\ERA-Interim_PCs_z500_lim0-360_-20_-90_1979-2011_AMJJASON_c52_annual_mean_varimax_c2.mat') %Z500
     end
 
 MA_PCs_save_z500=MA_PCs_save;  
@@ -680,11 +696,17 @@ shade_nr=0;
         set(hl,'LineWidth',3,'Color',[0.0,0.0,0.0]);
 %        xlabel('Year','FontWeight','bold','FontSize',18 );
         ylabel('Correlation','FontWeight','bold','FontSize',20 );
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Change to correct minus symbol
+ax=gca;
+set(ax,'ticklabelinterpreter','none')  %or 'tex' but not 'latex'
+yticklabels(ax, strrep(yticklabels(ax),'-','–'));
+xticklabels(ax, strrep(xticklabels(ax),'-','–'));        
+        
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % save fig
 end_str='_c2';
 filename=['z500_RICE_ERA_interim_mov_corr_w_',num2str(sliding_w),'_', iso_str,'_',iso_season_str,end_str];       
-%filedir ='C:\PHD\matlab_storage_of_output_files\figures\';
 filedir ='C:\Users\Machine\matlab_storage_of_output_files\figures\';
 
 
@@ -821,6 +843,14 @@ if show_two_nr==1 && (PC_nr==1 || PC_nr==3)
      legend(str_1, str_2,'Location','northwest')
     
 end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Change to correct minus symbol
+ax=gca;
+set(ax,'ticklabelinterpreter','none')  %or 'tex' but not 'latex'
+yticklabels(ax, strrep(yticklabels(ax),'-','–'));
+xticklabels(ax, strrep(xticklabels(ax),'-','–'));
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % save fig
 end_str='_c2';
