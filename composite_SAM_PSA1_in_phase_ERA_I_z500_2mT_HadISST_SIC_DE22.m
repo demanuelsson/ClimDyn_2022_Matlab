@@ -9,14 +9,24 @@
 % t-test
 % FDR-test Wilks 2016
 %%%%%%%%%%%%%%%%%%%%%%%%%%
-clear
+%% SETUP environment ----
 close all
+fprintf('[\bSetting up environment ... ]\b')
+tic
+% CLEAR environment
+clearvars -except config ; close all
 
-addpath C:\Users\Machine\matlab_lib\Data\ERA_interim
-yr_s=1979;
-yr_e=2011;
-
-name_c='ERA_int_monthly_z500_2.nc';
+% ESTABLISH configuation
+% If running from master script ELSE user input the config file
+if exist('config','var')
+    eval(config)
+else 
+    addpath('G:\My Drive\ClimDyn_oct2022_R4\ClimDyn_R4_2022_Matlab\ClimDyn_R4_2022_Matlab\configfiles\')
+    eval('Config_inPhase')
+end
+toc 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+name_c=[data_dir,'ERA_int_monthly_z500_2.nc'];
 %   ncdisp(name_c)
 
 era_time=ncread(name_c,'time');
@@ -35,8 +45,6 @@ datevalue=dayssince111+datenum(1900,1,1);
  era_year_num=yyyy+(mm/12-1/12); 
  
 %%%%%%%%%%%%%%%%%%%%%%%
-
-
 eof_type=3;
 
 if eof_type==1
@@ -207,12 +215,7 @@ end
    
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % letter
-%letter='e';
-letter='a';
-
 TextBox = uicontrol('style','text');
-letter_position=   [240 380 60 60];
-   
 set(TextBox,'String',letter,'position',letter_position,'FontSize',32 ); % ,'FontWeight','bold'
                  set(TextBox,'foregroundcolor', [0 0 0], ...
             'backgroundcolor', [1 1 1]);
@@ -230,6 +233,14 @@ l2=legend([h1 h2], hs1 , hs2);
     pos1(1) = 0.2;
     pos1(3) = 0.6;
     set(gca, 'Position', pos1) 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Change to correct minus symbol
+ax=gca;
+set(ax,'ticklabelinterpreter','none')  %or 'tex' but not 'latex'
+yticklabels(ax, strrep(yticklabels(ax),'-','–'));
+xticklabels(ax, strrep(xticklabels(ax),'-','–'));    
+    
+    
 %%%%%%%%%%%%%%%%%%%%
 % save figure
 
