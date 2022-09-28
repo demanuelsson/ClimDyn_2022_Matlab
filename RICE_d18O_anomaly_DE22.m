@@ -93,6 +93,14 @@ letter_position=   [200 380 60 60];
 set(TextBox,'String',letter,'position',letter_position,'FontSize',32 ); % ,'FontWeight','bold'
                  set(TextBox,'foregroundcolor', [0 0 0], ...
             'backgroundcolor', [1 1 1]);
+%%%%%%%%%%%%%%%%        
+
+% Change to correct minus symbol
+ax=gca;
+set(ax,'ticklabelinterpreter','none')  %or 'tex' but not 'latex'
+yticklabels(ax, strrep(yticklabels(ax),'-','–'));
+xticklabels(ax, strrep(xticklabels(ax),'-','–'));        
+        
 %%%%%%%%%%%%         
 save_fig=1;
 
