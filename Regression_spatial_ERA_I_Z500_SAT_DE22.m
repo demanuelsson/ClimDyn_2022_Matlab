@@ -13,11 +13,28 @@
 % Wilks test
 % saves surfaces, that is ploted further down
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-tic
-clear
+%% SETUP environment ----
 close all
+fprintf('[\bSetting up environment ... ]\b')
+tic
+% CLEAR environment
+clearvars -except config ; close all
+
+% ESTABLISH configuation
+% If running from master script ELSE user input the config file
+if exist('config','var')
+    eval(config)
+else 
+    addpath('G:\My Drive\ClimDyn_oct2022_R4\ClimDyn_R4_2022_Matlab\ClimDyn_R4_2022_Matlab\configfiles\')
+    
+ eval('Config_reg_EOF')
+
+end
+toc     
+
+%%
+tic
+
 
      for    PC_nr=2:3 % (2) PC1 (SAM), (3) PC2 (PSA1)     (4) PC3 PSA2, (5) PC4
 
@@ -27,7 +44,7 @@ close all
 downscale_nr=1; % 0/1
 seasonaly_nr=0;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
-cor_nr=4;  % (1) just trend, (4) PCs from EOF z500, (6) PCs from EOF 2mT
+cor_nr=4;  % (1) just trend, (4) PCs from EOF Z500, (6) PCs from EOF 2mT
 % change dataset too
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -93,10 +110,10 @@ proj='stereo';
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Read in ERA-interim data
-% addpath C:\PHD\ERA_interim
-  addpath C:\Users\benman\matlab_lib\Data\ERA_interim
 
-name_c='ERA_int_monthly_z500_2.nc';
+%  addpath C:\Users\benman\matlab_lib\Data\ERA_interim
+
+name_c=[data_dir,'ERA_int_monthly_z500_2.nc'];
 %   ncdisp(name_c)
 
 era_time=ncread(name_c,'time');
@@ -135,7 +152,7 @@ if strcmp(name,'2mT')==1
     % Monthly means of dail means
     % geopotentail 500 hPa
     
-    name_c='ERA_int_monthly_z500_2.nc'; 
+    name_c=[data_dir,'ERA_int_monthly_z500_2.nc']; 
     era_z500=ncread(name_c,'z'); % GPH z500 %%%%%% file _2 with 2014 and 2015 too ......
     era_z500=era_z500/9.80665;
     
@@ -506,7 +523,7 @@ if  era_name_nr==1  %%%%% Monthly anomalies data
   %%%%%%%%%%      v850
      elseif type_nr==2  && era_name_nr==3%%%%% v850 Monthly data  
          
-     filedir ='C:\Users\Machine\matlab_storage_of_output_files\';
+     
      if downscale_nr==0
      
 %       load([filedir,'ERA_interim_v850_clim.mat']); % cosweight and monthly clim removed global z500 not downscaled (run start of eof code)
@@ -542,7 +559,7 @@ if  era_name_nr==1  %%%%% Monthly anomalies data
   
   elseif type_nr==2  && era_name_nr==4%%%%% u850 Monthly data  
 
-       filedir ='C:\Users\Machine\matlab_storage_of_output_files\';
+  %     filedir ='C:\Users\Machine\matlab_storage_of_output_files\';
        
 %          ntim=432; % already done for this one
 %          nlat=241;
@@ -569,7 +586,7 @@ if  era_name_nr==1  %%%%% Monthly anomalies data
    
 elseif era_name_nr==5%%%%% 2mT Monthly data    
 
-            filedir ='C:\Users\Machine\matlab_storage_of_output_files\';
+     %       filedir ='C:\Users\Machine\matlab_storage_of_output_files\';
             if downscale_nr==0
             load([filedir,'era_2mT_c8.mat']); % cosweight and monthly clim removed global z500 not downscaled (run start of eof code)     
             
@@ -693,8 +710,8 @@ tic
  
 % for i=1:A
 %     for j=1:B
-        
-parfor i=1:A
+for i=1:A        
+%parfor i=1:A
     for j=1:B        
                         
             s=regstats(squeeze(X(i,j,:)),y,'linear','all');
@@ -1121,12 +1138,12 @@ end
         end
         
 
-filedir ='C:\Users\Machine\matlab_storage_of_output_files\figures\';
+filedir_c =[filedir,'figures\'];
 
 if corr_label==1
-savefilename_c=strcat(filedir,filename,'_crop');
+savefilename_c=strcat(filedir_c,filename,'_crop');
 else
-savefilename_c=strcat(filedir,filename);
+savefilename_c=strcat(filedir_c,filename);
 
 end
 
@@ -1143,7 +1160,7 @@ save_fields=1;
 
 if save_fields==1
 
- filedir ='C:\Users\Machine\matlab_storage_of_output_files\';
+% filedir ='C:\Users\Machine\matlab_storage_of_output_files\';
  filename=strcat(filedir,filename);
 savefilename_c=strcat(filename,'.mat');
 save(savefilename_c,'p_all','s_all','p_fdr_rej','era_lat','era_long');
@@ -1179,10 +1196,10 @@ end
 % [wa, wb]=size(s_all_c); 
 % save regression surface  
 
-folder_c='C:\Users\Machine\matlab_storage_of_output_files\';
+
 
 %savefilename =[folder_c,filename,'_',num2str(p_level_rc),'_c2.mat'];
-savefilename =[filename,'_',num2str(p_level_rc),'_c6.mat'];
+savefilename =[filedir,'_',num2str(p_level_rc),'_c6.mat'];
 %_c2 rotate
 
 save(savefilename,'s_all_c'); 
@@ -1206,16 +1223,16 @@ type_str='Annual';% one value per year
 yr_s=1979;
 yr_e=2011;
 %  
-  folder_c='C:\Users\Machine\matlab_storage_of_output_files\';
+%  folder_c='C:\Users\Machine\matlab_storage_of_output_files\';
 
     if era_name_nr==5
 %         load([folder_c,'ERA_interim_regression_2mT_PC1_',season,'_',type_str,'_',...
 %             num2str(yr_s),'-',num2str(yr_e),'_c_',num2str(p_level_rc),'_c5.mat']);
-        load([folder_c,'ERA_interim_regression_2mT_SAM_',season,'_',type_str,'_',...
+        load([filedir,'ERA_interim_regression_2mT_SAM_',season,'_',type_str,'_',...
             num2str(yr_s),'-',num2str(yr_e),'_c_',num2str(p_level_rc),'_c5.mat']);
 
     elseif era_name_nr==1
-        load([folder_c,'ERA_interim_regression_z500_SAM_',season,'_',type_str,'_',...
+        load([filedir,'ERA_interim_regression_z500_SAM_',season,'_',type_str,'_',...
             num2str(yr_s),'-',num2str(yr_e),'_c_',num2str(p_level_rc),'_c6.mat']);
     end      
 
@@ -1234,11 +1251,11 @@ s_all_c_pc1(find(s_all_c_pc1>0))=1;  % positive values 1
     if era_name_nr==5
 %             load([folder_c,'ERA_interim_regression_2mT_PC2_',season,'_',type_str,'_',...
 %                 num2str(yr_s),'-',num2str(yr_e),'_c_',num2str(p_level_rc),'_c5.mat']);
-            load([folder_c,'ERA_interim_regression_2mT_PSA1_',season,'_',type_str,'_',...
+            load([filedir,'ERA_interim_regression_2mT_PSA1_',season,'_',type_str,'_',...
                 num2str(yr_s),'-',num2str(yr_e),'_c_',num2str(p_level_rc),'_c6.mat']);
             
     elseif era_name_nr==1
-            load([folder_c,'ERA_interim_regression_z500_PSA1_',season,'_',type_str,'_',...
+            load([filedir,'ERA_interim_regression_z500_PSA1_',season,'_',type_str,'_',...
             num2str(yr_s),'-',num2str(yr_e),'_c_',num2str(p_level_rc),'_c6.mat']);
     end
 
@@ -1380,9 +1397,9 @@ elseif era_name_nr==2
 end
 
 
-folder_c='C:\Users\Machine\matlab_storage_of_output_files\';
+%folder_c='C:\Users\Machine\matlab_storage_of_output_files\';
 %load([folder_c,'ERA_interim_regression_',era_name_str,'_',PC_nr_str,'_annual_Monthly_1979-2011_c.mat']);
-load([folder_c,'ERA_interim_regression_',era_name_str,'_',PC_nr_str,'_Annual_Annual_1979-2011_c.mat']);
+load([filedir,'ERA_interim_regression_',era_name_str,'_',PC_nr_str,'_Annual_Annual_1979-2011_c.mat']);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  Figure
@@ -1654,12 +1671,12 @@ end
         end
         
 
-filedir ='C:\Users\Machine\matlab_storage_of_output_files\figures\';
+filedir_c =[filedir,'figures\'];
 
 if corr_label==1
-savefilename_c=strcat(filedir,filename,'_crop');
+savefilename_c=strcat(filedir_c,filename,'_crop');
 else
-savefilename_c=strcat(filedir,filename);
+savefilename_c=strcat(filedir_c,filename);
 
 end
 
