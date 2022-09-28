@@ -200,7 +200,7 @@ xlabel('Year','FontWeight','bold','FontSize', 20);
 end_str='_c1'; 
 name_str=['SAM_PSA_index',end_str];
 
-  filedir= 'C:\Users\Machine\matlab_storage_of_output_files\';
+%  filedir= 'C:\Users\Machine\matlab_storage_of_output_files\';
   savefilename =[filedir, name_str '.mat'];
  
  
@@ -237,15 +237,15 @@ l2=legend([h1 h2], hs1 , hs2);
 % Change to correct minus symbol
 ax=gca;
 set(ax,'ticklabelinterpreter','none')  %or 'tex' but not 'latex'
-yticklabels(ax, strrep(yticklabels(ax),'-','�'));
-xticklabels(ax, strrep(xticklabels(ax),'-','�'));    
+yticklabels(ax, strrep(yticklabels(ax),'-','–'));
+xticklabels(ax, strrep(xticklabels(ax),'-','–'));    
     
     
 %%%%%%%%%%%%%%%%%%%%
 % save figure
 
- filedir ='C:\Users\Machine\matlab_storage_of_output_files\figures\';  
- filename=strcat(filedir,'SAM_PSA1_in-phase_years_',eof_str,'c');
+%  filedir ='C:\Users\Machine\matlab_storage_of_output_files\figures\';  
+ filename=strcat(filedir,'figures\','SAM_PSA1_in-phase_years_',eof_str,'c');
  savefilename_c=filename;
 
 % save as png 
@@ -261,7 +261,7 @@ cd('G:\My Drive\ClimDyn_oct2022_R4\ClimDyn_R4_2022_Matlab\ClimDyn_R4_2022_Matlab
 %% loop ERA-interim composite
 tic
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-era_name_nr=2; % 1 or 2
+% era_name_nr=1; % 1 or 2
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 1. Z500 *
 % 2. 2mT *
@@ -278,7 +278,7 @@ yr_s=1979;
 yr_e=2011;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
- sea_nr=3;                    %%%%%%%%%%          Season
+% sea_nr=3;                    %%%%%%%%%%          Season
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 if sea_nr==1
     season='annual';
@@ -678,7 +678,9 @@ cRange= caxis;
         
   end
         
-  set(h,'Position',pos)      
+  set(h,'Position',pos)
+  %%%%%%%%%%%%%%%
+  h.TickLabels = strrep(h.TickLabels, '-', '–');
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
  
    if era_name_nr==1
@@ -686,7 +688,7 @@ cRange= caxis;
      mlabel('MLabelParallel',-16  ,'PLabelLocation', [-75 -60 -45 -30],'PLabelMeridian',100)
        letter_position=   [200 760 60 80];
   elseif era_name_nr==2
-    a1=axestext_c(1.035,+0.57, ['SAT (�C)'] ,'rotation',-90,'FontSize',22, 'FontWeight', 'bold'); 
+    a1=axestext_c(1.035,+0.57, ['SAT (°C)'] ,'rotation',-90,'FontSize',22, 'FontWeight', 'bold'); 
      mlabel('MLabelParallel',-36  ,'PLabelLocation', [-75 -60 -45 -30],'PLabelMeridian',100)
        letter_position=   [200 740 60 80];
    end             
@@ -732,8 +734,8 @@ if coast_nr==1
     lon_cr(in_c)=NaN;
 
     %%%%%%%%%%%%%
-%    addpath C:\PHD\matlab_mapping
-    addpath C:\Users\benman\matlab_mapping
+
+%    addpath C:\Users\benman\matlab_mapping
 %         if strcmp(name,'SIC')==1
             color_code=[.4 .4 .4];    
             plot3m(lat_cr,lon_cr,'-','LineWidth', 2,'color',color_code);
@@ -744,7 +746,7 @@ if coast_nr==1
     bedmap2('patchshelves','LineWidth', 1.0,'facecolor','none','frame','on','edgecolor',color_code)
 end      
         
-   hp1=  title(['(SAM-, PSA1+) minus (SAM+, PSA1-)',...
+   hp1=  title(['(SAM−, PSA1+) minus (SAM+, PSA1−)',...
                  ],'FontSize',16, 'FontWeight', 'bold');
                                               
             pos=get(hp1,'Position');
@@ -759,11 +761,11 @@ end
 hold off
 %%%%%%%%%%%%%%%%%%%%
 % save figure
- filedir ='C:\Users\Machine\matlab_storage_of_output_files\figures\'; 
+% filedir ='C:\Users\Machine\matlab_storage_of_output_files\figures\'; 
 %     if rcontour_psa==1
 %                 filename=strcat(filedir,'ndsic_',name,'_',iso,'_',season,'_',proj,'_',num2str(yr_s),'_',num2str(yr_e),'_wPSA_pattern');
     
-                filename=strcat(filedir,'compositie_in_phase_SAM_PSA1_',name,...
+                filename=strcat(filedir,'figures\','compositie_in_phase_SAM_PSA1_',name,...
                     '_',eof_str,'_',proj);
                 
 
@@ -775,13 +777,13 @@ orient landscape
 
 cd('G:\My Drive\ISO_CFA\matlab')
 export_fig('-pdf','-painters', '-depsc','-opengl', '-r190',savefilename_c); % func needs ghostscript
-export_fig('-png','-painters', '-depsc','-nocrop','-opengl', '-r190',savefilename_c); % PNG  110
+export_fig('-png','-painters', '-depsc','-opengl', '-r190',savefilename_c); % PNG  ,'-nocrop'
 cd('G:\My Drive\ClimDyn_oct2022_R4\ClimDyn_R4_2022_Matlab\ClimDyn_R4_2022_Matlab')  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 %% Sea Ice HadISST
 tic
-clearvars -except ind_c1 ind_c2 eof_type contour_alt_nr
+clearvars -except ind_c1 ind_c2 eof_type contour_alt_nr filedir
 
 %%%%%%%%%%%%%%%%%%%%%%
 %  clear all
@@ -1154,6 +1156,8 @@ cRange= caxis;
 %         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   
      set(h,'Position',pos)
      set(h, 'FontSize',20, 'FontWeight', 'bold'); 
+     
+     h.TickLabels = strrep(h.TickLabels, '-', '–');
 %%%%%%%%%%%%%
 
 if contour_alt_nr==1
@@ -1165,9 +1169,7 @@ elseif contour_alt_nr==2
       h1= contourm(double(HadISST_lat(146:167)),double(HadISST_lon),p_fdr_rej', [0.05],'-k','ShowText','off',...
    'LineWidth', 2);
 end
-
-
- %%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%
 % letter
 letter='d';
 TextBox = uicontrol('style','text');
@@ -1206,19 +1208,17 @@ if coast_nr==1
     bedmap2('patchshelves','LineWidth', 1.0,'facecolor','none','frame','on','edgecolor',color_code)
 end 
   
-   hp1=  title(['(SAM-,PSA+) minus (SAM+,PSA-) '],'FontSize',28, 'FontWeight', 'bold');    
+   hp1=  title(['(SAM−,PSA+) minus (SAM+,PSA−) '],'FontSize',28, 'FontWeight', 'bold');    
 
             pos=get(hp1,'Position');
             pos(2)=pos(2)-0.05;
             set(hp1,'Position',pos,'FontSize',28, 'FontWeight', 'bold'); 
-            
-      
-   
+ 
 %%%%%%%%%%%%%%%%%%%%
 % save figure
 eof_str='varimax';
-  filedir ='C:\Users\benman\matlab_storage_of_output_files\figures\'; 
-filename=strcat(filedir,'HadISST_compositie_in_phase_SAM_PSA1_',name,'_',eof_str,'_',season,'_',proj);
+%  filedir ='C:\Users\benman\matlab_storage_of_output_files\figures\'; 
+filename=strcat(filedir,'figures\','HadISST_compositie_in_phase_SAM_PSA1_',name,'_',eof_str,'_',season,'_',proj);
 savefilename_c=filename;
 
  % save as png 
@@ -1226,7 +1226,7 @@ orient landscape
 cd('G:\My Drive\ISO_CFA\matlab')
   export_fig('-pdf','-painters', '-depsc','-opengl', '-r190',savefilename_c); %func needs ghostscript 
 
-  export_fig('-png','-painters', '-depsc','-nocrop','-opengl', '-r170',savefilename_c); % PNG  110
+  export_fig('-png','-painters', '-depsc','-opengl', '-r170',savefilename_c); % PNG  ,'-nocrop'
 cd('G:\My Drive\ClimDyn_oct2022_R4\ClimDyn_R4_2022_Matlab\ClimDyn_R4_2022_Matlab')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%          
