@@ -146,7 +146,7 @@ if strcmp(name,'2mT')==1
     letter='a';
     lat1=-90;
     lat2=-30; 
-    label_1='°C s.d.^-^1'; 
+    label_1='°C s.d.^?^1'; 
  elseif strcmp(name,'z500')==1 %&& strcmp(season,'annual')==1
     % ECMWF ERA-Inerim (Dee et al. 2011)
     % Monthly means of dail means
@@ -293,7 +293,7 @@ toc
          load('C:\Users\Machine\matlab_storage_of_output_files\ERA-Interim_PCs_z500_lim0-360_-20_-90_1979-2011_AMJJASON_c52_annual_mean_varimax_c2.mat');  %  % AMJJASON 
       end
                
-                  label_1='m s.d.^-^1';
+                  label_1='m s.d.^?^1';
     
     
         if type_nr==1   %%%%%%%%% Annual 
@@ -710,8 +710,8 @@ tic
  
 % for i=1:A
 %     for j=1:B
-        
-parfor i=1:A
+for i=1:A        
+%parfor i=1:A
     for j=1:B        
                         
             s=regstats(squeeze(X(i,j,:)),y,'linear','all');
@@ -916,7 +916,15 @@ hold on
             colormap(flipud(cbrewer2('div','PuOr',20))); 
         end
       
-      
+  %%%%%%%%%%%%%%%%%%%%%
+% ax=gca;
+% set(ax,'ticklabelinterpreter','none')  %or 'tex' but not 'latex'
+% yticklabels(ax, strrep(yticklabels(ax),'-','–'));
+% xticklabels(ax, strrep(xticklabels(ax),'-','–'));
+%cb = colorbar();
+br.TickLabels = strrep(br.TickLabels, '-', '–');
+%%%%%%%%%%%%%%%%%%%%%%%%%%%          
+        
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
  % p=0.05 significance level contour      
       
@@ -1196,10 +1204,10 @@ end
 % [wa, wb]=size(s_all_c); 
 % save regression surface  
 
-folder_c='C:\Users\Machine\matlab_storage_of_output_files\';
+
 
 %savefilename =[folder_c,filename,'_',num2str(p_level_rc),'_c2.mat'];
-savefilename =[filename,'_',num2str(p_level_rc),'_c6.mat'];
+savefilename =[filedir,'_',num2str(p_level_rc),'_c6.mat'];
 %_c2 rotate
 
 save(savefilename,'s_all_c'); 
@@ -1223,16 +1231,16 @@ type_str='Annual';% one value per year
 yr_s=1979;
 yr_e=2011;
 %  
-  folder_c='C:\Users\Machine\matlab_storage_of_output_files\';
+%  folder_c='C:\Users\Machine\matlab_storage_of_output_files\';
 
     if era_name_nr==5
 %         load([folder_c,'ERA_interim_regression_2mT_PC1_',season,'_',type_str,'_',...
 %             num2str(yr_s),'-',num2str(yr_e),'_c_',num2str(p_level_rc),'_c5.mat']);
-        load([folder_c,'ERA_interim_regression_2mT_SAM_',season,'_',type_str,'_',...
+        load([filedir,'ERA_interim_regression_2mT_SAM_',season,'_',type_str,'_',...
             num2str(yr_s),'-',num2str(yr_e),'_c_',num2str(p_level_rc),'_c5.mat']);
 
     elseif era_name_nr==1
-        load([folder_c,'ERA_interim_regression_z500_SAM_',season,'_',type_str,'_',...
+        load([filedir,'ERA_interim_regression_z500_SAM_',season,'_',type_str,'_',...
             num2str(yr_s),'-',num2str(yr_e),'_c_',num2str(p_level_rc),'_c6.mat']);
     end      
 
@@ -1251,11 +1259,11 @@ s_all_c_pc1(find(s_all_c_pc1>0))=1;  % positive values 1
     if era_name_nr==5
 %             load([folder_c,'ERA_interim_regression_2mT_PC2_',season,'_',type_str,'_',...
 %                 num2str(yr_s),'-',num2str(yr_e),'_c_',num2str(p_level_rc),'_c5.mat']);
-            load([folder_c,'ERA_interim_regression_2mT_PSA1_',season,'_',type_str,'_',...
+            load([filedir,'ERA_interim_regression_2mT_PSA1_',season,'_',type_str,'_',...
                 num2str(yr_s),'-',num2str(yr_e),'_c_',num2str(p_level_rc),'_c6.mat']);
             
     elseif era_name_nr==1
-            load([folder_c,'ERA_interim_regression_z500_PSA1_',season,'_',type_str,'_',...
+            load([filedir,'ERA_interim_regression_z500_PSA1_',season,'_',type_str,'_',...
             num2str(yr_s),'-',num2str(yr_e),'_c_',num2str(p_level_rc),'_c6.mat']);
     end
 
@@ -1289,7 +1297,7 @@ ind_psa_sum_c(ind_nan)=9999;
     end
 
 
- savefilename =[folder_c,filename]; 
+ savefilename =[filedir,filename]; 
 % save(savefilename,'ind_psa_sum'); 
  save(savefilename,'ind_psa_sum_c','ind_psa_sum_nonactive'); 
  toc
@@ -1323,7 +1331,7 @@ if era_name_nr==1
    era_name_str='Z500';
    title_str=era_name_str;
    lat2=-20;
-   label_1='m s.d.^-^1';
+   label_1='m s.d.^?^1';
    if PC_nr==1
     PC_nr_str='SAM';
     letter='a';
@@ -1353,7 +1361,7 @@ if era_name_nr==1
 elseif era_name_nr==2
    era_name_str='2mT';
    lat2=-30;
-   label_1='°C s.d.^-^1';
+   label_1='°C s.d.^?^1';
    title_str='SAT';
    if PC_nr==1
     PC_nr_str='PC1';
@@ -1397,9 +1405,9 @@ elseif era_name_nr==2
 end
 
 
-folder_c='C:\Users\Machine\matlab_storage_of_output_files\';
+%folder_c='C:\Users\Machine\matlab_storage_of_output_files\';
 %load([folder_c,'ERA_interim_regression_',era_name_str,'_',PC_nr_str,'_annual_Monthly_1979-2011_c.mat']);
-load([folder_c,'ERA_interim_regression_',era_name_str,'_',PC_nr_str,'_Annual_Annual_1979-2011_c.mat']);
+load([filedir,'ERA_interim_regression_',era_name_str,'_',PC_nr_str,'_Annual_Annual_1979-2011_c.mat']);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  Figure
@@ -1671,12 +1679,12 @@ end
         end
         
 
-filedir ='C:\Users\Machine\matlab_storage_of_output_files\figures\';
+filedir_c =[filedir,'figures\'];
 
 if corr_label==1
-savefilename_c=strcat(filedir,filename,'_crop');
+savefilename_c=strcat(filedir_c,filename,'_crop');
 else
-savefilename_c=strcat(filedir,filename);
+savefilename_c=strcat(filedir_c,filename);
 
 end
 
