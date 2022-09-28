@@ -16,13 +16,9 @@ clearvars -except config ; close all
 if exist('config','var')
     eval(config)
 else 
-    addpath('G:\My Drive\ClimDyn_oct2022_R4\ClimDyn_R4_2022_Matlab\configfiles\')
+    addpath('G:\My Drive\ClimDyn_oct2022_R4\ClimDyn_R4_2022_Matlab\ClimDyn_R4_2022_Matlab\configfiles\')
     
-
-
-
  eval('config_map')
-
 
 end
 toc        
