@@ -15,11 +15,28 @@
 
 % Wilks test
 %%%%%%%%%%%%%%%%%%%%%%
-
+%% SETUP environment ----
+close all
+fprintf('[\bSetting up environment ... ]\b')
 tic
- clear
- close all
+% CLEAR environment
+clearvars -except config ; close all
+
+% ESTABLISH configuation
+% If running from master script ELSE user input the config file
+if exist('config','var')
+    eval(config)
+else 
+    addpath('G:\My Drive\ClimDyn_oct2022_R4\ClimDyn_R4_2022_Matlab\ClimDyn_R4_2022_Matlab\configfiles\')
+
+ eval('Config_corr_SIC')
+ %eval('Config_corr_SIC_suppl_m')
+ 
+end
+toc 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+tic
+
 % Input
 
 param_nr=2;% (1-SST/ 2 SIC)
@@ -34,10 +51,7 @@ if param_nr==2
     name='SIC';
 end
  
- site='RICE';
-  yr_s=1979;
-  yr_e=2009; %%%%%%%%% RI 2009 %%% suppl. material
-  %yr_e=2011; 
+
   letter='e';
   
   if yr_e==2009
@@ -45,7 +59,7 @@ end
   end
   
 %%%%%%%%%%%%%%%%%%%%%
-sea_nr=3;
+% sea_nr=3;
 if sea_nr==1    
     season='annual';
 elseif sea_nr==2
@@ -119,9 +133,9 @@ end
 %           standard_name = 'sea_ice_area_fraction'
 %           long_name     = 'Monthly 1 degree resolution sea ice concentration'
 
-addpath C:\Users\Machine\matlab_lib\Data\HadISST_data
+%addpath C:\Users\Machine\matlab_lib\Data\HadISST_data
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   
-    name_c='HadISST_ice_c.nc';
+    name_c=[data_dir,'HadISST_ice_c.nc'];
     HadISST_time=ncread(name_c,'time'); %units         = 'days since 1870-1-1 0:0:0'
     % missing values  missing_value = -1e+30 ( looks more like -1000)\
     %monthly values
@@ -248,17 +262,17 @@ if strcmp(iso,'dD')==1 || strcmp(iso,'d18O')==1
 % isotopes record
 %date_annual=[1900:2011]';
 
-    iso_alt_nr=3;
+%    iso_alt_nr=3;
         
         if iso_alt_nr==1
-             load('C:\Users\Machine\matlab_storage_of_output_files\RICE_combined_Deep_1213B_c23.mat');
+             load([filedir,'RICE_combined_Deep_1213B_c23.mat']);
              iso_season_str='annual';
         elseif iso_alt_nr==2
-            load('C:\Users\Machine\matlab_storage_of_output_files\RI_combined_Deep_1213B_annual_means_no_summer_c24.mat'); % MAMJJASON 
+            load([filedir,'RI_combined_Deep_1213B_annual_means_no_summer_c24.mat']); % MAMJJASON 
 %             load('C:\Users\benman\matlab_storage_of_output_files\RI_combined_Deep_1213B_annual_means_no_summer_clim_c24.mat'); % clim removed, no difference
             iso_season_str='ExtendedWinter';
         elseif iso_alt_nr==3    
-            load('C:\Users\Machine\matlab_storage_of_output_files\RI_combined_Deep_1213B_annual_means_no_summer_AMJJASON_c24.mat'); % AMJJASON 
+            load([filedir,'RI_combined_Deep_1213B_annual_means_no_summer_AMJJASON_c24.mat']); % AMJJASON 
 %             load('C:\Users\benman\matlab_storage_of_output_files\RI_combined_Deep_1213B_annual_means_no_summer_AMJJASON_clim_c24.mat'); % clim removed, no difference
             iso_season_str='ExtendedWinter';           
         end
@@ -536,11 +550,11 @@ end
     
 if yr_e==2009 % suppl. mat
 
-    a1=axestext_c(1.1,+0.6, ['Correlation'] ,'rotation',-90,'FontSize',22, 'FontWeight', 'bold');    %050
+    a1=axestext_c(1.1,+0.6, ['Correlation'] ,'rotation',-90,'FontSize',22, 'FontWeight', 'bold');    %
 
 else
     
-    a1=axestext_c(1.08,+0.61, ['Correlation'] ,'rotation',-90,'FontSize',24, 'FontWeight', 'bold');    %050
+    a1=axestext_c(1.09,+0.61, ['Correlation'] ,'rotation',-90,'FontSize',24, 'FontWeight', 'bold');    %
 
 end 
     
@@ -573,6 +587,9 @@ end
 %     end
         
         set(h,'Position',pos)
+        
+h.TickLabels = strrep(h.TickLabels, '-', '–');
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%        
 
 if strcmp(iso,'dD')==1
     iso_str='{\delta}D';
@@ -683,7 +700,7 @@ if show_title==1 || show_title==2 || show_title==3 || show_title==4
         if strcmp(proj,'stereo')==1  
             pos=get(hp1,'Position');
             pos(2)=pos(2)-0.07;
-            set(hp1,'Position',pos,'FontSize',28, 'FontWeight', 'bold');    
+            set(hp1,'Position',pos,'FontSize',30, 'FontWeight', 'bold');    
 %         elseif strcmp(proj,'mec')==1
 %             pos=get(hp1,'Position');
 %             pos(2)=pos(2)-0.02;
@@ -870,11 +887,11 @@ end
 hold off
 %%%%%%%%%%%%%%%%%%%%
 % save figure
- filedir ='C:\Users\Machine\matlab_storage_of_output_files\figures\'; 
+% filedir ='C:\Users\Machine\matlab_storage_of_output_files\figures\'; 
     if rcontour_psa==1
-                filename=strcat(filedir,'HadISST_',name,'_',iso,'_',season,'_',proj,'_',num2str(yr_s),'_',num2str(yr_e),'_wPSA_pattern');
+                filename=strcat(filedir,'figures\','HadISST_',name,'_',iso,'_',season,'_',proj,'_',num2str(yr_s),'_',num2str(yr_e),'_wPSA_pattern');
     else
-                filename=strcat(filedir,'HadISST_',name,'_',iso,'_',season,'_',proj,'_',num2str(yr_s),'_',num2str(yr_e));
+                filename=strcat(filedir,'figures\','HadISST_',name,'_',iso,'_',season,'_',proj,'_',num2str(yr_s),'_',num2str(yr_e));
     end
 
 savefilename_c=filename;
@@ -883,13 +900,10 @@ savefilename_c=filename;
 orient landscape
 
 cd('G:\My Drive\ISO_CFA\matlab')
-% if figure_format==1
-%  export_fig('-eps','-nocrop','-painters', '-depsc','-opengl', '-r100',savefilename_c); % EPS works  func needs ghostscript 
+
 export_fig('-pdf','-painters', '-depsc','-opengl', '-r190',savefilename_c);  %func needs ghostscript ,'-nocrop' 
-%elseif figure_format==2
-  export_fig('-png','-painters', '-depsc','-nocrop','-opengl', '-r170',savefilename_c); % PNG  110
-%end
+export_fig('-png','-painters', '-depsc','-opengl', '-r170',savefilename_c); % PNG  110  '-nocrop',
+
 cd('G:\My Drive\ClimDyn_oct2022_R4\ClimDyn_R4_2022_Matlab\ClimDyn_R4_2022_Matlab')  
 toc
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
