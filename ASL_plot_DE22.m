@@ -7,27 +7,40 @@
 % subfunctions
 % * corrcoef_df.m   UoW Steig
 % * fig.m fileexchange
-%%%%%%%%%%%%%%%%%%%%%%%%%%%   
+%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% SETUP environment ----
+close all
+fprintf('[\bSetting up environment ... ]\b')
+tic
+% CLEAR environment
+clearvars -except config ; close all
+
+% ESTABLISH configuation
+% If running from master script ELSE user input the config file
+if exist('config','var')
+    eval(config)
+else 
+    addpath('G:\My Drive\ClimDyn_oct2022_R4\ClimDyn_R4_2022_Matlab\ClimDyn_R4_2022_Matlab\configfiles\')
+    
+ eval('Config_ASL_ts_plot')
+
+end
+toc 
 %% Calculate mean z500 AS Box contour area
 % the start of the code from era_rice_corr_regress_annual_seasonal  to line 355
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-clear
-close all
 tic
-
-dataset=1; % (1) ERA-interim (2) NCEP-NCAR  %%%%%%%%%%%%%
-sea_nr=6;
-max_ASL_point=1; % (0/1)
 
 if dataset==1
     dataset_str='ERA-Interim';
     yr_s=1980;
-  %  addpath C:\PHD\ERA_interim
-    addpath C:\Users\benman\matlab_lib\Data\ERA_interim
-    era_time=ncread('ERA_int_monthly_SST.nc','time');
-    era_long=ncread('ERA_int_monthly_SST.nc','longitude');
-    era_lat=ncread('ERA_int_monthly_SST.nc','latitude');
-    era_sst=ncread('ERA_int_monthly_SST.nc','sst');
+
+    
+    era_time=ncread([data_dir,'ERA_int_monthly_SST.nc'],'time');
+    era_long=ncread([data_dir,'ERA_int_monthly_SST.nc'],'longitude');
+    era_lat=ncread([data_dir,'ERA_int_monthly_SST.nc'],'latitude');
+    era_sst=ncread([data_dir,'ERA_int_monthly_SST.nc'],'sst');
 % era_t850=ncread('ERA_int_monthly_t850.nc','t');
 
 % 'ERA_int_monthly_meridional_wind.nc');
@@ -40,7 +53,7 @@ if dataset==1
     mm=date_vec(:,2);
      era_year_num=yyyy+(mm/12-1/12); 
 
-    era_z500=ncread('ERA_int_monthly_z500_2.nc','z'); % GPH z500 _2 goes to 2015
+    era_z500=ncread([data_dir,'ERA_int_monthly_z500_2.nc'],'z'); % GPH z500 _2 goes to 2015
     era_z500=era_z500/9.80665;
   
 
@@ -126,7 +139,7 @@ era_lon_v=polyval(p,yq');
  toc
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
  M=era_z500;
- name='z500';
+ 
  
 
 [m n t]=size(M(:,:,1:era_count)); %
@@ -512,7 +525,7 @@ elseif (ASL_box==1 || ASL_box==2) && contour_use==0 && save_nr==1
      
      %savefilename = strcat('blocking\',name,'ASL_sector_P_Hoskings.mat'); 
      
-    savefilename = strcat('C:\Users\benman\matlab_storage_of_output_files\',name,'_', dataset_str,'_',season,'_', box_str,'_sector',max_ASL_point_str,'.mat'); 
+    savefilename = strcat(filedir,name,'_', dataset_str,'_',season,'_', box_str,'_sector',max_ASL_point_str,'.mat'); 
      
     % %matlab workspace
     save(savefilename,'era_MA_z500_annual_time_series');
@@ -569,18 +582,18 @@ plot(x,y,'*-k')
 %load('z500_ASL_c')
 % load('C:\PHD\matlab_storage_of_output_files\z500_ERA-Interim_ASL_sector_P_Hoskings.mat')
 
-sea_nr=6;
-max_nr=1;
+%sea_nr=6;
+%max_nr=1;
 if sea_nr==1 && max_nr==0
     load('C:\Users\benman\matlab_storage_of_output_files\z500_ERA-Interim_ASL_sector_P_Hoskings.mat')
     season='annual';
     max_str='';
 elseif sea_nr==6 && max_nr==0
-    load('C:\Users\benman\matlab_storage_of_output_files\z500_ERA-Interim_AMJJASON_ASL_sector.mat')
+    load([filedir,'z500_ERA-Interim_AMJJASON_ASL_sector.mat'])
     season='AMJJASON';
     max_str='';
 elseif sea_nr==6 && max_nr==1    
-    load('C:\Users\benman\matlab_storage_of_output_files\z500_ERA-Interim_AMJJASON_ASL_sector_max.mat')    
+    load([filedir,'z500_ERA-Interim_AMJJASON_ASL_sector_max.mat'])    
     season='AMJJASON';
     max_str='_max';
 end
@@ -608,13 +621,13 @@ h7=plot(era_MA_z500_annual_time_series((1:33),1), era_MA_z500_annual_time_series
          ylabel('Geopotential height (m)','FontWeight','bold','FontSize',20 );
                  
 %%%%%%%%%%
-        iso_alt_nr=2;
+
         
         if iso_alt_nr==1
              load('C:\Users\benman\matlab_storage_of_output_files\RICE_combined_Deep_1213B_c23.mat');
         elseif iso_alt_nr==2
 %             load('C:\Users\benman\matlab_storage_of_output_files\RI_combined_Deep_1213B_annual_means_no_summer_c24.mat'); % MAMJJASON
-            load('C:\Users\benman\matlab_storage_of_output_files\RI_combined_Deep_1213B_annual_means_no_summer_AMJJASON_c24.mat'); % AMJJASON 
+            load([filedir,'RI_combined_Deep_1213B_annual_means_no_summer_AMJJASON_c24.mat']); % AMJJASON 
 %             load('C:\Users\benman\matlab_storage_of_output_files\RI_combined_Deep_1213B_annual_means_no_summer_clim_c24.mat'); % clim removed, no difference
 %             
         end
@@ -654,11 +667,14 @@ set(gca,...
     pos1(3) = 0.6;
     set(gca, 'Position', pos1)
     
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ax=gca;
+set(ax,'ticklabelinterpreter','none')  %or 'tex' but not 'latex'
+yticklabels(ax, strrep(yticklabels(ax),'-','–'));
+xticklabels(ax, strrep(xticklabels(ax),'-','–'));
+    
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
- %letter='a';
-  letter='b';
- %letter_position=   [240 380 60 60];
- letter_position=   [200 380 50 60];
+
           TextBox = uicontrol('style','text');
           set(TextBox,'String',letter,'position',letter_position,'FontSize',32); % x position y position xsize ysize ,'FontWeight','bold'
           set(TextBox,'foregroundcolor', [0 0 0], ...
@@ -668,13 +684,16 @@ set(gca,...
 % save fig.
 end_str='_c2';
 filename=['ASL_plot','_',season,end_str,max_str]; 
-filedir ='C:\Users\benman\matlab_storage_of_output_files\figures\';
-savefilename_c=strcat(filedir,filename);
+%filedir ='C:\Users\benman\matlab_storage_of_output_files\figures\';
+savefilename_c=strcat(filedir,'figures\',filename);
 % save as png 
 orient landscape
-%export_fig('-png','-nocrop','-painters', '-depsc','-opengl', '-r170',savefilename_c); % PNG-nocrop' 
+cd('G:\My Drive\ISO_CFA\matlab')
+export_fig('-png','-nocrop','-painters', '-depsc','-opengl', '-r170',savefilename_c); % PNG-nocrop' 
 export_fig('-pdf','-nocrop','-painters', '-depsc','-opengl', '-r190',savefilename_c); % PNG-nocrop'
-%
+cd('G:\My Drive\ClimDyn_oct2022_R4\ClimDyn_R4_2022_Matlab\ClimDyn_R4_2022_Matlab')
+
+
 
 %%
 
