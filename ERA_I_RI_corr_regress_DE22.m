@@ -12,10 +12,29 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  original file era_wais_regression_test.m
 %  Wilks test
-tic
-clear
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% SETUP environment ----
 close all
+fprintf('[\bSetting up environment ... ]\b')
+tic
+% CLEAR environment
+clearvars -except config ; close all
 
+% ESTABLISH configuation
+% If running from master script ELSE user input the config file
+if exist('config','var')
+    eval(config)
+else 
+    addpath('G:\My Drive\ClimDyn_oct2022_R4\ClimDyn_R4_2022_Matlab\ClimDyn_R4_2022_Matlab\configfiles\')
+    
+ eval('Config_corr_Z500')
+
+end
+toc 
+%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+tic
 site='RICE';
 cor_nr=14;  % (14 dD d18O RICE)
 %%%%%%%%%%%%%%%%%
@@ -45,7 +64,7 @@ corr_label=1; %(1/0) %%%%%%%%%%% Show colorbar and label
 r_value=1; % sign (1)  positive (2) negative r-values in the ABS/Ross Sea region
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-era_name_nr=2; % 
+% era_name_nr=1;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 1. Z500 *
 % 2. 2mT *
@@ -68,7 +87,7 @@ yr_s=1979;
 %yr_e=2009;
 yr_e=2011;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-sea_nr=3;  %%%%%%%%%%          Season
+%sea_nr=3;  %%%%%%%%%%          Season
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 if sea_nr==1
     season='annual';
@@ -86,14 +105,14 @@ proj='stereo';
 
 %        Size:       480x241x421
 %        Dimensions: longitude,latitude,time
- addpath C:\Users\Machine\matlab_lib\Data\ERA_interim
+% addpath C:\Users\Machine\matlab_lib\Data\ERA_interim
 % ncdisp('ERA_int_monthly_z500.nc') 
 % ncdisp('ERA_int_monthly_2m_T.nc');
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % load ERA-interim data
 
-name_c='ERA_int_monthly_z500_2.nc';
+name_c=[data_dir,'ERA_int_monthly_z500_2.nc'];
 
 era_time=ncread(name_c,'time');
 era_long=ncread(name_c,'longitude');
@@ -112,7 +131,7 @@ if strcmp(name,'2mT')==1
     % ECMWF ERA-Inerim (Dee et al. 2011)
     % Monthly means of daily means
     % surface 2mT 
-    name_c='ERA_int_monthly_2m_T_c.nc';
+    name_c=[data_dir,'ERA_int_monthly_2m_T_c.nc'];
     era_T=ncread(name_c,'t2m'); % 2m temp
     era_T=era_T- 273.15;
     %letter='c';
@@ -130,7 +149,7 @@ if strcmp(name,'2mT')==1
     % geopotentail 500 hPa  
      
      
-    name_c='ERA_int_monthly_z500_2.nc'; 
+    name_c=[data_dir,'ERA_int_monthly_z500_2.nc']; 
     era_z500=ncread(name_c,'z'); 
     era_z500=era_z500/9.80665;
        letter='c';
@@ -330,17 +349,17 @@ if strcmp(iso,'dD')==1 || strcmp(iso,'d18O')==1
 %load('C:\PHD\matlab_storage_of_output_files\RICE_combined_Deep_1213B_c19.mat'); % May 2017
 %load('C:\PHD\matlab_storage_of_output_files\RICE_combined_Deep_1213B_c23.mat');
 
-    iso_alt_nr=3;
+%     iso_alt_nr=3;
         
         if iso_alt_nr==1
-             load('C:\Users\benman\matlab_storage_of_output_files\RICE_combined_Deep_1213B_c23.mat');
+             load([filedir,'RICE_combined_Deep_1213B_c23.mat']);
              iso_season_str='annual';
         elseif iso_alt_nr==2
-            load('C:\Users\Machine\matlab_storage_of_output_files\RI_combined_Deep_1213B_annual_means_no_summer_c24.mat'); % MAMJJASON 
+            load([filedir,'RI_combined_Deep_1213B_annual_means_no_summer_c24.mat']); % MAMJJASON 
 %             load('C:\Users\benman\matlab_storage_of_output_files\RI_combined_Deep_1213B_annual_means_no_summer_clim_c24.mat'); % clim removed, no difference
             iso_season_str='nosummer';
         elseif iso_alt_nr==3    
-            load('C:\Users\Machine\matlab_storage_of_output_files\RI_combined_Deep_1213B_annual_means_no_summer_AMJJASON_c24.mat'); % AMJJASON 
+            load([filedir,'RI_combined_Deep_1213B_annual_means_no_summer_AMJJASON_c24.mat']); % AMJJASON 
 %             load('C:\Users\benman\matlab_storage_of_output_files\RI_combined_Deep_1213B_annual_means_no_summer_AMJJASON_clim_c24.mat'); % clim removed, no difference
             iso_season_str='nosummer';           
         end
@@ -617,6 +636,10 @@ if corr_label==1
 
             pos_c(4)=pos_c(4)-0.30;  % height colorbar
             set(h,'pos',pos_c);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+% symbol -
+ h.TickLabels = strrep(h.TickLabels, '-', '–');           
+            
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     if era_name_nr==2
         txt_h=axestext_c(1.001,0.580,'Correlation','rotation',-90,'FontSize',18, 'FontWeight', 'bold'); % 2mT
@@ -903,11 +926,12 @@ elseif corr_label==1 % w. colorbar
         num2str(round(date_annual(start_t))),'_',num2str(round(date_annual(end_t))),proj,'_crop_c2'];
 end
 
-filedir ='C:\Users\Machine\matlab_storage_of_output_files\figures\';
-savefilename_c=strcat(filedir,filename);
+%filedir ='C:\Users\Machine\matlab_storage_of_output_files\figures\';
+savefilename_c=strcat(filedir,'figures\',filename);
 orient landscape
 cd('G:\My Drive\ISO_CFA\matlab')
-export_fig('-pdf','-painters', '-depsc','-opengl', '-r190',savefilename_c); % EPS works  func needs ghostscript  
+export_fig('-pdf','-painters', '-depsc','-opengl', '-r190',savefilename_c); %  func needs ghostscript
+export_fig('-png','-painters', '-depsc','-opengl', '-r190',savefilename_c);
 cd('G:\My Drive\ClimDyn_oct2022_R4\ClimDyn_R4_2022_Matlab\ClimDyn_R4_2022_Matlab')  
 %%%%%%%%%%%%%%%%%%%%
 
