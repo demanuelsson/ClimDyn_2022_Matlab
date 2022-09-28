@@ -146,7 +146,7 @@ if strcmp(name,'2mT')==1
     letter='a';
     lat1=-90;
     lat2=-30; 
-    label_1='�C s.d.^-^1'; 
+    label_1='°C s.d.^−^1'; 
  elseif strcmp(name,'z500')==1 %&& strcmp(season,'annual')==1
     % ECMWF ERA-Inerim (Dee et al. 2011)
     % Monthly means of dail means
@@ -186,7 +186,7 @@ if strcmp(name,'2mT')==1
     lat1=-90; 
     lat2=-50;  
     if type_nr==1
-    label_1='m s^-^1';
+    label_1='m s^−^1';
     end
     
   elseif strcmp(name,'u850')==1   
@@ -197,7 +197,7 @@ if strcmp(name,'2mT')==1
     lat1=-90; 
     lat2=-45;  
     if type_nr==1
-    label_1='m s^-^1';
+    label_1='m s^−^1';
     end
  end
 
@@ -293,7 +293,7 @@ toc
          load('C:\Users\Machine\matlab_storage_of_output_files\ERA-Interim_PCs_z500_lim0-360_-20_-90_1979-2011_AMJJASON_c52_annual_mean_varimax_c2.mat');  %  % AMJJASON 
       end
                
-                  label_1='m s.d.^-^1';
+                  label_1='m s.d.^−^1';
     
     
         if type_nr==1   %%%%%%%%% Annual 
@@ -919,10 +919,10 @@ hold on
   %%%%%%%%%%%%%%%%%%%%%
 % ax=gca;
 % set(ax,'ticklabelinterpreter','none')  %or 'tex' but not 'latex'
-% yticklabels(ax, strrep(yticklabels(ax),'-','�'));
-% xticklabels(ax, strrep(xticklabels(ax),'-','�'));
+% yticklabels(ax, strrep(yticklabels(ax),'-','–'));
+% xticklabels(ax, strrep(xticklabels(ax),'-','–'));
 %cb = colorbar();
-br.TickLabels = strrep(br.TickLabels, '-', '�');
+br.TickLabels = strrep(br.TickLabels, '-', '–');
 %%%%%%%%%%%%%%%%%%%%%%%%%%%          
         
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1331,7 +1331,7 @@ if era_name_nr==1
    era_name_str='Z500';
    title_str=era_name_str;
    lat2=-20;
-   label_1='m s.d.^-^1';
+   label_1='m s.d.^−^1';
    if PC_nr==1
     PC_nr_str='SAM';
     letter='a';
@@ -1361,7 +1361,7 @@ if era_name_nr==1
 elseif era_name_nr==2
    era_name_str='2mT';
    lat2=-30;
-   label_1='�C s.d.^-^1';
+   label_1='°C s.d.^−^1';
    title_str='SAT';
    if PC_nr==1
     PC_nr_str='PC1';
