@@ -13,7 +13,6 @@ ERA_I_RI_corr_regress_DE22
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 HadISST_RI_corr_annual_seasonal_DE22
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 composite_SAM_PSA1_in_phase_ERA_I_z500_2mT_HadISST_SIC_DE22
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 SAT_SIC_z500_RICE_DE22
