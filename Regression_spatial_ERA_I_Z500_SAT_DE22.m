@@ -916,7 +916,15 @@ hold on
             colormap(flipud(cbrewer2('div','PuOr',20))); 
         end
       
-      
+  %%%%%%%%%%%%%%%%%%%%%
+% ax=gca;
+% set(ax,'ticklabelinterpreter','none')  %or 'tex' but not 'latex'
+% yticklabels(ax, strrep(yticklabels(ax),'-','–'));
+% xticklabels(ax, strrep(xticklabels(ax),'-','–'));
+%cb = colorbar();
+br.TickLabels = strrep(br.TickLabels, '-', '–');
+%%%%%%%%%%%%%%%%%%%%%%%%%%%          
+        
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
  % p=0.05 significance level contour      
       
@@ -1289,7 +1297,7 @@ ind_psa_sum_c(ind_nan)=9999;
     end
 
 
- savefilename =[folder_c,filename]; 
+ savefilename =[filedir,filename]; 
 % save(savefilename,'ind_psa_sum'); 
  save(savefilename,'ind_psa_sum_c','ind_psa_sum_nonactive'); 
  toc
