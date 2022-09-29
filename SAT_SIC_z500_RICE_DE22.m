@@ -198,7 +198,7 @@ set(gca,...
     hs89='PC2 SAT';
     hs62='PC3 SAT';
     hs7='Nino-4 SST'; 
-    hs8='ADP (-1)'; 
+    hs8='ADP (âˆ’1)'; 
         
     hs7_c=['r ({\delta}^1^8O, ',hs7,')'];
     hs8_c=['r ({\delta}^1^8O, ',hs8,')'];
@@ -208,11 +208,11 @@ set(gca,...
   set(h_leg, 'location', 'SouthWest','EdgeColor',[0 0 0],'FontSize',18,'FontWeight','bold' ); % ,'color','none'
   
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Change to correct minus symbol
+% Change to correct - symbol
 ax=gca;
 set(ax,'ticklabelinterpreter','none')  %or 'tex' but not 'latex'
-yticklabels(ax, strrep(yticklabels(ax),'-','–'));
-xticklabels(ax, strrep(xticklabels(ax),'-','–'));
+yticklabels(ax, strrep(yticklabels(ax),'-','â€“'));
+xticklabels(ax, strrep(xticklabels(ax),'-','â€“'));
   
   
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -359,14 +359,14 @@ elseif alt==2
     
 set(gca,'XLim',[-0.8 0.8])  
 
- title_str='Nino-4 SST (°C)';
+ title_str='Nino-4 SST (Â°C)';
     
 elseif alt==3 
-  title_str='SAM (m s.d.^-^1)';  
+  title_str='SAM (m s.d.^âˆ’^1)';  
 elseif alt==4 
-  title_str='PSA1 (m s.d.^-^1)';
+  title_str='PSA1 (m s.d.^âˆ’^1)';
 elseif alt==5 
-  title_str='PSA2 (m s.d.^-^1)';  
+  title_str='PSA2 (m s.d.^âˆ’^1)';  
  
 end
 
@@ -422,14 +422,16 @@ x_text=0.1;
 letter='d';
 end
 
- axestext_c(x_text,y_text,['r = ',num2str(round(rp(1)*100)/100),', ',p_level(p(2)),', n_e_f_f = ',num2str(neff)],'FontWeight','bold','FontSize',14 );   
+ r_str=num2str(round(rp(1)*100)/100);
+ r_str_c=strrep(r_str, '-', 'â€“');
+ axestext_c(x_text,y_text,['r = ',r_str_c,', ',p_level(p(2)),', n_e_f_f = ',num2str(neff)],'FontWeight','bold','FontSize',14 );   
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Change to correct minus symbol
 ax=gca;
 set(ax,'ticklabelinterpreter','none')  %or 'tex' but not 'latex'
-yticklabels(ax, strrep(yticklabels(ax),'-','–'));
-xticklabels(ax, strrep(xticklabels(ax),'-','–'));
+yticklabels(ax, strrep(yticklabels(ax),'-','â€“'));
+xticklabels(ax, strrep(xticklabels(ax),'-','â€“'));
  
  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -700,8 +702,8 @@ shade_nr=0;
 % Change to correct minus symbol
 ax=gca;
 set(ax,'ticklabelinterpreter','none')  %or 'tex' but not 'latex'
-yticklabels(ax, strrep(yticklabels(ax),'-','–'));
-xticklabels(ax, strrep(xticklabels(ax),'-','–'));        
+yticklabels(ax, strrep(yticklabels(ax),'-','â€“'));
+xticklabels(ax, strrep(xticklabels(ax),'-','â€“'));        
         
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % save fig
@@ -848,8 +850,8 @@ end
 % Change to correct minus symbol
 ax=gca;
 set(ax,'ticklabelinterpreter','none')  %or 'tex' but not 'latex'
-yticklabels(ax, strrep(yticklabels(ax),'-','–'));
-xticklabels(ax, strrep(xticklabels(ax),'-','–'));
+yticklabels(ax, strrep(yticklabels(ax),'-','â€“'));
+xticklabels(ax, strrep(xticklabels(ax),'-','â€“'));
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % save fig
