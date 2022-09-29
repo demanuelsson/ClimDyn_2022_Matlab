@@ -27,8 +27,11 @@ if exist('config','var')
 else 
     addpath('G:\My Drive\ClimDyn_oct2022_R4\ClimDyn_R4_2022_Matlab\ClimDyn_R4_2022_Matlab\configfiles\')
     
- %eval('Config_corr_Z500')
- eval('Config_corr_SAT')
+ eval('Config_corr_Z500')
+ %eval('Config_corr_SAT')
+ 
+% eval('Config_corr_Z500_Suppl_M')
+ %eval('Config_corr_SAT_Suppl_M') 
  
 end
 toc 
@@ -84,9 +87,9 @@ name='2mT';
 name_str='SAT';
 end
 
-yr_s=1979;
-%yr_e=2009;
-yr_e=2011;
+% yr_s=1979;
+% %yr_e=2009;
+% yr_e=2011;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %sea_nr=3;  %%%%%%%%%%          Season
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -846,7 +849,7 @@ ind_psa_sum_nonactive_c(ind_psa_sum_nonactive_c==0)=NaN;
 % ind_psa_sum_nonactive_c(ind_psa_sum_nonactive_c==-2)=1;
 ind_psa_sum_nonactive_c(ind_psa_sum_nonactive_c==2)=1;
 
- stipple_nr=0; % (1/0) on/off
+%  stipple_nr=0; % (1/0) on/off
  
  if  (stipple_nr==1 && era_name_nr==5) || (stipple_nr==1 && era_name_nr==1)
  
