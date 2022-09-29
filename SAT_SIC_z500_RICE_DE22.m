@@ -729,7 +729,7 @@ close all
 show_two_nr=1; % 0,1 
 
 
-PC_nr=3; % Also used for non PCs index, Nino-4 and ADP 
+PC_nr=1; % Also used for non PCs index, Nino-4 and ADP 
 if PC_nr==1 % SAM 
     column_nr=2;
      letter='a';
