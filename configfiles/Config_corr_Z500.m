@@ -8,3 +8,8 @@ era_name_nr=1;
 sea_nr=3; 
 iso_alt_nr=3;
 
+yr_s=1979;
+yr_e=2011;
+
+stipple_nr=1; % (1/0) on/off
+
