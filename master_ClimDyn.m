@@ -17,3 +17,6 @@ composite_SAM_PSA1_in_phase_ERA_I_Z500_2mT_HadISST_SIC_DE22
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 SAT_SIC_z500_RICE_DE22
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+diffuision_estimate_code_DE22
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Scalogram_script_RI_d18O_DE22
