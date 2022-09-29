@@ -8,3 +8,5 @@ era_name_nr=2;
 sea_nr=3; 
 iso_alt_nr=3;
 
+yr_s=1979;
+yr_e=2011;
