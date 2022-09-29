@@ -17,7 +17,23 @@
 % isotope data sets as well.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% SETUP environment ----
+close all
+fprintf('[\bSetting up environment ... ]\b')
+tic
+% CLEAR environment
+clearvars -except config ; close all
 
+% ESTABLISH configuation
+% If running from master script ELSE user input the config file
+if exist('config','var')
+    eval(config)
+else 
+    addpath('G:\My Drive\ClimDyn_oct2022_R4\ClimDyn_R4_2022_Matlab\ClimDyn_R4_2022_Matlab\configfiles\')
+    eval('Config_diffusion')
+end
+toc 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Set up run options
 
@@ -84,7 +100,7 @@ if core_nr==1
 elseif core_nr==2
     datafile = 'MA_RI_iso_5mm_depth_c2.mat'; % saved from RI_ice_core_iso_depth_age_c23.m line 251
     if path_alt_nr==1
-    path_c1='C:\Users\benman\matlab_storage_of_output_files\';
+    path_c1=filedir;
     elseif path_alt_nr==2
     path_c1='P:\Ice Chemistry\Palmer\Daniel\diffusion_iso\iso_data\';      
     end
@@ -133,6 +149,7 @@ end
 [iso_spec] = create_spectra(method,data,spec_info,ARu,noise_toggle);
 % [iso] = create_spectra(method,data,spec_info,ARu,noise_toggle);
 % edit create_spectra
+% function includes paths to files 
 
 toc
 %% Autofit 
@@ -623,12 +640,11 @@ if save_fig_nr==1
   
 
 filename=['Diffusion_spectra_',site,'_Kahle_',fit_str];
-filedir ='C:\Users\benman\matlab_storage_of_output_files\figures\';
-savefilename_c=strcat(filedir,filename);
+%filedir ='C:\Users\benman\matlab_storage_of_output_files\figures\';
+savefilename_c=strcat(filedir,'figures\',filename);
 
  % save as png 
 orient landscape
-% increase quality of picture by increase to -r500
  export_fig('-png','-painters', '-depsc','-opengl', '-r190',savefilename_c);  % ,'-nocrop'         
  export_fig('-pdf','-painters', '-depsc','-opengl', '-r190',savefilename_c);  % ,'-nocrop'  
 
@@ -636,13 +652,10 @@ end
 
 
 % save all fit parameters
-save_MA_nr=1;
+save_MA_nr=0;
 
 if save_MA_nr==1
-filedir ='C:\Users\benman\matlab_storage_of_output_files\';    
-
-
-
+%filedir ='C:\Users\benman\matlab_storage_of_output_files\';    
    end_str='_c1';
    chem_str='iso';
    type_str='depth';
@@ -821,7 +834,7 @@ auto_sigmaD_de_a=auto_sigmaD_de./lamb_vq;
 
 %%%%%%%%% time
 
- [excel_layer_depth,reporttxt] = xlsread('C:\Users\benman\Google Drive\ISO_CFA\Age scale 2017\rice_2700-year_timescale_and_accumulation_updatedapr2018.csv'); % 2018  May, Winstrup
+ [excel_layer_depth,reporttxt] = xlsread('G:\My Drive\ISO_CFA\Age scale 2017\rice_2700-year_timescale_and_accumulation_updatedapr2018.csv'); % 2018  May, Winstrup
 
 
 % auto_age_d18o
@@ -847,14 +860,15 @@ legend('\delta^{18}O','\deltaD')
 save_fig=1;
 if save_fig==1
     filename=['Diffusion_length_yr_',site,'_spectral_Kahle_',fit_str];
-    filedir ='C:\Users\benman\matlab_storage_of_output_files\figures\';
-    savefilename_c=strcat(filedir,filename);
+%    filedir ='C:\Users\benman\matlab_storage_of_output_files\figures\';
+    savefilename_c=strcat(filedir,'figures\',filename);
 
     % save as png 
     orient landscape
-    % increase quality of picture by increase to -r500
+    cd('G:\My Drive\ISO_CFA\matlab')
     export_fig('-png','-painters', '-depsc','-opengl', '-r190',savefilename_c);  % ,'-nocrop'         
-    export_fig('-pdf','-painters', '-depsc','-opengl', '-r190',savefilename_c);  % ,'-nocrop' 
+    export_fig('-pdf','-painters', '-depsc','-opengl', '-r190',savefilename_c);  % ,'-nocrop'
+    cd('G:\My Drive\ClimDyn_oct2022_R4\ClimDyn_R4_2022_Matlab\ClimDyn_R4_2022_Matlab') 
 end
 
 
@@ -873,7 +887,7 @@ end
 tic
 if path_alt_nr==1 
 [excel_layer_depth,reporttxt] =...
-    xlsread('C:\Users\benman\Google Drive\ISO_CFA\Age scale 2017\rice_2700-year_timescale_and_accumulation_updatedapr2018.csv');
+    xlsread('G:\My Drive\ISO_CFA\Age scale 2017\rice_2700-year_timescale_and_accumulation_updatedapr2018.csv');
 elseif path_alt_nr==2
 [excel_layer_depth,reporttxt] =...
     xlsread('P:\Ice Chemistry\Palmer\Daniel\diffusion_iso\iso_data\rice_2700-year_timescale_and_accumulation_updatedapr2018.csv');    
