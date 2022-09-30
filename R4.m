@@ -10,15 +10,49 @@
     title_str2='SAM';
 
     
-    f1=fig('units','inches','width',11.5,'height',7.5,'font','Helvetica','fontsize',18,'border','on');
+    f1=fig('units','inches','width',11.5,'height',6.5,'font','Helvetica','fontsize',18,'border','on');
     box on
     
-    figure
-    plot(MA_PCs_save(:,1),MA_PCs_save(:,2),'-*')
+    plot(MA_PCs_save(:,1),MA_PCs_save(:,2),'-*k','linewidth',3)
     hold on
     yrs=[1979:2015]';
-    plot(yrs,SAM_x,'.-r')
+    plot(yrs,SAM_x,'*-r','linewidth',3)
     
-    legend('SAM this study', 'SAM NOAA')
+    legend('SAM this study', 'SAM NOAA','Location','northwest')
+    
+    
+                     set(gca,...
+          'linewidth',3,...
+          'FontWeight','bold' ); 
+      
+  xlabel('Year','FontWeight','bold','FontSize',18 );   
+  ylabel('SAM','FontWeight','bold','FontSize',18 );  
+      
+      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Change to correct - symbol
+ax=gca;
+set(ax,'ticklabelinterpreter','none')  %or 'tex' but not 'latex'
+yticklabels(ax, strrep(yticklabels(ax),'-','–'));
+xticklabels(ax, strrep(xticklabels(ax),'-','–'));
+      
+    
+    
+    save_fig=1;
+if save_fig==1
+    site='RI';
+    filename=['SAM_indices_comparison'];
+    filedir ='C:\Users\Machine\matlab_storage_of_output_files\figures\';
+    savefilename_c=strcat(filedir,filename);
+
+    % save as png 
+    orient landscape
+    cd('G:\My Drive\ISO_CFA\matlab')
+    export_fig('-png','-painters', '-depsc','-opengl', '-r190',savefilename_c);  % ,'-nocrop'         
+    export_fig('-pdf','-painters', '-depsc','-opengl', '-r190',savefilename_c);  % ,'-nocrop'
+    cd('G:\My Drive\ClimDyn_oct2022_R4\ClimDyn_R4_2022_Matlab\ClimDyn_R4_2022_Matlab')  
+end 
+    
+    
+    
     
     
