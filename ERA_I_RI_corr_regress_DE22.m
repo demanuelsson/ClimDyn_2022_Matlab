@@ -27,11 +27,11 @@ if exist('config','var')
 else 
     addpath('G:\My Drive\ClimDyn_oct2022_R4\ClimDyn_R4_2022_Matlab\ClimDyn_R4_2022_Matlab\configfiles\')
     
- eval('Config_corr_Z500')
+ %eval('Config_corr_Z500')
  %eval('Config_corr_SAT')
  
-% eval('Config_corr_Z500_Suppl_M')
- %eval('Config_corr_SAT_Suppl_M') 
+ %eval('Config_corr_Z500_Suppl_M')
+ eval('Config_corr_SAT_Suppl_M') 
  
 end
 toc 
