@@ -29,8 +29,8 @@ if exist('config','var')
 else 
     addpath('G:\My Drive\ClimDyn_oct2022_R4\ClimDyn_R4_2022_Matlab\ClimDyn_R4_2022_Matlab\configfiles\')
 
- eval('Config_corr_SIC')
- %eval('Config_corr_SIC_suppl_m')
+ %eval('Config_corr_SIC')
+ eval('Config_corr_SIC_suppl_m')
  
 end
 toc 
