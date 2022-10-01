@@ -29,8 +29,8 @@ if exist('config','var')
 else 
     addpath('G:\My Drive\ClimDyn_oct2022_R4\ClimDyn_R4_2022_Matlab\ClimDyn_R4_2022_Matlab\configfiles\')
 
- %eval('Config_corr_SIC')
- eval('Config_corr_SIC_suppl_m')
+ eval('Config_corr_SIC')
+ %eval('Config_corr_SIC_suppl_m')
  
 end
 toc 
@@ -39,7 +39,7 @@ tic
 
 % Input
 
-param_nr=2;% (1-SST/ 2 SIC)
+% param_nr=2;% (1-SST/ 2 SIC)
 
 % SST_dataset=1; % (1-HadISST, 2-ERSST) 
 
@@ -47,16 +47,12 @@ rcontour_psa=0; %(0)(1) show where PSA pattern overlap interferance (2) shows wh
 
 % coast_nr=1;  % On/Off
     
-if param_nr==2
-    name='SIC';
-end
- 
+% if param_nr==2
+%     name='SIC';
+% end
+%  
 
-  letter='e';
-  
-  if yr_e==2009
-  letter='c';    
-  end
+
   
 %%%%%%%%%%%%%%%%%%%%%
 % sea_nr=3;
@@ -73,42 +69,42 @@ end
  show_title=4; % (1)-long (2)-short (3) use for Interval SIC figure  (4) r (x,y)
   
         
- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
- Int_in=0; %%% turn (1/0) on/off, turn on for Fig 10a, b 
- 
- interval_nr=2; %(2, 3, 4)%%%%%%%%%%%%%%%%%%% 2,3 in use for both SST and SIC
- 
- if  Int_in==1
-     
-       alt_pc=2;
-    
-    if  interval_nr==2 %%%%%%%%%%%%%%%%%% used change name, in-phase
-
-        yr_s=1994;
-        yr_e=2001;
-        letter='b';
-        show_title=3;
-                
-    elseif  interval_nr==3 %%%%%%%%%%%%%%%%%% used change name, not in-phase
-
-        yr_s=1979; % 
-        yr_e=1993;
-        letter='a';
-        show_title=3;
-        
-    elseif  interval_nr==4 % out-of-phase
-      
-        yr_s=2005; % 
-        yr_e=2011;
-        letter='c';
-        show_title=3;       
-    end
-    
- else
-    
-       alt_pc=0; % dont show stippling
-
- end
+%  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  Int_in=0; %%% turn (1/0) on/off, turn on for Fig 10a, b 
+%  
+%  interval_nr=2; %(2, 3, 4)%%%%%%%%%%%%%%%%%%% 2,3 in use for both SST and SIC
+%  
+%  if  Int_in==1
+%      
+%        alt_pc=2;
+%     
+%     if  interval_nr==2 %%%%%%%%%%%%%%%%%% used change name, in-phase
+% 
+%         yr_s=1994;
+%         yr_e=2001;
+%         letter='b';
+%         show_title=3;
+%                 
+%     elseif  interval_nr==3 %%%%%%%%%%%%%%%%%% used change name, not in-phase
+% 
+%         yr_s=1979; % 
+%         yr_e=1993;
+%         letter='a';
+%         show_title=3;
+%         
+%     elseif  interval_nr==4 % out-of-phase
+%       
+%         yr_s=2005; % 
+%         yr_e=2011;
+%         letter='c';
+%         show_title=3;       
+%     end
+%     
+%  else
+%     
+%        alt_pc=0; % dont show stippling
+% 
+%  end
  
 %%%%%%%%%%%%%%%%
  
@@ -118,12 +114,12 @@ end
  p_level_rc=0.05; % p level choose 0.1 for figures 0.05 for SST time series
  
 %%%%%%%%%%%%%%%%%%%%%%%  
-if  strcmp(name,'SIC')==1
-  proj='stereo';
-  lat1=-90;
-  lat2=-50;
-  box_use=0;  % (0/1)  
-end
+% if  strcmp(name,'SIC')==1
+%   proj='stereo';
+%   lat1=-90;
+%   lat2=-50;
+%   box_use=0;  % (0/1)  
+% end
   
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % HadISST data
