@@ -14,7 +14,13 @@ iso_alt_nr=3;
   proj='stereo';
   lat1=-90;
   lat2=-50;
-  box_use=0;  % (0/1)  
+  lon1=0;
+  lon2= 360;
+  
+  color_alt=6; 
+  
+  box_use=0;  % (0/1)
+  RSAS_SIC_box=0;
 
 
 
