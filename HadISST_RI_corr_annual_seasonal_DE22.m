@@ -29,8 +29,9 @@ if exist('config','var')
 else 
     addpath('G:\My Drive\ClimDyn_oct2022_R4\ClimDyn_R4_2022_Matlab\ClimDyn_R4_2022_Matlab\configfiles\')
 
- eval('Config_corr_SIC')
- %eval('Config_corr_SIC_suppl_m')
+ % eval('Config_corr_SIC')
+ % eval('Config_corr_SIC_suppl_m')
+ eval('Config_corr_SST')
  
 end
 toc 
@@ -150,7 +151,9 @@ end
     
          %   name='ice'; 
         HadISST_ice=ncread(name_c,'sic'); % 360x180x1728 lon x lat x time
-        M=HadISST_ice;   
+        M=HadISST_ice;
+        
+        
     
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % HadISST_count=1705; % that overlaps with RICE record 1979-2011
@@ -382,17 +385,17 @@ end
  tic
   lock_scalebar=1;%%%%%%%%%%%%%%%%%%%%%%%
    
-  if Int_in==1
-    RSAS_SIC_box=0;    
-  elseif Int_in==0    
-    RSAS_SIC_box=0; % (1) area defined using RICE corr pattern (2) ADP following Yuan 2004
-  end
+%   if Int_in==1
+%     RSAS_SIC_box=0;    
+%   elseif Int_in==0    
+%     RSAS_SIC_box=0; % (1) area defined using RICE corr pattern (2) ADP following Yuan 2004
+%   end
   
  %%%%%%%
 
   f2=fig('units','inches','width',10.5,'height',10.5,'font','Helvetica','fontsize',16,'border','on'); 
 
-  axesm( 'stereo','MapLatLimit',[lat1 lat2],'Grid','on',...
+  axesm( proj,'MapLatLimit',[lat1 lat2],'MapLonLimit',[lon1 lon2],'Grid','on',...
       'Frame','on','ParallelLabel','on',...
        'MeridianLabel','on','FontWeight','bold','FontSize',18, 'mlabellocation',[0:-30:-360, 0:30:180]); 
  
@@ -472,11 +475,11 @@ colormap(b2r(-c_limit,c_limit));
 %colormap(jet);
 % colormap(brewermap(256,'*RdBu'))
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-if Int_in==1 % color for Fig. 10
-   color_alt=1;   
-else
-    color_alt=6;    
-end
+% if Int_in==1 % color for Fig. 10
+%    color_alt=1;   
+% else
+%     color_alt=6;    
+% end
 
 
 if color_alt==1
