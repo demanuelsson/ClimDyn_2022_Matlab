@@ -70,16 +70,16 @@ end
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        yr_nr_s=1;%%%%%%%%%%%
-        
-        if yr_nr_s==1
+         yr_nr_s=1;%%%%%%%%%%%
+%         
+%         if yr_nr_s==1
             yr_s=1979;
             yr_e=2011;
-        elseif yr_nr_s==2 % uesd in Fig. 11c
-            yr_s=2000;
-          %  yr_e=2013; 
-            yr_e=2011; 
-        end
+%         elseif yr_nr_s==2 % uesd in Fig. 11c
+%             yr_s=2000;
+%           %  yr_e=2013; 
+%             yr_e=2011; 
+%         end
         
     
 
