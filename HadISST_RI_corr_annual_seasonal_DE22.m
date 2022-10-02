@@ -29,12 +29,13 @@ if exist('config','var')
 else 
     addpath('G:\My Drive\ClimDyn_oct2022_R4\ClimDyn_R4_2022_Matlab\ClimDyn_R4_2022_Matlab\configfiles\')
 
- % eval('Config_corr_SIC')
+  eval('Config_corr_SIC')
  % eval('Config_corr_SIC_suppl_m')
- eval('Config_corr_SST')
+ %eval('Config_corr_SST')
  
 end
-toc 
+toc
+%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 tic
 
@@ -149,9 +150,14 @@ end
     HadISST_lon=ncread(name_c,'longitude');
     
     
-         %   name='ice'; 
+         if strcmp(name,'SIC') 
         HadISST_ice=ncread(name_c,'sic'); % 360x180x1728 lon x lat x time
         M=HadISST_ice;
+         elseif strcmp(name,'SST')
+        name_c=[data_dir,'HadISST_sst_c.nc'];     
+        HadISST_sst=ncread(name_c,'sst'); % 360x180x1728 lon x lat x time
+        M=HadISST_sst;
+         end
         
         
     
@@ -645,13 +651,11 @@ if coast_nr==1
     lon_cr(in_c)=NaN;
 
     %%%%%%%%%%%%%
-
-%    addpath C:\Users\benman\matlab_mapping
-        if strcmp(name,'SIC')==1
+%         if strcmp(name,'SIC')==1
             color_code=[.4 .4 .4];    
             plot3m(lat_cr,lon_cr,'-','LineWidth', 2,'color',color_code);
             bedmap2('gl','LineWidth', 2,'color',color_code);
-        end
+%         end
 
     bedmap2('gl','LineWidth', 2, 'color',color_code );
     bedmap2('patchshelves','LineWidth', 1.0,'facecolor','none','frame','on','edgecolor',color_code)
