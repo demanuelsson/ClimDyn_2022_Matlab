@@ -206,16 +206,16 @@ toc
  
  
 %%%
-
-HadISST_year_num(HadISST_start);
-HadISST_year_num(HadISST_count);
+% check
+% HadISST_year_num(HadISST_start);
+% HadISST_year_num(HadISST_count);
 
 % HadISST_year_num()-HadISST_year_num()
 % HadISST_start:HadISST_count
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % run from start if year is changed above
 % (360x180x1728) (Long,Lat,month)
-toc
+% toc
 %%
 fprintf('[\bSeasonal anomaly fields ]\b')
 tic
@@ -821,7 +821,7 @@ s_all_c(p_all>=p_level_rc)=NaN;
 fig('units','inches','width',14,'height',9,'font','Helvetica','fontsize',16,'border','on');
 %%%%%%%%%%%
 if param_nr==1
-   axesm( proj,'MapLatLimit',[lat1+adj_nr lat2],'MapLonLimit',[lon1 lon2],'Grid','on','ParallelLabel','on','Frame','on',... %
+   axesm( proj,'MapLatLimit',[lat1+adj_nr lat2],'MapLonLimit',[lon1 lon2],'Grid','off','ParallelLabel','on','Frame','on',... %
        'MeridianLabel','on','FontWeight','bold','FontSize',14,...
        'mlabellocation',[0:60:360]);
    
@@ -839,56 +839,44 @@ elseif param_nr==2 % stereo
    
    
 end
-   %Frame - around figure
-   
-   
-%        axesm('MapProjection','mercator','FLatLimit',[-80 20],'MapLonLimit',[lon1 lon2],'ParallelLabel','on','MeridianLabel','on',...
-%      'FontWeight','bold','FontSize',14) 
-  
-   set(gca,'box','off','XColor',[1,1,1],'YColor',[1,1,1]);  % turns off border box and axes  
+   %Frame - around figure 
+   set(gca,'box','off','XColor',[1,1,1],'YColor',[1,1,1]);  % turns off border box and axes (that would be outside of the main map otherwise)  
 
-% pcolor(era_long,era_lat,squeeze(b(1,:,:))'); shading flat; colorbar;
-
-%%%%
-%hSurf=surfm(double(era_lat),double(era_long),squeeze(b(1,:,:))');
-
-% s_all_c_in=logical(s_all_c_in);
-%  s_all_c(s_all_c_in)=NaN;
 
 wr_cc=squeeze(s_all_c(:,:,1))';
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-if SST_dataset==2 % ERSST
-    
-    
-    [ab, ac]=size(wr_cc);
-    
-    for i=1:ab
-        for j=1:ac
-           
-            
-%            if j<=91 % 'New Guinea', ,'North and South America'
-%                 wr_d=landmask(HadISST_lat(i),HadISST_lon(j),'Australia');
-%            else
-%                 wr_d=landmask(HadISST_lat(i),360-HadISST_lon(j),'Australia');
+% if SST_dataset==2 % ERSST
+%     
+%     
+%     [ab, ac]=size(wr_cc);
+%     
+%     for i=1:ab
+%         for j=1:ac
+%            
+%             
+% %            if j<=91 % 'New Guinea', ,'North and South America'
+% %                 wr_d=landmask(HadISST_lat(i),HadISST_lon(j),'Australia');
+% %            else
+% %                 wr_d=landmask(HadISST_lat(i),360-HadISST_lon(j),'Australia');
+% %            end
+%            
+%            
+% %            if wr_d==1
+% 
+%            if wr_cc(i,j)==0
+%              
+%            wr_cc(i,j)=NaN;
+%            
 %            end
-           
-           
-%            if wr_d==1
-
-           if wr_cc(i,j)==0
-             
-           wr_cc(i,j)=NaN;
-           
-           end
-            
-        end
-    end
-    
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
-
-  
-end
+%             
+%         end
+%     end
+%     
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
+% 
+%   
+% end
 
 %%%%%%%%%%%%%%%%%%%%
 
@@ -898,18 +886,15 @@ hSurf=surfm(double(HadISST_lat),double(HadISST_lon),wr_cc);
  colormap(b2r(-c_limit,c_limit));
 %%%%%%%%
 
-% ylim([-90 0]);
 br=colorbar;
-
 %The position arguments are [xposition yposition width height].
-
         pos=get(br,'Position');
                 pos(1)=pos(1)+x_move_colorbar; 
                 pos(2)=pos(2)+y_move_colorbar;
                 pos(3)=pos(3)+adj_width;  % widthcolorbar
                 pos(4)=pos(4)+adj_height;  % height colorbar
         set(br,'Position',pos)
-        br.TickLabels = strrep(br.TickLabels, '-', '–');% changes to minus symbol
+        br.TickLabels = strrep(br.TickLabels, '-', 'â€“');% changes to minus symbol
 
         if color_alt==1
             colormap(brewermap(256,'*RdBu'));
@@ -935,10 +920,6 @@ br=colorbar;
     % Wilks test
     h1= contourm( double(HadISST_lat),double(HadISST_lon),p_fdr_rej', [0.05],'-','ShowText','off',...
     'Linecolor',co_pa,'LineWidth', line_w_nr);
-
-
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 if coast_nr==1
     load coast
@@ -973,40 +954,20 @@ bedmap2('patchshelves','LineWidth', 1.0,'facecolor','none','frame','on','edgecol
 end
 %%%%%%%%%%%%%%%%%%%%
 
-
-% label_size=16;
 label_size=20;
-
-% if cor_nr==4
-%     a1=axestext_c(0.04, +0.05, ['(',label_1,')'] );
-% else
-%     a1=axestext_c(0.1, -0.04, ['(',label_1,' ', label_2,')'] );
-% % text(-1.9,-1.8, [label_1,' ', label_2],'FontWeight','bold','FontSize',label_size,'rotation',90); 
-% end
-% set(a1,'FontWeight','bold','FontSize',label_size,'rotation',90);
-
-
-
-
 label_vert=-300;
 label_across=-64.9;
 mlabel('MLabelParallel',label_across,'PLabelLocation',[-75 -60 -45 -30 -15  0 15 ],'PLabelMeridian',label_vert) 
 % 'MLabelLocation',[ -120 -60  0 60 120 180],
 
-
-
-
     
     if  iso_nr==7
                  
-         label_1='°C s.d.^-^1'; % per nomralized unit standard deviation
-         
-         
+         label_1='Â°C s.d.^âˆ’^1'; % per nomralized unit standard deviation   
          if param_nr==1
 
          elseif param_nr==2
-          label_1='SIC';   
-     
+          label_1='SIC';
          end
          
          
@@ -1024,391 +985,50 @@ mlabel('MLabelParallel',label_across,'PLabelLocation',[-75 -60 -45 -30 -15  0 15
             elseif fact==-1
             pc_str='PSA2';
             end
-        end
-        
-      elseif   iso_nr==6
-        
-          pc_str='PPA';
-          label_1='SIC'; 
-          x_lab=1.04;y_lab=0.43;
-          letter='';
-          PC_nr=0;
-        
-      elseif   iso_nr==8
-          
-            if nino_nr==4
-            pc_str='Niño-4';
-            elseif nino_nr==34
-            pc_str='Niño-3.4';
-            elseif nino_nr==12
-            pc_str='Niño-1+2'; 
-            end
-        label_1='°C s.d.^-^1'; 
-        x_lab=0.920;y_lab=0.70;
-        
- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%       
-      elseif   iso_nr==16 % SST PCs tropical Pacific
-          
-       
-            pc_str='SST PC';
-
-        label_1='°C s.d.^-^1'; 
-        x_lab=0.920;y_lab=0.70;
-          
-           if PC_nr==2
-              pc_str='HadISST EOF1';
-
-                if yr_s==1871
-                variance_exp=54; %1871          
-              
-                elseif yr_s==1950
-                %variance_exp=52; %1950
-                variance_exp=62; %1950 narrower region 20S-20N
-                
-                elseif yr_s==1979
-%                 variance_exp=54; %1979
-                variance_exp=64; %1979
-
-                end
-                
-           elseif  PC_nr==3
-              pc_str='HadISST EOF2';
-              
-              if yr_s==1871
-                variance_exp=10; %1871
-              elseif yr_s==1950
-%                 variance_exp=11; %1950
-                variance_exp=12; %1950 narrower region 20S-20N
-              elseif yr_s==1979
-%                 variance_exp=12; %1979   
-                variance_exp=14; %1979 
-              end
-              
-           elseif  PC_nr==4
-              pc_str='HadISST EOF3'; 
-              if yr_s==1950
-              variance_exp=6; %1950 narrower region 20S-20N
-              
-              elseif yr_s==1979
-              variance_exp=4; %1950 narrower region 20S-20N
-              
-              end
-              
-           elseif  PC_nr==5
-              pc_str='HadISST EOF4'; 
-              if yr_s==1950
-              variance_exp=3; %1950 narrower region 20S-20N
-              
-              elseif yr_s==1979
-              variance_exp=3; %1950 narrower region 20S-20N
-              
-              end
-              
-              
-              
-           end
-           
-   a2=axestext_c(0.98, +1.0-0.001, [num2str(variance_exp),'%'] );
-   set(a2,'FontWeight','bold','FontSize',label_size);
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%       
-      elseif   iso_nr==17 % ERSST SST PCs tropical Pacific
-          
-       
-            pc_str='SST PC';
-
-        label_1='°C s.d.^-^1'; 
-        x_lab=0.920;y_lab=0.70;
-          
-           if PC_nr==2
-              pc_str='ERSST EOF1';
-
-                if yr_s==1871
-                variance_exp=54; %1871          
-              
-                elseif yr_s==1950
-                %variance_exp=52; %1950
-                variance_exp=53; %1950 narrower region 20S-20N
-                
-                elseif yr_s==1979
-%                 variance_exp=54; %1979
-                variance_exp=64; %1979
-
-                end
-                
-           elseif  PC_nr==3
-              pc_str='ERSST EOF2';
-              
-              if yr_s==1871
-%                 variance_exp=10; %1871
-              elseif yr_s==1950
-%                 variance_exp=11; %1950
-                variance_exp=11; %1950 narrower region 20S-20N
-              elseif yr_s==1979
-%                 variance_exp=12; %1979   
-%                 variance_exp=14; %1979 
-              end
-              
-           elseif  PC_nr==4
-              pc_str='ERSST EOF3'; 
-              if yr_s==1950
-              variance_exp=10; %1950 narrower region 20S-20N
-              elseif yr_s==1979
-%               variance_exp=4; %1950 narrower region 20S-20N
-              
-              end
-           end
-           
-   a2=axestext_c(0.98, +1.0-0.001, [num2str(variance_exp),'%'] );
-   set(a2,'FontWeight','bold','FontSize',label_size);                                   
-           
-   
-   
-   
-   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%        
-      elseif   iso_nr==9 ||  iso_nr==10
-            if  iso_nr==9
-                pc_str='Trend';
-                
-                if param_nr==1
-              	label_1='°C decade^-^1';
-                x_lab=0.920;y_lab=0.74;
-                
-                elseif param_nr==2
-                label_1='% decade^-^1';
-                
-                    alt_cp1=2;%%%%
-                    
-                    if alt_cp1==1
-                    x_lab=0.920;y_lab=0.64;
-                    elseif alt_cp1==2
-                    x_lab=1.075;y_lab=0.34;
-                    elseif alt_cp1==3
-                    x_lab=1.025;y_lab=0.10;
-              
-                    
-                    end
-                    
-                end
-                
-           
-            elseif  iso_nr==10
-                
-                        if     index_nr==1
-                        pc_str='PDO';  
-                        elseif  index_nr==2
-                        pc_str='IPO';  
-                        end
-                       
-                        label_1='°C s.d.^-^1'; % per nomralized unit standard deviation
-                        
-      x_lab=0.920;y_lab=0.67;      
-                        
-          
-            end
-      
-  
-                   elseif  iso_nr==11
-                        pc_str='SAM Fogt';  
-                        label_1='°C s.d.^-^1'; % per nomralized unit standard deviation     
-                     x_lab=0.920;y_lab=0.67;    
-                     
-                     
-                    elseif  iso_nr==12
-                        pc_str='SST Aus';  
-                        label_1='°C s.d.^-^1'; % per nomralized unit standard deviation     
-                        x_lab=0.920;y_lab=0.67;
-                        
-                    elseif  iso_nr==14
-                            if el_nino_type==1
-                            pc_str='CP';
-                            elseif el_nino_type==2
-                            pc_str='EP';
-                            elseif el_nino_type==12
-                            pc_str='CP alt 2';
-                            end
-                            
-                            
-                               if param_nr==1
-                                label_1='°C s.d.^-^1'; % per nomralized unit standard deviation     
-                                x_lab=0.920;y_lab=0.67;  
-                        
-                              elseif param_nr==2
-                                label_1='SIC';   
-                                %x_lab=1.04;y_lab=0.42;
-                                
-                                x_lab=1.1;y_lab=0.44;
-                                
-                               end
-                              
-                    elseif  iso_nr==15  
-                        label_size=26;
-                        if PC_nr==2
-                        pc_str='PC1';
-                                    if SIC_PCs_alt==1
-                                    variance_exp=17;
-                                    elseif SIC_PCs_alt==2
-                                    variance_exp=17;
-                                    elseif SIC_PCs_alt==5
-                                    variance_exp=17;
-                                    
-                                    elseif SIC_PCs_alt==4
-                                    variance_exp=15;
-                                    
-                                   end
-                                    a2=axestext_c(0.95, +0.96, [num2str(variance_exp),'%'] );
-                                    set(a2,'FontWeight','bold','FontSize',label_size);
-                        
-                                    
-%                                             lon_b_c=[-150 -150 -140 -130 -120 -110 -100 -90 -80 -70 -60 -50 -40 -30 -30 -150];
-%                                             lat_b_c=[ -90 -65   -65  -65  -65  -65  -65 -65 -65 -65 -65 -65 -65 -65 -90 -90];
-%                                             plotm(lat_b_c,lon_b_c,'-','LineWidth',3,'Color',[1.0 0.0 .4])  
-                                            
-                                            
-                                            lon_b_c=[-30 -40 -50 -60 -70 -80 -90 -100 -110 -120 -130 -140 -150   -150 -140 -130 -120 -110 -100 -90 -80 -70 -60 -50 -40 -30 -30 ];
-                                            lat_b_c=[-75 -75 -75 -75 -75 -75 -75  -75  -75  -75  -75  -75  -75   -64   -64  -64  -64  -64  -64 -64 -64 -64 -64 -64 -64 -64 -75 ];
-                                            plotm(lat_b_c,lon_b_c,'-','LineWidth',3,'Color',[1.0 0.0 .4])  
-                                            
-                                            
-                                            
-                                            
-                        
-                        
-                        elseif PC_nr==3
-                        pc_str='PC2';
-                                     if SIC_PCs_alt==1
-                                    variance_exp=11;
-                                     elseif SIC_PCs_alt==2
-                                    variance_exp=11; 
-                                    elseif SIC_PCs_alt==5  %%%
-                                    variance_exp=12;
-                                    elseif SIC_PCs_alt==4
-                                    variance_exp=10;
-                                     end
-                                    a2=axestext_c(0.95, +0.96, [num2str(variance_exp),'%'] );
-                                    set(a2,'FontWeight','bold','FontSize',label_size);
-                                    
-                       elseif PC_nr==4
-                        pc_str='PC3';
-                                     if SIC_PCs_alt==1
-                                    variance_exp=11;
-                                     elseif SIC_PCs_alt==2
-                                    variance_exp=8; 
-                                    elseif SIC_PCs_alt==5 %%%%
-                                    variance_exp=8;
-                                    elseif SIC_PCs_alt==4
-                                    variance_exp=10;
-                                     end
-                                    a2=axestext_c(0.95, +0.96, [num2str(variance_exp),'%'] );
-                                    set(a2,'FontWeight','bold','FontSize',label_size);              
-                        
-                        
-                        end
-                               
-                               if param_nr==2
-%                                 label_1='SIC s.d.^-^1';   
-                                label_1='SIC';   
-%                                 x_lab=1.04; y_lab=0.41;
-                               x_lab=1.09;y_lab=0.45;
-                               end      
-            
+        end         
     end
     
-%     if type_nr==2
-%         season='monthly';
-%     end
-
-    
-    
-%    t4=title([ pc_str  ,' ',season  ]);
-
 
 if type_nr==1
-type_str=[];
+    type_str=[];
 elseif type_nr==2 && sea_nr==1
     season=[];
     type_str='monthly';
 elseif type_nr==2
-type_str='monthly';
+    type_str='monthly';
 end
 
 
 
-
+if show_title==1
       if param_nr==1  
       t4=title([ pc_str  ,' SST regression ',season,' ',type_str,' ',num2str(yr_s),'-',num2str(yr_e) ]);
-      elseif param_nr==2 %&& ( PC_nr==2 || PC_nr==4 || PC_nr==999)
-     t4=title([ pc_str  ,' SIC regression ',season,' ',type_str,' ',num2str(yr_s),'-',num2str(yr_e) ]);   
-%      elseif param_nr==2 && (PC_nr==3 )%|| PC_nr==4)
-%      t4=title([ pc_str  ,'(-1) SIC regression ',season,' ',type_str,' ',num2str(yr_s),'-',num2str(yr_e) ]); 
-
+      elseif param_nr==2 
+     t4=title([ pc_str  ,' SIC regression ',season,' ',type_str,' ',num2str(yr_s),'-',num2str(yr_e) ]);
       end
       
  if type_nr==1
 type_str='annaul';     
  end    
-      
-      
-% set(t4,'FontWeight','bold','FontSize',20)
-
+ 
         pos=get(t4,'Position');
-        
-        if iso_nr==10 || iso_nr==9  
-%         pos(2)=pos(2)-0.24;
-        
-              pos(2)=pos(2)-0.06;
-%         elseif iso_nr==9 && param_nr==2  
-%         pos(2)=pos(2)-0.15; % -0.35;
-        elseif  (iso_nr==16 || iso_nr==17)  && param_nr==1
         pos(2)=pos(2)-0.06;
-
-        elseif iso_nr==6 || (iso_nr==7 || iso_nr==14  || iso_nr==15 ) && param_nr==2  
-        pos(2)=pos(2)-0.06;
-%         elseif iso_nr==9 && param_nr==2 
-%             
-%         pos(2)=pos(2)-0.28;  
-        
-        else
-        pos(2)=pos(2)-0.16;  
-        end
-        
         set(t4,'Position',pos,'FontSize',16, 'FontWeight', 'bold');    
 
-
-        
-        
-        
-        
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        
-%         letter_size=28;
-%         
-%         if param_nr==2
-%          letter_size=36;    
-%         end
+end    
         
         %%%%%%%%%%%%%%%%%%%%%%%%%%%
           TextBox = uicontrol('style','text');
           set(TextBox,'String',letter,'position',letter_pos,'FontWeight','bold','FontSize',letter_size ); % x position y position xsize ysize
           set(TextBox,'foregroundcolor', [0 0 0], ...
          'backgroundcolor', [1 1 1]);
-     
-
-     
-     
-     if param_nr==2 && ( iso_nr==7 ||  iso_nr==15)
          
+     if param_nr==2 && ( iso_nr==7 ||  iso_nr==15)    
            a1=axestext_c(x_lab,y_lab, [' '] );
-         
      else
-         
          a1=axestext_c(x_lab,y_lab, ['(',label_1,')'] );
-         
      end
-     
-     
 
-     
-% text(-1.9,-1.8, [label_1,' ', label_2],'FontWeight','bold','FontSize',label_size,'rotation',90); 
 label_size2=18;
 set(a1,'FontWeight','bold','FontSize',label_size2,'rotation',90);
      
@@ -1417,17 +1037,10 @@ set(a1,'FontWeight','bold','FontSize',label_size2,'rotation',90);
     end    
     %%%%%%%%%%%%
     
-     gridm('GLineStyle','--','Gcolor',[.1 .1 .1],'GLineWidth',1.5,...
-    'MLineLimit',[lat1 lat2],'Galtitude', .02)
+%      gridm('GLineStyle','--','Gcolor',[.5 .5 .5],'GLineWidth',1.0,...
+%     'MLineLimit',[lat1 lat2],'Galtitude', .02)
 
-
-% %%%%%%%%%%%%areas of PSA1 and PSA2 overlap%%%%%%%%%%%%%%%%%%%%%%%%
-% folder_c='C:\PHD\matlab_storage_of_output_files\';
-% load([folder_c,'ind_psa_sum']);
-% 
-%           color_code=[1 .7 .1];                  
-%     h2= contourm( double(HadISST_lat),double(HadISST_lon),ind_psa_sum',[1,1],'-k','ShowText','off',...
-%     'Linecolor',color_code,'LineWidth', 2.5);   
+  
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 PSA2_box=0;
 eRS_box=1;
@@ -1444,347 +1057,22 @@ elseif iso_nr==9 && param_nr==2 && eRS_box==1
         
         lon_b_c=[-140 -140 -166 -166 -140];
         lat_b_c=[ -74 -70 -70 -74 -74];
-        plotm(lat_b_c,lon_b_c,'-','LineWidth',3,'Color',[0.9 .1 .9])       
-        
-    
+        plotm(lat_b_c,lon_b_c,'-','LineWidth',3,'Color',[0.9 .1 .9]) 
 end
 
-
-
-
-
-    %%%%%%%%%%%%%
-
-if (PC_nr==2 || PC_nr==3 || PC_nr==4) && iso_nr==7 && param_nr==1
+%%%%%%%%%%%%%
     
 filename=['HadISST_regression_',name,'_',pc_str,'_',season,'_',type_str,'_',num2str(yr_s),'-',num2str(yr_e)];
-
-
-elseif iso_nr==11 || iso_nr==12  || iso_nr==14 || iso_nr==15 
-
-filename=['HadISST_regression_',name,'_',pc_str,'_',season,'_',type_str,'_',num2str(yr_s),'-',num2str(yr_e)];
-elseif SST_dataset==1
-    if iso_nr==9
-        iso='trend';
-    end
-% filename=['HadISST_regression_',name,'_',iso,'_',season];
-
-filename=['HadISST_regression_',name,'_',pc_str,'_',season,'_',type_str,'_',num2str(yr_s),'-',num2str(yr_e)];
-
-elseif SST_dataset==2
-filename=['ERSST_regression_',name,'_',pc_str,'_',season,'_',type_str,'_',num2str(yr_s),'-',num2str(yr_e)];
-
-end
-   % num2str(round(date_annual(start_t))),'_',num2str(round(date_annual(end_t))),proj];
-
-
 savefilename_c=strcat(filedir,'figures\',filename);
 
  % save as png 
 orient landscape
-% increase quality of picture by increase to -r500
 
-quality_level_nr=3;%%%%%%%%%%%%%%%%%%%%%%%%%
-
-if quality_level_nr==1
-   quality_level_str= '-r110';
-elseif quality_level_nr==2
-  % quality_level_str= '-r150';
-   quality_level_str= '-r190';
-elseif quality_level_nr==3   
    quality_level_str= '-r240';
-end
 cd('G:\My Drive\ISO_CFA\matlab')
   export_fig('-png','-nocrop','-painters', '-depsc','-opengl', quality_level_str, savefilename_c); % PNG-nocrop'
 cd('G:\My Drive\ClimDyn_oct2022_R4\ClimDyn_R4_2022_Matlab\ClimDyn_R4_2022_Matlab')
 toc
-%% for saving PSA pattern surfaces (step 1)-= one more step=- 
-  
-% save regression surface  
-% folder_c='C:\PHD\matlab_storage_of_output_files\';
-% if sea_nr==1
-    savefilename =[folder_c,filename,'_',num2str(p_level_rc),'_c.mat'];
-% elseif sea_nr>=2    
-%      savefilename =[folder_c,filename,'_',num2str(p_level_rc),'_',season,'.mat'];   
-% end
 
- %save(savefilename,'s_all_c'); 
- 
- save(savefilename,'s_all_c','s_all'); 
- 
- 
-%% Where do PSA1 and PSA2 overlap
-% PSA2
-p_level_rc=0.05;
-%p_level_rc=0.01;
- type_nr=2; % (2) monthly
- 
- sea_nr=1;
- 
- folder_c='C:\PHD\matlab_storage_of_output_files\';
- %%%%%%%%%%%%%%%
-    if sea_nr==1
-        season='annual';
-    elseif sea_nr==2
-        season='DJF';
-    elseif sea_nr==3
-        season='MAM';
-    elseif sea_nr==4
-        season='JJA';
-    elseif sea_nr==5
-        season='SON';
-    end
-%%%%%%%%%%%%%%
-if type_nr==1
-type_str=[];
-
-elseif type_nr==2
-type_str='monthly_';
-
-end
-
-
-%%%%%%%%%%%%%%%%%%%
-% if sea_nr==1
-%     load([folder_c,'HadISST_regression_SST_PSA2_monthly','_',num2str(p_level_rc),'.mat']);
-if sea_nr>=3        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-      load([folder_c,'HadISST_regression_SST_PSA2','_', season,'_',type_str,num2str(p_level_rc),'.mat']);  
-elseif sea_nr==2   % DJF
-      load([folder_c,'HadISST_regression_SST_PSA1','_', season,'_',type_str,num2str(p_level_rc),'.mat']); 
-   %   load([folder_c,'HadISST_regression_SST_PSA2','_', season,'_',type_str,num2str(p_level_rc),'.mat']); 
-elseif sea_nr==1 % annual
-      season=[];
-    load([folder_c,'HadISST_regression_SST_PSA2','_', season,'_',type_str,num2str(p_level_rc),'.mat']); 
-      
-end
-    
-
-s_all_c_psa2=s_all_c;  % this is the p-level surface as rs with lower p-levels are masked above
-
-%%%%%%%%%%%%
- ind_psa2_nonnan=~isnan(s_all_c_psa2);
-%%%%%%%%%%
-
-s_all_c_psa2(find(s_all_c_psa2<0))=-1;  % Negative values -1
-s_all_c_psa2(find(s_all_c_psa2>0))=1;  % Negative values -1
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% PSA1
-
-% if sea_nr==1
-%     load([folder_c,'HadISST_regression _SST_PSA1_monthly','_',num2str(p_level_rc),'.mat']);
-if sea_nr>=3
-      load([folder_c,'HadISST_regression_SST_PSA1','_', season,'_',type_str,num2str(p_level_rc),'.mat']);  
-elseif sea_nr==2 % DJF
-        load([folder_c,'HadISST_regression_SST_SAM','_', season,'_',type_str,num2str(p_level_rc),'.mat']);  
-      %   load([folder_c,'HadISST_regression_SST_PSA1','_', season,'_',type_str,num2str(p_level_rc),'.mat']);         
-elseif sea_nr==1
-              season=[];
-    load([folder_c,'HadISST_regression_SST_PSA1','_', season,'_',type_str,num2str(p_level_rc),'.mat']); 
-end
-
-s_all_c_psa1=s_all_c;
-
-%%%%%%%%%%%%%%%%%
- ind_psa1_nonnan=~isnan(s_all_c_psa1);
-%%%%%%%%%%%%%%%%%
-
-s_all_c_psa1(find(s_all_c_psa1<0))=-1;  % Negative values -1
-s_all_c_psa1(find(s_all_c_psa1>0))=1;  % Negative values -1
-
-
-
-
-
-% [~,ind_test_c]=ismember(s_all_c_psa1,s_all_c_psa2); % is not member of 
-
-%%%%%%%%%%%%%%
- ind_psa_sum_nonactive=ind_psa1_nonnan+ind_psa2_nonnan;
-%%%%%%%%%%%%%
-
- ind_psa_sum=s_all_c_psa1+s_all_c_psa2;
- ind_psa_sum_c=ind_psa_sum;
- 
-ind_nan= isnan(ind_psa_sum_c);
- 
-ind_psa_sum_c(ind_nan)=9999; 
- 
-%%
-
-if sea_nr==1
-filename=['ind_psa_sum_',num2str(p_level_rc),'.mat'];
-elseif sea_nr>=2
-filename=['ind_psa_sum_',season,'_',num2str(p_level_rc),'.mat'];
-end
-
- savefilename =[folder_c,filename]; 
-% save(savefilename,'ind_psa_sum'); 
- save(savefilename,'ind_psa_sum_c','ind_psa_sum_nonactive'); 
- 
- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
- %% IPO SAM version (use)
-% Where do SAM and PSA1 overlap, SST and SIC
-% PSA2
-p_level_rc=0.05;
-%p_level_rc=0.01;
- type_nr=2; % (2) monthly
- 
- yr_s=1979;yr_e=2014;
- 
- sign_nr=1; % (1) SAM*(-1)+PSA1, (2) SAM +PSA1
- 
- if sign_nr==1
-     fact_nr=-1;
- elseif sign_nr==2
-     fact_nr=1;
- end
- 
- 
- sea_nr=1;
- 
- folder_c='C:\PHD\matlab_storage_of_output_files\';
- %%%%%%%%%%%%%%%
-
-        season='annual';
-
-%%%%%%%%%%%%%%
-if type_nr==1
-type_str=[];
-
-elseif type_nr==2
-type_str='monthly_';
-
-end
-
-param_nr=2;% (1-SST/ 2 SIC)
-
-
-if param_nr==1
-param_str='SST';    
-elseif param_nr==2
-    
-alt_pc=2;%(1) sam psa1 (2) pcs SIC %%%%%%%    
-param_str='SIC';
-
-end
-
-%%%%%%%%%%%%%%%%%%%
-% if sea_nr==1
-%     load([folder_c,'HadISST_regression_SST_PSA2_monthly','_',num2str(p_level_rc),'.mat']);
-% if sea_nr>=3        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%       load([folder_c,'HadISST_regression_SST_PSA2','_', season,'_',type_str,num2str(p_level_rc),'.mat']);  
-% elseif sea_nr==2   % DJF
-%       load([folder_c,'HadISST_regression_SST_PSA1','_', season,'_',type_str,num2str(p_level_rc),'.mat']); 
-%    %   load([folder_c,'HadISST_regression_SST_PSA2','_', season,'_',type_str,num2str(p_level_rc),'.mat']); 
-% elseif sea_nr==1 % annual
-      season=[];
-      
-      if param_nr==1
-        load([folder_c,'HadISST_regression_',param_str,'_SAM','_', season,'_',type_str,num2str(p_level_rc),'.mat']);
-      elseif param_nr==2
-          if alt_pc==1
-        load([folder_c,'HadISST_regression_',param_str,'_SAM','_', season,'_',type_str,num2str(yr_s),'-',num2str(yr_e),'_',num2str(p_level_rc),'.mat']);
-          elseif alt_pc==2
-        load([folder_c,'HadISST_regression_',param_str,'_PC1','_', season,'_',type_str,num2str(yr_s),'-',num2str(yr_e),'_',num2str(p_level_rc),'_c.mat']);  
-          end
-       end
-      
-% end
-%     
-
-s_all_c_sam=s_all_c;  % this is the p-level surface as rs with lower p-levels are masked above
-
-%%%%%%%%%%%%
- ind_sam_nonnan=~isnan(s_all_c_sam);
-%%%%%%%%%%
-
-s_all_c_sam(find(s_all_c_sam<0))=-1;  % Negative values -1
-s_all_c_sam(find(s_all_c_sam>0))=1;  %
-s_all_c_sam(find(s_all_c_sam==0))=NaN; % % remove zeros outside of the sea ice zone
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% PSA1
-
-% % if sea_nr==1
-% %     load([folder_c,'HadISST_regression _SST_PSA1_monthly','_',num2str(p_level_rc),'.mat']);
-% if sea_nr>=3
-%       load([folder_c,'HadISST_regression_SST_PSA1','_', season,'_',type_str,num2str(p_level_rc),'.mat']);  
-% elseif sea_nr==2 % DJF
-%         load([folder_c,'HadISST_regression_SST_SAM','_', season,'_',type_str,num2str(p_level_rc),'.mat']);  
-%       %   load([folder_c,'HadISST_regression_SST_PSA1','_', season,'_',type_str,num2str(p_level_rc),'.mat']);         
-% elseif sea_nr==1
-              season=[];
-              
-              if param_nr==1
-                load([folder_c,'HadISST_regression_SST_PSA1','_', season,'_',type_str,num2str(p_level_rc),'.mat']); 
-              elseif param_nr==2
-                if alt_pc==1
-                load([folder_c,'HadISST_regression_',param_str,'_PSA1','_', season,'_',type_str,num2str(yr_s),'-',num2str(yr_e),'_',num2str(p_level_rc),'.mat']);
-                elseif alt_pc==2
-                load([folder_c,'HadISST_regression_',param_str,'_PC2','_', season,'_',type_str,num2str(yr_s),'-',num2str(yr_e),'_',num2str(p_level_rc),'_c.mat']);     
-                end
-              end
-    
-    
-    
-% end
-
-s_all_c_psa1=s_all_c;
-
-%%%%%%%%%%%%%%%%%
- ind_psa1_nonnan=~isnan(s_all_c_psa1);
-%%%%%%%%%%%%%%%%%
-
-s_all_c_psa1(find(s_all_c_psa1<0))=-1;  % Negative values -1
-s_all_c_psa1(find(s_all_c_psa1>0))=1;  % Negative values -1
-s_all_c_psa1(find(s_all_c_psa1==0))=NaN;
-
-
-
-
-% [~,ind_test_c]=ismember(s_all_c_psa1,s_all_c_psa2); % is not member of 
-
-%%%%%%%%%%%%%%
- ind_psa_sum_nonactive=ind_sam_nonnan+ind_psa1_nonnan;
-%%%%%%%%%%%%%
-    IPO_nr=2; % (1) IPO+, (2) IPO -  % just a name for SIC
-    
-    if IPO_nr==1
-        fac_i=-1;
-        ipo_str='ipo_p_';
-    elseif IPO_nr==2
-         fac_i=1;
-         ipo_str='ipo_n_';
-    end
-
- ind_psa_sum=s_all_c_sam*( fac_i)+s_all_c_psa1; % multiply by -1 negative corr
- 
- 
- ind_psa_sum_c=ind_psa_sum;
- 
-ind_nan= isnan(ind_psa_sum_c);
- 
-ind_psa_sum_c(ind_nan)=9999; 
- 
-%% save
-
-if sea_nr==1
-    if param_nr==1
-    filename=['ind_sam_psa1_sum_',ipo_str,num2str(p_level_rc),'.mat'];
-    elseif param_nr==2
-        if alt_pc==1    
-        filename=['ind_',param_str,'sam_psa1_sum_',ipo_str,num2str(p_level_rc),'.mat'];
-        elseif alt_pc==2 
-        filename=['ind_',param_str,'pc1_pc2_sum_',ipo_str,num2str(p_level_rc),'.mat'];
-        end
-    end
-
-elseif sea_nr>=2
-filename=['ind_sam_psa1_sum_',season,'_',num2str(p_level_rc),'_c.mat'];
-end
-
- savefilename =[folder_c,filename]; 
-% save(savefilename,'ind_psa_sum'); 
- save(savefilename,'ind_psa_sum_c','ind_psa_sum_nonactive'); 
  
  
