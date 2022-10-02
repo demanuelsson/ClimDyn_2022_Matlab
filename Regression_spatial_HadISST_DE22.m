@@ -1042,22 +1042,13 @@ set(a1,'FontWeight','bold','FontSize',label_size2,'rotation',90);
 
   
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-PSA2_box=0;
-eRS_box=1;
+if Nino_34==1 % show nino-3.4 box
 
+        textm(-1,-185,'Niño-3.4','color',[1 1 1],'FontSize',12,'FontWeight','bold');
 
-if PC_nr==4 && PSA2_box==1 % SST box south of Aus
-    
-        lon_b_c=[120 120 155 155 120];
-        lat_b_c=[ -45 -36 -36 -45 -45];
-        plotm(lat_b_c,lon_b_c,'-','LineWidth',3,'Color',[1 .7 .1])  
-        
-        
-elseif iso_nr==9 && param_nr==2 && eRS_box==1 
-        
-        lon_b_c=[-140 -140 -166 -166 -140];
-        lat_b_c=[ -74 -70 -70 -74 -74];
-        plotm(lat_b_c,lon_b_c,'-','LineWidth',3,'Color',[0.9 .1 .9]) 
+        lon_b_c=[170 170 -120 -120 170];
+        lat_b_c=[ -5 5 5 -5 -5];
+        plotm(lat_b_c,lon_b_c,'-','LineWidth',3,'Color',[.4 .8 .2])  
 end
 
 %%%%%%%%%%%%%
@@ -1067,10 +1058,9 @@ savefilename_c=strcat(filedir,'figures\',filename);
 
  % save as png 
 orient landscape
-
    quality_level_str= '-r240';
 cd('G:\My Drive\ISO_CFA\matlab')
-  export_fig('-png','-nocrop','-painters', '-depsc','-opengl', quality_level_str, savefilename_c); % PNG-nocrop'
+  export_fig('-png','-painters', '-depsc','-opengl', quality_level_str, savefilename_c); % PNG-nocrop' '-nocrop',
 cd('G:\My Drive\ClimDyn_oct2022_R4\ClimDyn_R4_2022_Matlab\ClimDyn_R4_2022_Matlab')
 toc
 
