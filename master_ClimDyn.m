@@ -20,3 +20,5 @@ SAT_SIC_z500_RICE_DE22
 diffuision_estimate_code_DE22
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Scalogram_script_RI_d18O_DE22
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Regression_spatial_HadISST_DE22
