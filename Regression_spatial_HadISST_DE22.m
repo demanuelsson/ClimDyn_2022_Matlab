@@ -22,7 +22,7 @@ else
  
 end
 toc
-
+%%
 
 
 
@@ -31,25 +31,25 @@ toc
 
 type_nr=2;    % (1) annual (2) monthly
 
-param_nr=2;% (1-SST/ 2 SIC)
+param_nr=1;% (1-SST/ 2 SIC)
 
 % if param_nr==1
 %     name='SST';
 % elseif param_nr==2
-    name='SIC';
+%    name='SIC';
 % end
  
  site='RICE';
  
  set_yr=1;
- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    if set_yr==1    
-        yr_s=1979;
-        yr_e=2014;     
-   elseif set_yr==8       
-        yr_s=2000;
-        yr_e=2013;
-    end
+%  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%     if set_yr==1    
+%         yr_s=1979;
+%         yr_e=2011;     
+%    elseif set_yr==8       
+%         yr_s=2000;
+%         yr_e=2013;
+%     end
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   
   
@@ -58,13 +58,11 @@ param_nr=2;% (1-SST/ 2 SIC)
   
  figure_format=2; %(1)  EPS (2) PNG
   
- sea_nr=1;
 
- season='annual';
 
  
  %%%%%%%%%%%%%%%%%%%%
- iso_nr=15;  
+ iso_nr=7;  
  %%%%%%%%%%%%%%%%%%%
  
  
@@ -83,28 +81,28 @@ show_maximum_point=0;
 show_title=1; % (1/0)
 area_2_box=0 ; % 0/1 for RICE SST corr Box and text for Area 2
   
-if  strcmp(name,'SIC')==1
-  
-  lat1=-90;
-  lat2=-50;
-  box_use=0;  % (0/1) 
-
-  lon1=-300;
-   lon2= 60;
-  
-  
-% elseif  strcmp(name,'SST')==1  
-%   proj='merc';
-%   %proj='stereo';
-%   lat1=-90;
-%   lat2=20;
+% if  strcmp(name,'SIC')==1
 %   
+%   lat1=-90;
+%   lat2=-50;
+%   box_use=0;  % (0/1) 
+% 
 %   lon1=-300;
-%   %lon2= -30;
 %    lon2= 60;
 %   
-%    box_use=0;  % (0/1)
-end
+%   
+% % elseif  strcmp(name,'SST')==1  
+% %   proj='merc';
+% %   %proj='stereo';
+% %   lat1=-90;
+% %   lat2=20;
+% %   
+% %   lon1=-300;
+% %   %lon2= -30;
+% %    lon2= 60;
+% %   
+% %    box_use=0;  % (0/1)
+% end
   
 %   letter=[];
  
@@ -130,11 +128,11 @@ if SST_dataset==1
 % version 1.1 Rayner et al. 2003
 
 
-addpath C:\PHD\HadISST_data\ % Ienovo
+% addpath C:\PHD\HadISST_data\ % Ienovo
 %    ncdisp('HadISST_ice_c.nc');
 %    ncdisp('HadISST_sst.nc');
 
- HadISST_time=ncread('HadISST_ice_c.nc','time'); %units         = 'days since 1870-1-1 0:0:0'
+ HadISST_time=ncread([data_dir,'HadISST_sst_c.nc'],'time'); %units         = 'days since 1870-1-1 0:0:0'
  % missing values  missing_value = -1e+30 ( looks more like -1000)\
  %monthly values
  
@@ -145,9 +143,9 @@ addpath C:\PHD\HadISST_data\ % Ienovo
  mm=date_vec(:,2);
  HadISST_year_num=yyyy+(mm/12-1/12); 
 
- HadISST_time_bnds =ncread('HadISST_ice_c.nc','time_bnds');
- HadISST_lat=ncread('HadISST_ice_c.nc','latitude');
- HadISST_lon=ncread('HadISST_ice_c.nc','longitude');
+ HadISST_time_bnds =ncread([data_dir,'HadISST_sst_c.nc'],'time_bnds');
+ HadISST_lat=ncread([data_dir,'HadISST_sst_c.nc'],'latitude');
+ HadISST_lon=ncread([data_dir,'HadISST_sst_c.nc'],'longitude');
  
  
 end 
@@ -171,11 +169,12 @@ end
 %   end
   
  if strcmp(name,'SIC')==1
-  
-%   name='ice'; 
-   HadISST_ice=ncread('HadISST_ice_c.nc','sic'); % 360x180x1728 lon x lat x time
+
+   HadISST_ice=ncread([data_dir,'HadISST_ice_c.nc'],'sic'); % 360x180x1728 lon x lat x time
    M=HadISST_ice;
- 
+   
+ elseif strcmp(name,'SST')==1 
+   M=ncread([data_dir,'HadISST_sst_c.nc'],'sst'); % 360x180x1728 lon x lat x time
  end
    
  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -225,6 +224,12 @@ mm_in=mm(HadISST_start:HadISST_count);  % seasonal index
 %      mm_in_c=[find(mm_in==9);  find(mm_in==10); find(mm_in==11)];
 %      mm_in_c=sort( mm_in_c);
 %      mm_in_c=mm_in_c(4:end);
+
+elseif sea_nr==7  % AMJJASON
+     mm_in_c=[find(mm_in==4);  find(mm_in==5); find(mm_in==6); find(mm_in==7); find(mm_in==8); find(mm_in==9); find(mm_in==10); find(mm_in==11)];
+     mm_in_c=sort( mm_in_c);
+     mm_in_c=mm_in_c(4:end);
+
         
  end
 %%%%%%%%%%%%%%%%%%%
@@ -348,7 +353,15 @@ elseif strcmp(season,'SON')==1
           HadISST_M_season_son=HadISST_M_season_son(2:end);
           HadISST_M_season_reg_son(i,j,:)=HadISST_M_season_son; % means for regression          
           HadISST_M_season_dummy_son=detrend(HadISST_M_season_son); 
-          HadISST_M_season_detrend_son(i,j,:)=HadISST_M_season_dummy_son;    
+          HadISST_M_season_detrend_son(i,j,:)=HadISST_M_season_dummy_son;  
+% %     %AMJJASON
+elseif strcmp(season,'AMJJASON')==1
+          HadISST_M_season_amjjason=nanmean(dummy1(4:11,:),1);  % 4.seasonal 
+          HadISST_M_season_amjjason=HadISST_M_season_amjjason(2:end);
+          HadISST_M_season_reg_amjjason(i,j,:)=HadISST_M_season_amjjason; % means for regression          
+          HadISST_M_season_dummy_amjjason=detrend(HadISST_M_season_amjjason); 
+          HadISST_M_season_detrend_amjjason(i,j,:)=HadISST_M_season_dummy_amjjason;            
+          
 %         
 %     % S month with maximum SIE
 %           
@@ -387,7 +400,7 @@ if strcmp(iso,'dD')==1 || strcmp(iso,'d18O')==1 || strcmp(iso,'d-excess')==1
 % date_annual=[1980:2012]';
 date_annual=[1900:2011]';
 
-if  strcmp(season,'annual')==1 ||  strcmp(season,'MAMJJA')==1
+if  strcmp(season,'annual')==1 ||  strcmp(season,'MAMJJA')==1 ||  strcmp(season,'AMJJASON')==1
    start_t=find(date_annual==yr_s);
 elseif strcmp(season,'DJF')==1 || strcmp(season,'MAM')==1 || strcmp(season,'JJA')==1 || strcmp(season,'SON')==1   
     start_t=find(date_annual==yr_s+1);
@@ -395,7 +408,7 @@ end
 % start_t=86; % # 86-1979
 end_t=find(date_annual==yr_e); 
 
-load('stacked_record\stacked_record_annual_Ma_c14.mat') % c12 stacked, c14 just 1213B and 2013 deep
+load('stacked_record\stacked_record_annual_Ma_c14.mat')
 % updated age-scale
 
     if   strcmp(iso,'dD')==1 
@@ -494,10 +507,7 @@ elseif strcmp(iso,'PPAp')==1
      
 elseif iso_nr==7
 
-%     load('C:\PHD\matlab_storage_of_output_files\PCs_z500.mat')  
-%load('C:\PHD\matlab_storage_of_output_files\PCs_z500_lim0-360E_-30_-90_1979-2015.mat');
-% load('C:\PHD\matlab_storage_of_output_files\ERA-Interim_PCs_z500_lim0-360_-20_-90_1979-2015_annual');
-load('C:\PHD\matlab_storage_of_output_files\ERA-Interim_PCs_z500_lim0-360_-20_-90_1979-2014_annual'); % 2014
+load([datadir,'ERA-Interim_PCs_z500_lim0-360_-20_-90_1979-2011_AMJJASON_c52_annual_mean_varimax_c2.mat']); % 2014
         if type_nr==1 
             time_c=MA_PCs_save(:,1);
             yr_2=find( time_c==yr_e);
@@ -516,7 +526,7 @@ load('C:\PHD\matlab_storage_of_output_files\ERA-Interim_PCs_z500_lim0-360_-20_-9
      
             
             %%%%%%%%%%%%%%%%%%%%%%%%%%%
-            PC_nr=4; % (2) SAM (3) PSA1 (4) PSA2
+           % PC_nr=2; % (2) SAM (3) PSA1 (4) PSA2
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             
              label_2='';
@@ -1101,6 +1111,8 @@ if type_nr==1 % interannual
     X=HadISST_M_season_reg_jja(:,:,1:end);  
     elseif sea_nr==5
     X=HadISST_M_season_reg_son(:,:,1:end); 
+    elseif sea_nr==7
+    X=HadISST_M_season_reg_amjjason(:,:,1:end); 
     end     
 
 elseif type_nr==2
