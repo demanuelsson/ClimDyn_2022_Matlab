@@ -23,101 +23,28 @@ else
 end
 toc
 %%
-
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Input
-
-type_nr=1;    % (1) annual (or seasonal but one value for each year) (2) monthly
-
-param_nr=1;% (1-SST/ 2 SIC)
-
-% if param_nr==1
-%     name='SST';
-% elseif param_nr==2
-%    name='SIC';
+fprintf('[\bRead in data ]\b')
+tic
+% if iso_nr==7 %***************
+% iso='PCs';
+% elseif iso_nr==9 %***************
+% iso=[]; % just trend
+% elseif iso_nr==14 %***************
+% iso='CP EP index';
+% elseif iso_nr==15 %***************
+% iso='SIC PCs';
 % end
- 
- site='RICE';
- 
- set_yr=1;
-%  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%     if set_yr==1    
-%         yr_s=1979;
-%         yr_e=2011;     
-%    elseif set_yr==8       
-%         yr_s=2000;
-%         yr_e=2013;
-%     end
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  
-  
- 
- show_colorbar=1;
-  
- figure_format=2; %(1)  EPS (2) PNG
-  
-
-
- 
- %%%%%%%%%%%%%%%%%%%%
- iso_nr=7;  
- %%%%%%%%%%%%%%%%%%%
- 
- 
-if iso_nr==7 %***************
-iso='PCs';
-elseif iso_nr==9 %***************
-iso=[]; % just trend
-elseif iso_nr==14 %***************
-iso='CP EP index';
-elseif iso_nr==15 %***************
-iso='SIC PCs';
-end
  
 show_maximum_point=0;
  
 show_title=1; % (1/0)
 area_2_box=0 ; % 0/1 for RICE SST corr Box and text for Area 2
   
-% if  strcmp(name,'SIC')==1
-%   
-%   lat1=-90;
-%   lat2=-50;
-%   box_use=0;  % (0/1) 
-% 
-%   lon1=-300;
-%    lon2= 60;
-%   
-%   
-% % elseif  strcmp(name,'SST')==1  
-% %   proj='merc';
-% %   %proj='stereo';
-% %   lat1=-90;
-% %   lat2=20;
-% %   
-% %   lon1=-300;
-% %   %lon2= -30;
-% %    lon2= 60;
-% %   
-% %    box_use=0;  % (0/1)
-% end
-  
-%   letter=[];
  
   lock_scalebar=1;
   
-  
-%   if  strcmp(season,'DJF')==1
-%   letter='a';
-%   elseif strcmp(season,'MAM')==1
-%   letter='b';
-%   elseif strcmp(season,'JJA')==1
-%   letter='c';
-%   elseif strcmp(season,'SON')==1
-%   letter='d';
-%   end
+ 
   
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 SST_dataset=1; % (1) HadISST 
@@ -194,50 +121,79 @@ HadISST_start=find(HadISST_year_num==yr_s); % 1950 hardly any data before this
 % div=118;
 div=ceil((HadISST_count-HadISST_start)/12); %1979
 
-%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%
+% mm_in=mm(HadISST_start:HadISST_count);  % seasonal indexing. Only used for monthly reg [not used]
+% 
+%  if sea_nr==1
+%     mm_in_c=[HadISST_start:HadISST_count]';
+%     
+% %  elseif sea_nr==2  % DJF
+% %      mm_in_c=[find(mm_in==12);  find(mm_in==1); find(mm_in==2)];
+% %      mm_in_c=sort( mm_in_c);
+% %      mm_in_c=mm_in_c(3:end-1); % dont use JF for first year as there is no D
+% %      
+% % elseif sea_nr==3  % MAM
+% %      mm_in_c=[find(mm_in==3);  find(mm_in==4); find(mm_in==5)];
+% %      mm_in_c=sort( mm_in_c);
+% %      mm_in_c=mm_in_c(4:end);
+% %      
+% % elseif sea_nr==4  % JJA
+% %      mm_in_c=[find(mm_in==6);  find(mm_in==7); find(mm_in==8)];
+% %      mm_in_c=sort( mm_in_c);
+% %      mm_in_c=mm_in_c(4:end);
+% %      
+% %  elseif sea_nr==5  % SON
+% %      mm_in_c=[find(mm_in==9);  find(mm_in==10); find(mm_in==11)];
+% %      mm_in_c=sort( mm_in_c);
+% %      mm_in_c=mm_in_c(4:end);
+% 
+% elseif sea_nr==7  % AMJJASON
+%      mm_in_c=[find(mm_in==4);  find(mm_in==5); find(mm_in==6); find(mm_in==7); find(mm_in==8); find(mm_in==9); find(mm_in==10); find(mm_in==11)];
+%      mm_in_c=sort( mm_in_c);
+%      mm_in_c=mm_in_c(1:end);
+%       
+%  end
+% %%%%%%%%%%%%%%%%%%%
+%%
+ tic
+
+[nlon, nlat, ntim]= size(M(:,:,:)); %
+HadISST_c = permute(M(:,:,:), [3 2 1]);
+
+
+%%% -=(1)=-
+% Remove monthly climatology for all cells 
+
+ HadISST_c2 = double(reshape(HadISST_c, ntim, nlat*nlon));  % One time series (column) for each grid point
  
+ %  lat 1, 2, 3, 4,..........33...lat 1, 2, 3, 4.....33       until 33X240=7920
+ %  
+ %1
+ %time
+ 
+ [HadISST_c3,clim_z500] = annave(HadISST_c2);   % Removes seasonal cycle
 
- %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+ HadISST_c4= reshape(HadISST_c3,  ntim, nlat, nlon );
 
+ 
+%%% -=(2)=- 
+ %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% - Since the grid size decreases as you move towards the pole, 
+% weight each grid box (i.e., multiply the time series at each grid box) 
+% by the square root of the cosine of latitude (the weights are based on 
+% the square root of the cosine so that the covariance matrix is weighted by the cosine of latitude).
 
-mm_in=mm(HadISST_start:HadISST_count);  % seasonal index
+%  z = cosweight(z, lat);
+% weighted to account for the decrease in area towards the pole.
+%era_z500_c2=cosweight(era_z500_c,era_lat_c); % Original UoW function    (time x lat x lon) 
+HadISST_c5=cosweight(HadISST_c4,HadISST_lat);
+%%%%%%%%%%%
 
- if sea_nr==1
-    mm_in_c=[HadISST_start:HadISST_count]';
-    
-%  elseif sea_nr==2  % DJF
-%      mm_in_c=[find(mm_in==12);  find(mm_in==1); find(mm_in==2)];
-%      mm_in_c=sort( mm_in_c);
-%      mm_in_c=mm_in_c(3:end-1); % dont use JF for first year as there is no D
-%      
-% elseif sea_nr==3  % MAM
-%      mm_in_c=[find(mm_in==3);  find(mm_in==4); find(mm_in==5)];
-%      mm_in_c=sort( mm_in_c);
-%      mm_in_c=mm_in_c(4:end);
-%      
-% elseif sea_nr==4  % JJA
-%      mm_in_c=[find(mm_in==6);  find(mm_in==7); find(mm_in==8)];
-%      mm_in_c=sort( mm_in_c);
-%      mm_in_c=mm_in_c(4:end);
-%      
-%  elseif sea_nr==5  % SON
-%      mm_in_c=[find(mm_in==9);  find(mm_in==10); find(mm_in==11)];
-%      mm_in_c=sort( mm_in_c);
-%      mm_in_c=mm_in_c(4:end);
-
-elseif sea_nr==7  % AMJJASON
-     mm_in_c=[find(mm_in==4);  find(mm_in==5); find(mm_in==6); find(mm_in==7); find(mm_in==8); find(mm_in==9); find(mm_in==10); find(mm_in==11)];
-     mm_in_c=sort( mm_in_c);
-     mm_in_c=mm_in_c(4:end);
-
-        
- end
-%%%%%%%%%%%%%%%%%%%
-
-
-
-
-
+% Back to old format again
+HadISST_c6= reshape(HadISST_c5,  ntim, nlat, nlon );
+M = permute(HadISST_c6, [3 2 1]);  %
+toc
+%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
  
@@ -259,7 +215,11 @@ HadISST_year_num(HadISST_count);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % run from start if year is changed above
 % (360x180x1728) (Long,Lat,month)
+toc
 %%
+fprintf('[\bSeasonal anomaly fields ]\b')
+tic
+
 [m n t]=size(M(:,:,HadISST_start:HadISST_count));% time(months) % 1894-2011
 for i= 1:m
     for j= 1:n
@@ -299,7 +259,7 @@ for i= 1:m
 
 if strcmp(season,'MAMJJA')==1
 
-          HadISST_M_season_amjjas=nanmean(dummy1(3:8,:),1);  %3. seasonal (JJA)
+          HadISST_M_season_amjjas=nanmean(dummy1(3:8,:),1);  %3. seasonal 
           HadISST_M_season_amjjas=HadISST_M_season_amjjas(1:end);
           HadISST_M_season_reg_amjjas(i,j,:)=HadISST_M_season_amjjas; % means for regression         
           HadISST_M_season_dummy_amjjas=detrend(HadISST_M_season_amjjas); 
@@ -355,23 +315,13 @@ elseif strcmp(season,'SON')==1
           HadISST_M_season_dummy_son=detrend(HadISST_M_season_son); 
           HadISST_M_season_detrend_son(i,j,:)=HadISST_M_season_dummy_son;  
 % %     %AMJJASON
-elseif strcmp(season,'AMJJASON')==1
+elseif strcmp(season,'AMJJASON')==1 % [Used]
           HadISST_M_season_amjjason=nanmean(dummy1(4:11,:),1);  % 4.seasonal 
-          HadISST_M_season_amjjason=HadISST_M_season_amjjason(2:end);
+          HadISST_M_season_amjjason=HadISST_M_season_amjjason(1:end);
           HadISST_M_season_reg_amjjason(i,j,:)=HadISST_M_season_amjjason; % means for regression          
           HadISST_M_season_dummy_amjjason=detrend(HadISST_M_season_amjjason); 
           HadISST_M_season_detrend_amjjason(i,j,:)=HadISST_M_season_dummy_amjjason;            
-          
-%         
-%     % S month with maximum SIE
-%           
-%           HadISST_M_season_s=nanmean(dummy1(11:11,:),1);  % 5. individual month
-%           HadISST_M_season_s=HadISST_M_season_s(2:end);
-%           HadISST_M_season_reg_s(i,j,:)=HadISST_M_season_s; % means for regression
-%           HadISST_M_season_dummy_s=detrend(HadISST_M_season_s); 
-%           HadISST_M_season_detrend_s(i,j,:)=HadISST_M_season_dummy_s; 
-% %     
-%     
+              
 elseif strcmp(season,'annual')==1
          HadISST_M_annual_temp=nanmean(dummy1,1); % annual HadISST-values
 
@@ -391,130 +341,15 @@ end
 end
  
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-if strcmp(iso,'dD')==1 || strcmp(iso,'d18O')==1 || strcmp(iso,'d-excess')==1
-    
-%     iso=' dD ';
+fprintf('[\bLoad Z500 PCs ]\b')
+tic
+if iso_nr==7  % ZPCs
 
-% isotopes stacked record
-% load('ISO_rice_annual_c3.mat') % only load to get date vector
-% date_annual=[1980:2012]';
-date_annual=[1900:2011]';
-
-if  strcmp(season,'annual')==1 ||  strcmp(season,'MAMJJA')==1 ||  strcmp(season,'AMJJASON')==1
-   start_t=find(date_annual==yr_s);
-elseif strcmp(season,'DJF')==1 || strcmp(season,'MAM')==1 || strcmp(season,'JJA')==1 || strcmp(season,'SON')==1   
-    start_t=find(date_annual==yr_s+1);
-end
-% start_t=86; % # 86-1979
-end_t=find(date_annual==yr_e); 
-
-load('stacked_record\stacked_record_annual_Ma_c14.mat')
-% updated age-scale
-
-    if   strcmp(iso,'dD')==1 
-    X=detrend(stacked_record_annual_Ma((start_t:end_t),2));
-
-    elseif strcmp(iso,'d18O')==1
-    X=detrend(stacked_record_annual_Ma((start_t:end_t),3));  
-    
-    elseif strcmp(iso,'d-excess')==1
-    X=detrend(stacked_record_annual_Ma((start_t:end_t),4));         
-    end
-
-
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-elseif strcmp(iso,'Accumulation')==1
-% iso=' Accumulation ';
-% Accumulation
-% accumulation record (:,3) is detrended
-% load('rice_accumulation\Accumulation_we_RICE_top40m_1979_c4.mat')
-% iso=' Accumulation ';
-% 
-% start_t=find(Accumulation_we_RICE_top40m_1979(:,1)==1980);
-% % start_t=86; % # 86-1979
-% end_t=find(Accumulation_we_RICE_top40m_1979(:,1)==2010); 
-% 
-% date_annual=Accumulation_we_RICE_top40m_1979(:,1);
-% X=Accumulation_we_RICE_top40m_1979(:,3);
-% X=X(start_t:end_t);
-
-load('rice_accumulation\Accumulation_we_RICE_top40m_c7.mat')
-
-date_annual=Accumulation_we_RICE_top40m(:,1);
-if  strcmp(season,'annual')==1 ||  strcmp(season,'MAMJJA')==1
-   start_t=find(date_annual==yr_s);
-elseif strcmp(season,'DJF')==1 || strcmp(season,'MAM')==1 || strcmp(season,'JJA')==1 || strcmp(season,'SON')==1   
-    start_t=find(date_annual==yr_s+1);
-end
-end_t=find(date_annual==yr_e); 
-
-
-X=Accumulation_we_RICE_top40m(:,3);   %  (:,3) is detrended
-% X=X(find(Accumulation_we_RICE_top40m_1979(:,1)==1979):find(Accumulation_we_RICE_top40m_1979(:,1)==2011));
-X=X(start_t:end_t);
-
-
-elseif strcmp(iso,'d_excess_1213B') % just using 1213B core
-   
-load('stacked_record\shallow_core_1213B_annual_ISO_RICE_Ma_c.mat')
-date_annual=stacked_record_annual_Ma(:,1);
-if  strcmp(season,'annual')==1 ||  strcmp(season,'MAMJJA')==1
-   start_t=find(date_annual==yr_s);
-elseif strcmp(season,'DJF')==1 || strcmp(season,'MAM')==1 || strcmp(season,'JJA')==1 || strcmp(season,'SON')==1   
-    start_t=find(date_annual==yr_s+1);
-end
-end_t=find(date_annual==yr_e); 
-X=detrend(stacked_record_annual_Ma((start_t:end_t),4)); % 4 d-excess     
- 
-
-elseif strcmp(iso,'dD_1213B') % just using 1213B core
-load('stacked_record\shallow_core_1213B_annual_ISO_RICE_Ma_c.mat')
-date_annual=stacked_record_annual_Ma(:,1);
-if  strcmp(season,'annual')==1 ||  strcmp(season,'MAMJJA')==1
-   start_t=find(date_annual==yr_s);
-elseif strcmp(season,'DJF')==1 || strcmp(season,'MAM')==1 || strcmp(season,'JJA')==1 || strcmp(season,'SON')==1   
-    start_t=find(date_annual==yr_s+1);
-end
-end_t=find(date_annual==yr_e); 
-X=detrend(stacked_record_annual_Ma((start_t:end_t),2)); % 4 dD 1213B 
-
-elseif strcmp(iso,'d18O_1213B') % just using 1213B core
-   
-load('stacked_record\shallow_core_1213B_annual_ISO_RICE_Ma_c.mat')
-date_annual=stacked_record_annual_Ma(:,1);
-if  strcmp(season,'annual')==1 ||  strcmp(season,'MAMJJA')==1
-   start_t=find(date_annual==yr_s);
-elseif strcmp(season,'DJF')==1 || strcmp(season,'MAM')==1 || strcmp(season,'JJA')==1 || strcmp(season,'SON')==1   
-    start_t=find(date_annual==yr_s+1);
-end
-end_t=find(date_annual==yr_e); 
-X=detrend(stacked_record_annual_Ma((start_t:end_t),3)); % 3 d18O 1213B 
-
-
-elseif strcmp(iso,'PPAp')==1
-
-%      load('PPAp_RI_3days_2.mat')  % 95 100 
-     load('PPA_RI_mean_3days.mat') % PPA AS
-
-    date_annual=[1979:2014]';
-    start_t=find(date_annual==yr_s); 
-    end_t=find(date_annual==yr_e); 
-    
-     y=detrend(PPA_box_mean_store(start_t:end_t));
-     
-elseif iso_nr==7
-
-load([filedir,'ERA-Interim_PCs_z500_lim0-360_-20_-90_1979-2011_AMJJASON_c52_annual_mean_varimax_c2.mat']); % 2014
+load([filedir,'ERA-Interim_PCs_z500_lim0-360_-20_-90_1979-2011_AMJJASON_c52_annual_mean_varimax_c2.mat']); % 2011
         if type_nr==1 
             time_c=MA_PCs_save(:,1);
             yr_2=find( time_c==yr_e);
            
-            
-            
-            
         elseif type_nr==2
             time_c=MA_PCs_save_monthly(:,1);
             yr_2=find( time_c==yr_e)+11;
@@ -522,9 +357,7 @@ load([filedir,'ERA-Interim_PCs_z500_lim0-360_-20_-90_1979-2011_AMJJASON_c52_annu
             
      yr_1=find( time_c==yr_s); 
   
-                 
-     
-            
+    
             %%%%%%%%%%%%%%%%%%%%%%%%%%%
            % PC_nr=2; % (2) SAM (3) PSA1 (4) PSA2
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -532,31 +365,17 @@ load([filedir,'ERA-Interim_PCs_z500_lim0-360_-20_-90_1979-2011_AMJJASON_c52_annu
              label_2='';
              iso='z500';
    
-            if PC_nr==2 %SAM
-                
-                    letter='c';
-                    
-                      
+            if PC_nr==2 %SAM. PC1 (but first coloumn in MA is time)
+                                          
                 if sea_nr==1  || sea_nr==7
                     if param_nr==1
-                    letter='a';
-                        fact=-1;  %  SAM+ 2015
+                        fact=1;    
                     elseif param_nr==2  %SIC
-                    letter='d';
 %                     fact=1;%%%%%%%%%%%%%%%%%change polarity SAM-%%%%%%%%%%%%%%%%%%%%%%%
                         % fact=-1; % to corespond to SIC PC regression fig.
-                        % 2015
+                        
                          fact=1; % to corespond to SIC PC regression fig. 2014
-                    end
-                 
-                elseif sea_nr==2
-                letter='b';
-                elseif sea_nr==3
-                 letter='b';       
-               elseif sea_nr==4
-                letter='b';        
-               elseif sea_nr==5
-               letter='b';  
+                    end  
                 end
                 
             
@@ -570,29 +389,15 @@ load([filedir,'ERA-Interim_PCs_z500_lim0-360_-20_-90_1979-2011_AMJJASON_c52_annu
                 
                 if sea_nr==1  || sea_nr==7
                    if param_nr==1 
-                    letter='d';
-                    fact=-1;   %PSA1+
+
+                    fact=1;   %PSA1+
                    elseif param_nr==2
-                     letter='e';
-                    % fact=1;   %PSA1   % to corespond to SIC PC regression fig. 2015
-                     fact=1;   %PSA1   % to corespond to SIC PC regression fig. 2014
-                   end
-                 
-                elseif sea_nr==2
-                letter='c';
-                elseif sea_nr==3
-                 letter='c';       
-               elseif sea_nr==4
-                letter='c';        
-               elseif sea_nr==5
-               letter='c';  
+
+                     fact=1;   %PSA1   % to corespond to SIC PC regression fig. 2011
+                   end 
                 end
                  
-%                             if sea_nr==2
-%                             fact=1;   %PSA1+ (as it doesnt resemble PSA1 in DJF)
-%                             else
-%                             fact=1;   %PSA1+   
-%                             end
+
                  
             elseif PC_nr==4
                  
@@ -603,22 +408,13 @@ load([filedir,'ERA-Interim_PCs_z500_lim0-360_-20_-90_1979-2011_AMJJASON_c52_annu
                 
                  if sea_nr==1 || sea_nr==7
                      if param_nr==1
-                        letter='e';
+
                         fact=1; %PSA2+ 
                      elseif param_nr==2
-                        letter='f';
-                        % fact=-1; % to corespond to SIC PC regression fig.2015
-                         fact=-1; % to corespond to SIC PC regression fig.2014
+
+                         fact=1; % to corespond to SIC PC regression fig.2011
                          
                      end
-                elseif sea_nr==2
-                letter='d';
-                elseif sea_nr==3
-                 letter='d';       
-               elseif sea_nr==4
-                letter='d';        
-               elseif sea_nr==5
-               letter='d';  
                  end
                 
      
@@ -647,450 +443,15 @@ load([filedir,'ERA-Interim_PCs_z500_lim0-360_-20_-90_1979-2011_AMJJASON_c52_annu
                
              y=MA_PCs_save_monthly((mm_in_c),PC_nr)*fact;   
             
-         end
-         
-elseif iso_nr==8
-     
-    nino_nr=4; % (34) nino-3.4 (4) nino-4 (12) nino 1+2
-     
-     PC_nr=999; % just to get a number for enso
-     label_2='';
-%      iso='z500';
-     
-     letter='a'; 
-     
-     
-    if nino_nr==4    % nino-4
-    load('nino_4_M_c.mat'); % 2015
-    nino_xc=nino_4_M;
-     iso='ENSO_nino-4';
-    elseif nino_nr==34
-    load('nino_34_M.mat'); % nino 3.4 
-    nino_xc=nino_34_M;  
-    iso='ENSO_nino-34';
-    
-    elseif nino_nr==12 % nino 1+2
-     load('C:\PHD\matlab_lib\Data\Nino_1p2_noaa.mat');
-     nino_xc=Nino_1p2_noaa(:,(2:13));
-     iso='ENSO_nino-1+2';
-    
-    end
-     
-
-% sea_nr=1; %% (1), annual (2) DJF
-        date_annual=[1870:2014]';
-        start_t=find(date_annual==yr_s); 
-        end_t=find(date_annual==yr_e); 
-
-% yr_1
-% yr_2        
-        
-         if sea_nr==1
-                s1=1;s2=12;
-         elseif sea_nr==3
-                s1=3;s2=5;
-        elseif sea_nr==4
-                s1=6;s2=8;
-        elseif sea_nr==5
-            s1=9;s2=11;    
-         end
-
-    if sea_nr==2
-    %%%%%%%%DJF
-    s1=1; s2=2; s3=12;
-    nino_sea_jf=nino_xc((2:end),(s1:s2));
-    nino_sea_d=nino_xc((1:end-1),(s3)); 
-    nino_sea_djf=horzcat(nino_sea_d, nino_sea_jf);
-    nino_x=nanmean(nino_sea_djf,2);
-    %%%%%%%%%
-    else
-    nino_sea=(nino_xc((1:end),(s1:s2))); % ok
-    nino_x=nanmean(nino_sea,2);
-    end
-    %%%%%%%%%%%%%%%%%% restrict years first
-        nino_sea_c=nino_sea ((start_t:end_t),:);
-    
-        nino_sea_c2=permute(nino_sea_c,[2 1]);
-    
-        [w_a, w_b]=size(nino_sea_c2);
-        nino_sea_c3=reshape(nino_sea_c2, w_b*w_a,1);
-         nino_sea_c4=zscore( nino_sea_c3);
-    
-
-%     time_series=nino_x(start_t:end_t); % 1979-2009
-        y=nino_sea_c4;  
-    
-  elseif iso_nr==9
-      
-      
-            wr_yr=[1979:2014]';
-            yr_1=find(wr_yr==yr_s);       
-            yr_2=find(wr_yr==yr_e);
-            
-                if sea_nr==1 && type_nr==1% annual
- 
-                y=wr_yr(yr_1:yr_2);
-                elseif sea_nr>=2  && type_nr==1        % Seasonal (1980-
-                y=wr_yr(yr_1+1:yr_2);
-                elseif  type_nr==2% annual and seasonal monthly
-                yc=[1:HadISST_count]';
-                y=yc(mm_in_c);
-                
-                
-%                elseif sea_nr>=2 && type_nr==2% annual monthly
-%                 y=[1:HadISST_count]';
-                
-        
-                end
-                
-                
-                 PC_nr=999; % just to get a number for enso    
-                
-                
-            label_2='yr^-^1';
-            
-                 if sea_nr==1 && param_nr==1
-                 letter='a';
-                 elseif sea_nr==1 && param_nr==2
-                     if set_yr==8
-                         letter='a';
-                     elseif set_yr==9
-                         letter='d'; 
-                     elseif set_yr==1
-                         letter='a'; 
-                     end
-                 
-%                  elseif sea_nr==2
-%                  letter='a';
-%                 elseif sea_nr==3
-%                  letter='b'; 
-%                  elseif sea_nr==4
-%                  letter='c'; 
-%                  elseif sea_nr==5
-%                  letter='d'; 
-                 end
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%                 
-   elseif iso_nr==10      %PDO
-          
-            if sea_nr==1 && type_nr==1
-                
-            
-            date_annual=[1900:2015]';
-
-            load('PDO_annual_c.mat')
-            start_t=find(date_annual==yr_s); 
-            end_t=find(date_annual==yr_e); 
-               
-            yc=PDO_x(start_t:end_t);
-            y=zscore(yc);
-            
-            elseif type_nr==2  %%%% Monthly
-                
-                
-                
-                if  index_nr==1
-                %%%% PDO Monthly 
-                load('PDO_index_c'); % monthly
-                
-%                 wr_c=length(PDO_index_c(:,1));
-%                 wr_c1=wr_c*12;
-%                 wr_c2=[1:wr_c1]';
-                
-             %   80*12   % 1979
-              %  115*12 -1 % 2014
-              %  116*12 -1 % 2015
-                
-                PDO_index_c2=permute(PDO_index_c,[2, 1]);
-                PDO_monthly_x=reshape(PDO_index_c2,[12*116 1]);
-                Pwr=[1900:1/12:2016]';
-                % y=zscore(PDO_monthly_x(960:1391));
-                 y=zscore(PDO_monthly_x(949:1380));
-                 
-                %%%%%%%%%% 
-                elseif index_nr==2 % IPO
-                    
-                 % IPO TPI filtered
-                  %  Henley et al. 2015
-                    load('C:\PHD\matlab_lib\Data\IPO_TPI_unfiltered.mat')
-
-
-                    IPO_TPI_unfiltered_c=IPO_TPI_unfiltered(:,(2:13));
-                    IPO_TPI_time=IPO_TPI_unfiltered(:,1);
-%                     IPO_TPI_annual=nanmean(IPO_TPI_unfiltered_c,2);
-
-                    [ac, bc, cc]=size(IPO_TPI_unfiltered_c);
-                    IPO_TPI_unfiltered_c2=permute(IPO_TPI_unfiltered_c((1:146),:),[2,1]);
-                    IPO_TPI_unfiltered_c3=reshape(IPO_TPI_unfiltered_c2,12*146,1);
-                    Pwr=[1870:1/12:2016]';
-                    y=zscore(IPO_TPI_unfiltered_c3(1309:1740));
-                 
-                 
-                %%%%%%%%%
-                end
-            
-            end
-       
-          PC_nr=999; % just to get a number for enso    
-          letter='b';  
-                
-            label_2='°C yr^-^1';
-            
-            
-   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%                 
-   elseif iso_nr==11      %SAM Fogt        
-     
-       if sea_nr==1 && type_nr==1
-       
-            load('SAM_Fogt.mat')
-            SAM_Fogt_c=SAM_Fogt(41:140,:);% SAM Fogt 1905-2004   9999 values at the start 
-            SAM_annual_Fogt=mean(SAM_Fogt_c,2); 
-            date_annual=[1905:2004]';     
-
-            start_t=find(date_annual==yr_s); 
-            end_t=find(date_annual==yr_e); 
-               
-            yc=SAM_annual_Fogt(start_t:end_t);
-            y=zscore(yc);
-
-      
-
-       end
-
-       
-       
-                 PC_nr=999; % just to get a number for enso    
-                 letter='b';  
-                
-                label_2='°C s.d.^-^1';
-     
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%                 
-%    elseif iso_nr==12      %SST Aus                 
-%                 if sea_nr==1 && type_nr==1
-%                 load('C:\PHD\matlab_storage_of_output_files\HadISST_SST_Aus_box.mat')  % annual SST south of Aus
-%                 
-%                 
-%                         date_annual=[1870:2014]';
-%                         start_t=find(date_annual==yr_s); 
-%                         end_t=find(date_annual==yr_e); 
-%                         
-%                         yc=HadISST_M_sst_box4(start_t:end_t);
-%                         y=zscore(yc);
-%                 
-%                 
-%                 
-%                 end
-%                 
-%                 
-%                  PC_nr=999; % just to get a number for enso    
-%                  letter='b';  
-%                 
-%                 label_2='°C s.d.^-^1';
-                
-    elseif iso_nr==14      %CP EP index             
-       
-        el_nino_type=1; %  (1) CP (2) EP (12) CP alt2 nino-3 removed
-                
-       if el_nino_type==1
-           
-%           load('C:\PHD\matlab_storage_of_output_files\HadISST_PCs_SST_CP_lim-70_120_20_-20_1950-2014_annual_c.mat') % 1950
-          load('C:\PHD\matlab_storage_of_output_files\HadISST_PCs_SST_CP_lim-70_120_20_-20_1900-2014_annual_c.mat') % 1900  fact (-1) used
-           
-           
-       elseif el_nino_type==2
-           
-           %load('C:\PHD\matlab_storage_of_output_files\HadISST_PCs_SST_EP_lim-70_120_20_-20_1950-2014_annual_c.mat')
-           load('C:\PHD\matlab_storage_of_output_files\HadISST_PCs_SST_EP_lim-70_120_20_-20_1900-2014_annual_c.mat')
-           
-           
-           
-      elseif el_nino_type==12 % not in use
-          
-           load('C:\PHD\matlab_storage_of_output_files\HadISST_PCs_SST_CP_alt2_lim-70_120_20_-20_1950-2014_annual.mat')
-           
-       end
-       
-                   time_c=MA_PCs_save_monthly(:,1);
-                    yr_2=find( time_c==yr_e)+11;
-                    yr_1=find( time_c==yr_s); 
-       
-                PC_nr=2;% leading PC
-                fact=-1; % 1950 +1, 1900 -1
-                y=MA_PCs_save_monthly((yr_1:yr_2),PC_nr)*fact;
-       
-                 PC_nr=999; % just to get a number for enso   
-                 
-                 if param_nr==1
-                 letter='b';  
-                 elseif param_nr==2
-                 letter='b';      
-                 end
-                label_2='°C s.d.^-^1';
-     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
-    elseif iso_nr==15   % SIC PCs
-        
-        SIC_PCs_alt=5;%%%%%%%%%%%%%%%
-        
-    
-          load('C:\PHD\matlab_storage_of_output_files\HadISST_PCs_SIC_lim-150--30_-64_-75_1979-2014_annual.mat'); % use 
-          
-  
-                    time_c=MA_PCs_save_monthly(:,1);
-                    yr_2=find( time_c==yr_e)+11;
-                    yr_1=find( time_c==yr_s); 
-                %%%%%%%%%%%%%%%%%%%%%%    
-                PC_nr=2;%  PC# (2) PC1 Leading SAM-related (3) PC2 PSA1-related (4) PC3
-                %%%%%%%%%%%%%%%%%%%%%%%%
-                
- 
-
-                 %%%%%%%%%%%%%%%%
-                 if PC_nr==2
-                 letter='a';  
-%                  fact=-1; %
-                  fact=1; %%%%%%%%%%%%% leave SIC PCs unchanged
-                 
-                 elseif PC_nr==3
-                 letter='b'; 
-%                  fact=-1; % 
-                  fact=-1; %%%%%%%%%%%%% 
-                
-                 elseif PC_nr==4
-                 letter='c'; 
-                 fact=-1; %                 
-                 
-                 
-                 end
-                 
-                y=MA_PCs_save_monthly((yr_1:yr_2),PC_nr)*fact;
-                 
-                label_2='SIC s.d.^-^1';
-     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%     
-                    
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
-    elseif iso_nr==16   % SST PCs tropical Pacific       
-          
-
-                    eof_sst_nr=2;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-    if eof_sst_nr==1
-    load('C:\PHD\matlab_storage_of_output_files\HadISST_PCs_SST_lim-240--80_30_-30_1871-2014_annual_trend.mat'); %                      
-    elseif eof_sst_nr==2
-        
-%     load('C:\PHD\matlab_storage_of_output_files\HadISST_PCs_SST_lim-240--80_30_-30_1950-2014_annual_trend.mat'); %
-    load('C:\PHD\matlab_storage_of_output_files\HadISST_PCs_SST_lim-240--80_20_-20_1950-2014_annual_trend.mat'); %
-    
-    elseif eof_sst_nr==3  % 1979 
-%     load('C:\PHD\matlab_storage_of_output_files\HadISST_PCs_SST_lim-240--80_30_-30_1979-2014_annual_trend.mat'); %    
-      load('C:\PHD\matlab_storage_of_output_files\HadISST_PCs_SST_lim-240--80_20_-20_1979-2014_annual_trend.mat'); % narrower
-    end
-
-           
-             
-                    time_c=MA_PCs_save_monthly(:,1);
-                    yr_2=find( time_c==yr_e)+11;
-                    yr_1=find( time_c==yr_s); 
-                %%%%%%%%%%%%%%%%%%%%%%    
-                PC_nr=4;%  PC# (2) PC1, (3) PC2, (4) PC3, (5) PC4
-                %%%%%%%%%%%%%%%%%%%%%%%%
-                
-                
-                lat1=-30;
-                lat2=30;
-                lon1=-240;
-                lon2=-60;
-
-                 %%%%%%%%%%%%%%%%
-                 if PC_nr==2
-                 letter='a';  
-%                  fact=-1; %
-                  fact=1; %%%%%%%%%%%%% leave SIC PCs unchanged
-                 
-                 elseif PC_nr==3
-                 letter='c'; 
-%                  fact=-1; % 
-                  if yr_s==1950 
-                    fact=-1; %%%%%%%%%%%%%
-                  elseif yr_s==1979
-                    fact=1;
-                    
-                  else
-                    fact=1;  
-                  end
-                  
-                 
-                 elseif PC_nr==4
-                 letter='e'; 
-                 
-                    if yr_s==1950 
-                    fact=1; %
-                    elseif yr_s==1979 
-                    fact=-1; %    
-                    end
-                    
-                 elseif PC_nr==5
-                    letter='g';
-                    fact=1; %
-                 
-                 end
-                 
-                y=MA_PCs_save_monthly((yr_1:yr_2),PC_nr)*fact;
-                 
-                label_2='°C s.d.^-^1';
-                
-                
-                
-   
-         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
-%     elseif iso_nr==17   % SST ERSST PCs tropical Pacific                
-%     load('C:\PHD\matlab_storage_of_output_files\ERSST_PCs_SST_lim120-280_20_-20_1950-2014_annual_trend.mat'); %          
-%           time_c=MA_PCs_save_monthly(:,1);
-%                     yr_2=find( time_c==yr_e)+11;
-%                     yr_1=find( time_c==yr_s); 
-%                 %%%%%%%%%%%%%%%%%%%%%%    
-%                 PC_nr=2;%  PC# (2)PC1 (3)PC2 (4)PC3
-%                 %%%%%%%%%%%%%%%%%%%%%%%%
-%                 
-%                 
-%                 lat1=-30;
-%                 lat2=30;
-%                 lon1=-240;
-%                 lon2=-60;
-% 
-%                  %%%%%%%%%%%%%%%%
-%                  if PC_nr==2
-%                  letter='a';  
-% %                  fact=-1; %
-%                   fact=1; %%%%%%%%%%%%% leave SIC PCs unchanged
-%                  
-%                  elseif PC_nr==3
-%                  letter='c'; 
-% %                  fact=-1; % 
-%                   if yr_s==1950 || yr_s==1979
-%                     fact=1; %%%%%%%%%%%%%
-%                   else
-%                     fact=1;  
-%                   end
-%                   
-%                  
-%                  elseif PC_nr==4
-%                  letter='e'; 
-%                  fact=1; %                 
-%                  
-%                  
-%                  end
-%                  
-%                 y=MA_PCs_save_monthly((yr_1:yr_2),PC_nr)*fact;
-%                  
-%                 label_2='°C s.d.^-^1';    
-           
+         end                
 end
-
-
+toc
 %% regression of deseasonal 
-
+fprintf('[\bRegression ... ]\b')
+tic
 method_nr=2;  % Use 2 regstats it works fine
 
-if type_nr==1 % interannual
+if type_nr==1 % Interannual, one value yearly for seasonal [used]
     if  sea_nr==1 && param_nr==1 % SST
     X=HadISST_M_annual(:,:,1:end);
     
@@ -1109,107 +470,103 @@ if type_nr==1 % interannual
     X=HadISST_M_season_reg_amjjason(:,:,1:end); 
     end     
 
-elseif type_nr==2
-    
-    if SST_dataset==1 % HadISST
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        if  set_yr==1 &&  param_nr==1
-        load('HadISST_sst_c4.mat') % from HadISST_cosweight_clim.m 1979-
-        ntim=432;
-    
-    
-        elseif (set_yr==6 &&  param_nr==1)  || (iso_nr==16 && param_nr==1) % 1950-2014
-            
-        yr_s_nr=1;
-        
-            if yr_s_nr==1
-            load('C:\PHD\matlab_lib\Data\HadISST_sst_1950_2014_clim.mat')
-            ntim=780;
-    
-            elseif yr_s_nr==2
-            % 1871-2014
-            load('C:\PHD\matlab_storage_of_output_files\clim_SST_1871_2014.mat');
-            ntim=1728;
-            HadISST_sst_c4=era_z500_c4;
-        
-            end
-            
-        
-        elseif (set_yr==1 || set_yr==8  || set_yr==9) &&  param_nr==2
-        load('C:\PHD\matlab_storage_of_output_files\HadISST_clim_sic_1979_2014.mat');
-        ntim=432;    
-            
-
-        end
-        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    elseif SST_dataset==2 % ERSST
-      
-            load('C:\PHD\matlab_storage_of_output_files\clim_SST_ERSST_1950_2014.mat');
-            ntim=780;
-            HadISST_sst_c4=era_z500_c4;
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    % 
-    
-    
-
-    
-    end
-    
-    
-    if SST_dataset==1
-        nlat=180;
-        nlon=360;
-        
-    elseif SST_dataset==2    
-        nlat=89;
-        nlon=180;
-        
-    end
-    
-    HadISST_sst_c5 = reshape(HadISST_sst_c4,ntim, nlat, nlon); 
-    HadISST_sst_c6=permute(HadISST_sst_c5,[3 2 1]);
-  %  X=HadISST_sst_c6(:,:,(yr_1:yr_2));
-  
-        if  sea_nr==1
-            
-            if set_yr==1 || set_yr==10
-                
-             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   
-%              if yr_e==2014   
+% elseif type_nr==2 % for monthly reg [not used]
+%     
+%     if SST_dataset==1 % HadISST
+%     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%         if  set_yr==1 &&  param_nr==1
+%         load('HadISST_sst_c4.mat') % from HadISST_cosweight_clim.m 1979-
+%         ntim=432;
+%     
+%     
+%         elseif (set_yr==6 &&  param_nr==1)  || (iso_nr==16 && param_nr==1) % 1950-2014
+%             
+%         yr_s_nr=1;
+%         
+%             if yr_s_nr==1
+%             load('C:\PHD\matlab_lib\Data\HadISST_sst_1950_2014_clim.mat')
+%             ntim=780;
+%     
+%             elseif yr_s_nr==2
+%             % 1871-2014
+%             load('C:\PHD\matlab_storage_of_output_files\clim_SST_1871_2014.mat');
+%             ntim=1728;
+%             HadISST_sst_c4=era_z500_c4;
+%         
+%             end
+%             
+%         
+%         elseif (set_yr==1 || set_yr==8  || set_yr==9) &&  param_nr==2
+%         load('C:\PHD\matlab_storage_of_output_files\HadISST_clim_sic_1979_2014.mat');
+%         ntim=432;    
+%             
+% 
+%         end
+%         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%     elseif SST_dataset==2 % ERSST
+%       
+%             load('C:\PHD\matlab_storage_of_output_files\clim_SST_ERSST_1950_2014.mat');
+%             ntim=780;
+%             HadISST_sst_c4=era_z500_c4;
+%     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 
+%     end
+%     
+%     
+%     if SST_dataset==1
+%         nlat=180;
+%         nlon=360;
+%         
+%     elseif SST_dataset==2    
+%         nlat=89;
+%         nlon=180;
+%         
+%     end
+%     
+%     HadISST_sst_c5 = reshape(HadISST_sst_c4,ntim, nlat, nlon); 
+%     HadISST_sst_c6=permute(HadISST_sst_c5,[3 2 1]);
+%   %  X=HadISST_sst_c6(:,:,(yr_1:yr_2));
+%   
+%         if  sea_nr==1
+%             
+%             if set_yr==1 || set_yr==10
+%                 
+%              %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   
+% %              if yr_e==2014   
+% %              X=HadISST_sst_c6(:,:,(1:end));
+% %              elseif yr_e==2013
+% %              X=HadISST_sst_c6(:,:,(1:end-12));    
+% %              end
+%              
+%              
+%              
+%              if yr_s==1871 || yr_s==1950
 %              X=HadISST_sst_c6(:,:,(1:end));
-%              elseif yr_e==2013
-%              X=HadISST_sst_c6(:,:,(1:end-12));    
+%              elseif yr_s==1979 && param_nr==1
+%              X=HadISST_sst_c6(:,:,(349:end));
+%              elseif yr_s==1979 && param_nr==2
+%              X=HadISST_sst_c6(:,:,(1:end)); 
+%              
+%              
 %              end
-             
-             
-             
-             if yr_s==1871 || yr_s==1950
-             X=HadISST_sst_c6(:,:,(1:end));
-             elseif yr_s==1979 && param_nr==1
-             X=HadISST_sst_c6(:,:,(349:end));
-             elseif yr_s==1979 && param_nr==2
-             X=HadISST_sst_c6(:,:,(1:end)); 
-             
-             
-             end
-             
-             
-             %%%%%%%%%%%%%%%
-             
-            elseif set_yr==8
-                if yr_e==2014
-                X=HadISST_sst_c6(:,:,(253:end));   % 2000-2014 IPO-
-                elseif yr_e==2013
-                X=HadISST_sst_c6(:,:,(253:end-12));   % 2000-2013 IPO-
-                end
-            elseif set_yr==9
-             X=HadISST_sst_c6(:,:,(1:252));   % 2000-2014 IPO-
-            
-            end
-        elseif  sea_nr>=2
-%             999
-            X=HadISST_sst_c6(:,:,(mm_in_c));
-        end
+%              
+%              
+%              %%%%%%%%%%%%%%%
+%              
+%             elseif set_yr==8
+%                 if yr_e==2014
+%                 X=HadISST_sst_c6(:,:,(253:end));   % 2000-2014 IPO-
+%                 elseif yr_e==2013
+%                 X=HadISST_sst_c6(:,:,(253:end-12));   % 2000-2013 IPO-
+%                 end
+%             elseif set_yr==9
+%              X=HadISST_sst_c6(:,:,(1:252));   % 2000-2014 IPO-
+%             
+%             end
+%         elseif  sea_nr>=2
+% %             999
+%             X=HadISST_sst_c6(:,:,(mm_in_c));
+%         end
         
 end
     
@@ -1265,19 +622,17 @@ for i=1:A
 
     end
 end
+toc
+
+
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%  Figure
 %%%%%%%%%%%%%%%%%%%%%%%
-%%% Monthly values
-
-    
-
-%         proj_nr=1;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%         proj= 'stereo';
-
-   
-
+tic
+fprintf('[\bFigure ]\b')
     if  type_nr==2 &&  iso_nr==9 % TREND  per decade  % monthly
         
                 if param_nr==1 % SST
@@ -1459,7 +814,7 @@ end
 if param_nr==1
    axesm( proj,'MapLatLimit',[lat1+adj_nr lat2],'MapLonLimit',[lon1 lon2],'Grid','on','ParallelLabel','on','Frame','on',... %
        'MeridianLabel','on','FontWeight','bold','FontSize',14,...
-       'mlabellocation',[0:30:180,0:-30:-300]); 
+       'mlabellocation',[0:60:360]);
    
 elseif param_nr==2 % stereo
     if proj_nr==1
@@ -1467,12 +822,10 @@ elseif param_nr==2 % stereo
        'MeridianLabel','on','FontWeight','bold','FontSize',18,...
        'mlabellocation',[0:30:180,0:-30:-180]); 
    
-    elseif proj_nr==2 % mrec
+    elseif proj_nr==2 % merc
        axesm( proj,'MapLatLimit',[lat1+10 lat2+5],'MapLonLimit',[lon1 lon2],'Grid','on','ParallelLabel','on','Frame','on',... %
        'MeridianLabel','on','FontWeight','bold','FontSize',18,...
-       'mlabellocation',[0:60:180,0:-60:-280]);   
-   
-   
+       'mlabellocation',[0:60:180,0:-60:-280]);
     end
    
    
@@ -1530,10 +883,6 @@ end
 
 %%%%%%%%%%%%%%%%%%%%
 
-
-
-
-
 hSurf=surfm(double(HadISST_lat),double(HadISST_lon),wr_cc);
 
  hold on
@@ -1543,70 +892,15 @@ hSurf=surfm(double(HadISST_lat),double(HadISST_lon),wr_cc);
 % ylim([-90 0]);
 br=colorbar;
 
-%where the position arguments are [xposition yposition width height].
+%The position arguments are [xposition yposition width height].
 
-% inflate(h,1.5)
         pos=get(br,'Position');
-%         pos(1)=pos(1)-0.018;      %%%%%%%%%%%%%%%%%%%% x-position of colorbar   (+) --->>   +0.02;
-        pos(1)=pos(1)-0.0;      %%%%%%%%%%%%%%%%%%%% x-position of colorbar   (+) --->>   +0.02; 
-            if param_nr==1 &&  (iso_nr==16 || iso_nr==17)
-                
-                pos(1)=pos(1)-0.015;  
-                pos(2)=pos(2)+0.072;  
-%      
-                pos(3)=pos(3)- 0.0;  % widthcolorbar
-                pos(4)=pos(4)-0.15;  % height colorbar  
-                
-            elseif   param_nr==1 
-                pos(2)=pos(2)+0.095;  
-%             elseif  param_nr==1 && iso_nr ==9
-%             pos(2)=pos(2)+0.095;     
-                pos(3)=pos(3)- 0.0;  % widthcolorbar
-                pos(4)=pos(4)-0.15;  % height colorbar
-            elseif param_nr==2 && iso_nr==6
-                pos(1)=pos(1)+0.011; 
-                pos(2)=pos(2)+0.041; 
-                pos(3)=pos(3)- 0.0;  % widthcolorbar
-                pos(4)=pos(4)-0.15;  % height colorbar
-                
-            elseif param_nr==2 && (iso_nr==9  ||  iso_nr==14)
-                
-                if proj_nr==1
-                pos(1)=pos(1)+0.005; 
-                pos(2)=pos(2)+0.07; 
-                pos(3)=pos(3)- 0.0;  % widthcolorbar
-                pos(4)=pos(4)-0.15;  % height colorbar
-                
-                elseif proj_nr==2 % merch iso
-                pos(1)=pos(1)-0.015; 
-                pos(2)=pos(2)+0.055; 
-                pos(3)=pos(3)- 0.0;  % widthcolorbar
-                pos(4)=pos(4)-0.15;  % height colorbar               
-                
-                end
-                
-                
-            elseif  iso_nr==7 ||  iso_nr==15 
-                pos(1)=pos(1)+0.014; 
-                pos(2)=pos(2)+0.170;
-                pos(3)=pos(3)- 0.0;  % widthcolorbar
-                pos(4)=pos(4)-0.35;  % height colorbar
-                
-            elseif param_nr==2
-                pos(2)=pos(2)+0.045;   
-                pos(3)=pos(3)- 0.0;  % widthcolorbar
-                pos(4)=pos(4)-0.15;  % height colorbar   
-            end
-
-        
+                pos(1)=pos(1)+x_move_colorbar; 
+                pos(2)=pos(2)+y_move_colorbar;
+                pos(3)=pos(3)+adj_width;  % widthcolorbar
+                pos(4)=pos(4)+adj_height;  % height colorbar
         set(br,'Position',pos)
-
-
-
-
-% colormap(b2r(-c_limit,c_limit));
-
-
+        br.TickLabels = strrep(br.TickLabels, '-', '–');% changes to minus symbol
 
         if color_alt==1
             colormap(brewermap(256,'*RdBu'));
@@ -1626,31 +920,10 @@ br=colorbar;
 
 
 
-% colb_x=-0.02; colb_y=0;
-% move([colb_x, colb_y],br)
-%             inflate(1,0.76,h);
-
-%     if iso_nr==7 || iso_nr==8 || iso_nr==9  || iso_nr==10  || iso_nr==12 || iso_nr==14  || iso_nr==6 ||  iso_nr==15 ||  iso_nr==16 ||  iso_nr==17
-%         co_pa=[.1 .1 .1];
-%         
-%         line_w_nr=2;
-%         if param_nr==1
-%         line_w_nr=1.5;
-%         end
-%         
-%     else
-%         co_pa=[.9 .9 .9];
-%         line_w_nr=2;
-%     end
-
+% significance contour
     h1= contourm( double(HadISST_lat),double(HadISST_lon),squeeze(p_all(:,:,1))', [0.05],'-','ShowText','off',...
     'Linecolor',co_pa,'LineWidth', line_w_nr);
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
 if coast_nr==1
     load coast
     %%%%%%%%%%%%%
@@ -1678,19 +951,12 @@ end
  plot3m(lat_cr,lon_cr,'-','LineWidth', 2, 'color',color_code);
 %plot3m(lat(in_c),long(in_c),'.k','MarkerSize', 1);
 %%%%%%%%%%%%%
-
-
-addpath C:\PHD\matlab_mapping
 bedmap2('gl','LineWidth', 1.5, 'color',color_code);
 bedmap2('patchshelves','LineWidth', 1.0,'facecolor','none','frame','on','edgecolor',color_code);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 end
-
-
-
 %%%%%%%%%%%%%%%%%%%%
 
-%letter='b';
 
 % label_size=16;
 label_size=20;
@@ -1704,49 +970,16 @@ label_size=20;
 % set(a1,'FontWeight','bold','FontSize',label_size,'rotation',90);
 
 
-% if   iso_nr==9  
-%         label_across=-70;
-% elseif  iso_nr==10  
-%          label_across=-70;
-% end
+
 
 label_vert=-300;
-if param_nr==1 && (iso_nr==16 || iso_nr==17)
-     label_across=-28;
-elseif param_nr==1
-     label_across=-70;
-elseif param_nr==2 && (iso_nr==6 || iso_nr==7 || iso_nr==14 ||  iso_nr==15)
-    label_across=-55; 
-
-elseif param_nr==2 && iso_nr==9    
-    label_across=-55;
-    label_vert=-298;
-elseif param_nr==2
-     label_across=-85;   
-end
-
-
-
-
-% end
-
-
-
-if  iso_nr==10  
-mlabel('MLabelParallel',label_across,'PLabelLocation',[-75 -60 -45 -30 -15  0 15 30],'PLabelMeridian',label_vert) 
-else
+label_across=-64.9;
 mlabel('MLabelParallel',label_across,'PLabelLocation',[-75 -60 -45 -30 -15  0 15 ],'PLabelMeridian',label_vert) 
-end
+% 'MLabelLocation',[ -120 -60  0 60 120 180],
 
 
 
-%  % save figure
 
-% if cor_nr==1
-%     t4=title(['Trend ', name,' ', season]);
-% elseif cor_nr==3
-%    t4= title(['Regression ', iso,'/', name]);
-% elseif cor_nr==4
     
     if  iso_nr==7
                  
@@ -1754,14 +987,10 @@ end
          
          
          if param_nr==1
-             
-         x_lab=0.920;y_lab=0.7;
+
          elseif param_nr==2
           label_1='SIC';   
-          %x_lab=1.04;y_lab=0.41;
-          x_lab=1.09;y_lab=0.45;
-          
-          
+     
          end
          
          
@@ -2066,7 +1295,7 @@ end
                                x_lab=1.09;y_lab=0.45;
                                end      
             
-      end
+    end
     
 %     if type_nr==2
 %         season='monthly';
@@ -2126,51 +1355,22 @@ type_str='annaul';
         pos(2)=pos(2)-0.16;  
         end
         
-        set(t4,'Position',pos,'FontSize',22, 'FontWeight', 'bold');    
+        set(t4,'Position',pos,'FontSize',16, 'FontWeight', 'bold');    
 
 
         
-        
-  
-        if iso_nr==10 
-            letter_pos= [260 615 50 50]; 
-        elseif (iso_nr==7 || iso_nr==8 || iso_nr==11 || iso_nr==12  || iso_nr==14 || iso_nr==6) && param_nr==1 
-            letter_pos= [260 595 50 50];
-        
-        elseif  iso_nr==9 && param_nr==2
-            letter_pos= [350 685 50 50];
-        
-        elseif  (iso_nr==16 || iso_nr==17) && param_nr==1
-            letter_pos= [225 570 50 50];
-        
-        
-        elseif  ( iso_nr==7 || iso_nr==14|| iso_nr==15 ) && param_nr==2 
-            
-            sic_alt=2;%%%%%%%%%%%%%%%%%%%%%%%
-            
-           if  sic_alt==1
-            letter_pos= [270 545 50 50];
-           elseif sic_alt==2
-            letter_pos= [380 675 50 50];
-           end
-        
-        else
-         letter_pos= [270 560 50 50];   
-        end
         
         
         
         %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         
-        letter_size=28;
-        
-        if param_nr==2
-         letter_size=36;    
-        end
+%         letter_size=28;
+%         
+%         if param_nr==2
+%          letter_size=36;    
+%         end
         
         %%%%%%%%%%%%%%%%%%%%%%%%%%%
-%     letter='d'
-
           TextBox = uicontrol('style','text');
           set(TextBox,'String',letter,'position',letter_pos,'FontWeight','bold','FontSize',letter_size ); % x position y position xsize ysize
           set(TextBox,'foregroundcolor', [0 0 0], ...
@@ -2190,19 +1390,11 @@ type_str='annaul';
      end
      
      
-     if (iso_nr==9 || iso_nr==14)
-     
-         if proj_nr==1
-         label_size=26;
-         elseif proj_nr==2
-         label_size=20;    
-         end
-         
-     end
+
      
 % text(-1.9,-1.8, [label_1,' ', label_2],'FontWeight','bold','FontSize',label_size,'rotation',90); 
-
-set(a1,'FontWeight','bold','FontSize',label_size,'rotation',90);
+label_size2=18;
+set(a1,'FontWeight','bold','FontSize',label_size2,'rotation',90);
      
     if show_colorbar==1
     set(br, 'FontSize',18, 'FontWeight', 'bold'); 
@@ -2249,7 +1441,7 @@ end
 
 if (PC_nr==2 || PC_nr==3 || PC_nr==4) && iso_nr==7 && param_nr==1
     
-filename=['HadISST_regression_',name,'_',pc_str,'_',season,'_',type_str];
+filename=['HadISST_regression_',name,'_',pc_str,'_',season,'_',type_str,'_',num2str(yr_s),'-',num2str(yr_e)];
 
 
 elseif iso_nr==11 || iso_nr==12  || iso_nr==14 || iso_nr==15 
@@ -2270,7 +1462,7 @@ end
    % num2str(round(date_annual(start_t))),'_',num2str(round(date_annual(end_t))),proj];
 
 
-savefilename_c=strcat(filedir,filename);
+savefilename_c=strcat(filedir,'figures\',filename);
 
  % save as png 
 orient landscape
@@ -2289,6 +1481,7 @@ end
 cd('G:\My Drive\ISO_CFA\matlab')
   export_fig('-png','-nocrop','-painters', '-depsc','-opengl', quality_level_str, savefilename_c); % PNG-nocrop'
 cd('G:\My Drive\ClimDyn_oct2022_R4\ClimDyn_R4_2022_Matlab\ClimDyn_R4_2022_Matlab')
+toc
 %% for saving PSA pattern surfaces (step 1)-= one more step=- 
   
 % save regression surface  
