@@ -624,10 +624,61 @@ for i=1:A
 end
 toc
 
+%% Wilks test
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+tic
+fprintf('[\bWilks test ]\b')
+contour_alt_nr=2; % (1) p regular local, (2) with Wilks 2006, 2016 test
+if contour_alt_nr==2
+ 
 
+p_in= squeeze(p_all(:,:,1));
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% alt 2
+% from Github 
+% find the locations where the null hypothesis 
+% could be rejected locally
+% alp_c=.05;
+alp_c=.1;
+rej_null = find(p_in<alp_c); % changes from grid to vector
 
+no_rej_null = length(rej_null); 
+%sort from smallest to largest the p values that
+%would suggest the null hypothesis could be rejected
+%locally
+[rej_null_sort, rej_null_ind] = sort(p_in(rej_null)); 
+[rn_x,rn_y] = ind2sub([360,180],rej_null(rej_null_ind));
+p_local_rej = ones(360,180);
+p_fdr_rej = ones(360,180);
+no_grid_points = 360*180;
+n_fdr = 0; 
 
+%loop over all the cases where it the null hypothesis
+%is assumed could be rejected locally
+for i = 1:no_rej_null
+    pi_c = p_in(rej_null(rej_null_ind(i)));
+    p_local_rej(rn_x(i),rn_y(i))= pi_c;
+    % compute fdr threshold
+    
+    
+   % fdr_thres = 2*alp_c*i/no_grid_points; % correct?
+   % fdr_thres = 2*alp_c*((no_grid_points+1)-rej_null(rej_null_ind(i)))/no_grid_points; % modified otherwise the sort/rank isn't taken into acount
+   % fdr_thres = 2*alp_c*((no_rej_null+1)-rej_null_ind(i))/no_grid_points; % modified otherwise the sort/rank isn't taken into acount
+    fdr_thres = alp_c*((no_rej_null+1)-rej_null_ind(i))/no_grid_points; % remove 2, eq. 3 Wilks 2016
+    
+    
+    
+    %find local p values that are less than fdr threshold
+    if(pi_c<fdr_thres)
+        p_fdr_rej(rn_x(i),rn_y(i)) = pi_c;
+        n_fdr = n_fdr+1;
+    end 
+end
 
+end
+
+toc
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%  Figure
 %%%%%%%%%%%%%%%%%%%%%%%
@@ -767,49 +818,7 @@ s_all_c(p_all>=p_level_rc)=NaN;
 % end
 %%%%%%%%%%%%%
 
-% wr_c=find(s_all_c>100 | s_all_c<0.001);
-
-%   lon1=-250;
-%    lon2= 110;
-
-
 fig('units','inches','width',14,'height',9,'font','Helvetica','fontsize',16,'border','on');
-
-
-
-if   iso_nr==9  
-    
-        if param_nr==1
-        lat2=10;
-        adj_nr=25;
-        elseif param_nr==2
-        lat2=-50; 
-        adj_nr=9.5;
-        end
-        
-        
-elseif  iso_nr==10  
-       lat2=40;   
-elseif  iso_nr==14  || iso_nr==15
-    
-        if param_nr==1
-        lat1=5;
-        lat2=-30;  
-    
-        elseif param_nr==2
-        lat1=-50;    
-        lat2=-90; 
-        adj_nr=0;
-        end
-    
-    
-    
-    
-end
-
-
-
-
 %%%%%%%%%%%
 if param_nr==1
    axesm( proj,'MapLatLimit',[lat1+adj_nr lat2],'MapLonLimit',[lon1 lon2],'Grid','on','ParallelLabel','on','Frame','on',... %
@@ -919,10 +928,17 @@ br=colorbar;
         end
 
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % significance contour
-    h1= contourm( double(HadISST_lat),double(HadISST_lon),squeeze(p_all(:,:,1))', [0.05],'-','ShowText','off',...
+%     h2= contourm( double(HadISST_lat),double(HadISST_lon),squeeze(p_all(:,:,1))', [0.05],'-','ShowText','off',...
+%     'Linecolor',[0.6 0.8 0.8],'LineWidth', line_w_nr);
+    % Wilks test
+    h1= contourm( double(HadISST_lat),double(HadISST_lon),p_fdr_rej', [0.05],'-','ShowText','off',...
     'Linecolor',co_pa,'LineWidth', line_w_nr);
+
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 if coast_nr==1
     load coast
