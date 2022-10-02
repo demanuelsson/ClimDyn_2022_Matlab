@@ -4,32 +4,50 @@ data_dir='C:\Users\Machine\matlab_lib\Data\HadISST_data\';
 filedir ='C:\Users\Machine\matlab_storage_of_output_files\';
 
  name='SST';
+ type_nr=1;    % (1) annual (or seasonal but one value for each year) (2) monthly
+ param_nr=1;% (1-SST/ 2 SIC)
+
  site='RICE';
   yr_s=1979;
-  yr_e=2012; 
+  yr_e=2011; 
 
 sea_nr=7; % AMJJASON
  season='AMJJASON';
  PC_nr=3; 
 
-iso_alt_nr=3;
+ set_yr=1;
+ 
+ iso_nr=7;
+ iso='PCs';
 
   proj_nr=2;
   proj='mercator';
   lat1=-90;
-  lat2=10;
+  lat2=20;
   lon1=0;
   lon2= 360;
   box_use=0;  % (0/1)
   RSAS_SIC_box=0;
   
+  show_colorbar=1;
   color_alt=7; 
-  c_limit=0.3;
+  c_limit=0.6;
   
-  co_pa=[.1 .1 .1];  % contour   
+        x_move_colorbar=-0.048;
+        y_move_colorbar=0.002;
+        adj_width=0.0;
+        adj_height=-0.05;
+  
+  
+  co_pa=[.88 .18 .88];  % contour   
   line_w_nr=2;
 
-letter='e';
+letter='a';
+letter_pos= [175 525 50 50];
+letter_size=28;
 
 coast_nr=1;
+
+x_lab=0.96;y_lab=0.63; % unit position
+
 
