@@ -13,13 +13,13 @@ iso_alt_nr=3;
 
   proj='mercator';
   lat1=-90;
-  lat2=-50;
+  lat2=0;
   lon1=0;
   lon2= 360;
   box_use=0;  % (0/1)
   RSAS_SIC_box=0;
   
-  color_alt=6; 
+  color_alt=4; 
 
 letter='e';
 
