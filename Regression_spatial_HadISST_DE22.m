@@ -29,7 +29,7 @@ toc
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Input
 
-type_nr=2;    % (1) annual (2) monthly
+type_nr=1;    % (1) annual (or seasonal but one value for each year) (2) monthly
 
 param_nr=1;% (1-SST/ 2 SIC)
 
@@ -507,7 +507,7 @@ elseif strcmp(iso,'PPAp')==1
      
 elseif iso_nr==7
 
-load([datadir,'ERA-Interim_PCs_z500_lim0-360_-20_-90_1979-2011_AMJJASON_c52_annual_mean_varimax_c2.mat']); % 2014
+load([filedir,'ERA-Interim_PCs_z500_lim0-360_-20_-90_1979-2011_AMJJASON_c52_annual_mean_varimax_c2.mat']); % 2014
         if type_nr==1 
             time_c=MA_PCs_save(:,1);
             yr_2=find( time_c==yr_e);
@@ -537,7 +537,7 @@ load([datadir,'ERA-Interim_PCs_z500_lim0-360_-20_-90_1979-2011_AMJJASON_c52_annu
                     letter='c';
                     
                       
-                if sea_nr==1
+                if sea_nr==1  || sea_nr==7
                     if param_nr==1
                     letter='a';
                         fact=-1;  %  SAM+ 2015
@@ -568,7 +568,7 @@ load([datadir,'ERA-Interim_PCs_z500_lim0-360_-20_-90_1979-2011_AMJJASON_c52_annu
                 
                         
                 
-                if sea_nr==1
+                if sea_nr==1  || sea_nr==7
                    if param_nr==1 
                     letter='d';
                     fact=-1;   %PSA1+
@@ -601,7 +601,7 @@ load([datadir,'ERA-Interim_PCs_z500_lim0-360_-20_-90_1979-2011_AMJJASON_c52_annu
                 % use -1 because wave train eminates from Aus positive SSTA?
                 % fact=1; %PSA2-  
                 
-                 if sea_nr==1
+                 if sea_nr==1 || sea_nr==7
                      if param_nr==1
                         letter='e';
                         fact=1; %PSA2+ 
@@ -635,14 +635,8 @@ load([datadir,'ERA-Interim_PCs_z500_lim0-360_-20_-90_1979-2011_AMJJASON_c52_annu
          elseif  type_nr==1  && sea_nr>=2  % seasonal one value per year
              
           
-            y_c2=MA_PCs_save_monthly((mm_in_c),PC_nr)*fact;
-            
-            
-             y_c3=reshape(  y_c2,3,length( y_c2)/3);
-            
-              y_c4=nanmean( y_c3)';
-              
-              y= y_c4; % seasonal start 1980 allready taken out
+            y_c2=MA_PCs_save(:,PC_nr)*fact;
+            y= y_c2; 
              
             %%%%%%%%%%%%%%%%%%%%%%% 
             
@@ -1279,8 +1273,8 @@ end
 
     
 
-        proj_nr=1;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        proj= 'stereo';
+%         proj_nr=1;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%         proj= 'stereo';
 
    
 
@@ -1306,22 +1300,22 @@ end
         s_all_c1=s_all;
     end
 
-[c_max, c_min, c_limit]=Ma_max_min(s_all_c1);
-
-c_max_c=c_max;
-
-c_limit_c=c_limit;
+% [c_max, c_min, c_limit]=Ma_max_min(s_all_c1);
+% 
+% c_max_c=c_max;
+% 
+% c_limit_c=c_limit;
 
     if lock_scalebar==1
          
          
         if  iso_nr==7 || iso_nr==15 % PCs
          % c_limit=0.5;
-                if param_nr==1
-                c_limit=1.0;
-                elseif param_nr==2
-                c_limit=0.1;
-                end
+%                 if param_nr==1
+%                 c_limit=1.0;
+%                 elseif param_nr==2
+%                 c_limit=0.1;
+%                 end
                 
                 
            adj_nr=25;
@@ -1612,26 +1606,23 @@ br=colorbar;
 
 % colormap(b2r(-c_limit,c_limit));
 
-color_alt=2;%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-if (iso_nr==7 || iso_nr==15 || iso_nr==14) && param_nr==2
-    color_alt=4; 
-elseif  iso_nr==9  
-    color_alt=1; 
-end
-
-
-if color_alt==1
-    colormap(brewermap(256,'*RdBu'));
-elseif color_alt==2
-    colormap(flipud(cbrewer('div','Spectral',10))); 
-elseif color_alt==3
-    colormap(flipud(cbrewer('div','PiYG',20)));    
-elseif color_alt==4    
-    colormap(cbrewer('div','BrBG',20));    
-    
-end
+        if color_alt==1
+            colormap(brewermap(256,'*RdBu'));
+        elseif color_alt==2
+            colormap(flipud(cbrewer2('div','Spectral',10)));
+        elseif color_alt==3
+            colormap(flipud(cbrewer2('div','PiYG',20)));              
+        elseif color_alt==4
+            colormap(flipud(cbrewer2('div','RdYlGn',20)));          
+        elseif color_alt==5    
+             colormap(cbrewer2('div','BrBG',20));     
+        elseif color_alt==6    
+            colormap(flipud(cbrewer2('div','PuOr',20)));
+        elseif color_alt==7    
+            colormap(flipud(cbrewer2('div','RdGy',20)));      
+        end
 
 
 
@@ -1639,26 +1630,26 @@ end
 % move([colb_x, colb_y],br)
 %             inflate(1,0.76,h);
 
-    if iso_nr==7 || iso_nr==8 || iso_nr==9  || iso_nr==10  || iso_nr==12 || iso_nr==14  || iso_nr==6 ||  iso_nr==15 ||  iso_nr==16 ||  iso_nr==17
-        co_pa=[.1 .1 .1];
-        
-        line_w_nr=2;
-        if param_nr==1
-        line_w_nr=1.5;
-        end
-        
-    else
-        co_pa=[.9 .9 .9];
-        line_w_nr=2;
-    end
+%     if iso_nr==7 || iso_nr==8 || iso_nr==9  || iso_nr==10  || iso_nr==12 || iso_nr==14  || iso_nr==6 ||  iso_nr==15 ||  iso_nr==16 ||  iso_nr==17
+%         co_pa=[.1 .1 .1];
+%         
+%         line_w_nr=2;
+%         if param_nr==1
+%         line_w_nr=1.5;
+%         end
+%         
+%     else
+%         co_pa=[.9 .9 .9];
+%         line_w_nr=2;
+%     end
 
-    h1= contourm( double(HadISST_lat),double(HadISST_lon),squeeze(p_all(:,:,1))', [0.05],'--','ShowText','off',...
+    h1= contourm( double(HadISST_lat),double(HadISST_lon),squeeze(p_all(:,:,1))', [0.05],'-','ShowText','off',...
     'Linecolor',co_pa,'LineWidth', line_w_nr);
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-coast_nr=0;
+
 
 if coast_nr==1
     load coast
@@ -2277,9 +2268,8 @@ filename=['ERSST_regression_',name,'_',pc_str,'_',season,'_',type_str,'_',num2st
 
 end
    % num2str(round(date_annual(start_t))),'_',num2str(round(date_annual(end_t))),proj];
-% 
-% % filedir ='rice_isotopes\annual\';
-filedir ='C:\PHD\matlab_storage_of_output_files\figures\';
+
+
 savefilename_c=strcat(filedir,filename);
 
  % save as png 
@@ -2296,13 +2286,13 @@ elseif quality_level_nr==2
 elseif quality_level_nr==3   
    quality_level_str= '-r240';
 end
-
+cd('G:\My Drive\ISO_CFA\matlab')
   export_fig('-png','-nocrop','-painters', '-depsc','-opengl', quality_level_str, savefilename_c); % PNG-nocrop'
-
+cd('G:\My Drive\ClimDyn_oct2022_R4\ClimDyn_R4_2022_Matlab\ClimDyn_R4_2022_Matlab')
 %% for saving PSA pattern surfaces (step 1)-= one more step=- 
   
 % save regression surface  
-folder_c='C:\PHD\matlab_storage_of_output_files\';
+% folder_c='C:\PHD\matlab_storage_of_output_files\';
 % if sea_nr==1
     savefilename =[folder_c,filename,'_',num2str(p_level_rc),'_c.mat'];
 % elseif sea_nr>=2    
