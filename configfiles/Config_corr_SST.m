@@ -8,7 +8,10 @@ filedir ='C:\Users\Machine\matlab_storage_of_output_files\';
   yr_s=1979;
   yr_e=2011; 
 
-sea_nr=3; % AMJJASON
+sea_nr=7; % AMJJASON
+ season='AMJJASON';
+ PC_nr=3; 
+
 iso_alt_nr=3;
 
   proj='mercator';
