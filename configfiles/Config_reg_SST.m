@@ -50,4 +50,4 @@ coast_nr=1;
 
 x_lab=0.96;y_lab=0.63; % unit position
 
-
+show_title=0;
