@@ -42,7 +42,7 @@ sea_nr=7; % AMJJASON
   co_pa=[.88 .18 .88];  % contour   
   line_w_nr=2;
 
-letter='a';
+letter='';
 letter_pos= [175 525 50 50];
 letter_size=28;
 
