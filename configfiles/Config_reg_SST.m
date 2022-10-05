@@ -13,12 +13,15 @@ filedir ='C:\Users\Machine\matlab_storage_of_output_files\';
 
 sea_nr=7; % AMJJASON
  season='AMJJASON';
- PC_nr=3; 
+ PC_nr=2; % (3) SAM (3) PSA1 (4) PSA2
 
  set_yr=1;
  
  iso_nr=7;
  iso='PCs';
+ 
+ 
+ 
 
   proj_nr=2;
   proj='mercator';
@@ -37,7 +40,9 @@ sea_nr=7; % AMJJASON
         y_move_colorbar=0.002;
         adj_width=0.0;
         adj_height=-0.05;
-  
+        
+   lock_scalebar=1;
+        
   
   co_pa=[.88 .18 .88];  % contour   
   line_w_nr=2;
