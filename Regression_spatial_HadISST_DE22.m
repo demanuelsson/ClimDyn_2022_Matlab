@@ -38,13 +38,7 @@ tic
  
 show_maximum_point=0;
  
-show_title=1; % (1/0)
-area_2_box=0 ; % 0/1 for RICE SST corr Box and text for Area 2
-  
- 
-  lock_scalebar=1;
-  
- 
+% area_2_box=0 ; % 0/1 for RICE SST corr Box and text for Area 2
   
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 SST_dataset=1; % (1) HadISST 
@@ -1044,11 +1038,11 @@ set(a1,'FontWeight','bold','FontSize',label_size2,'rotation',90);
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 if Nino_34==1 % show nino-3.4 box
 
-        textm(-1,-185,'Niño-3.4','color',[1 1 1],'FontSize',12,'FontWeight','bold');
+%         textm(6,-165,'Niño-3.4','color',[1 1 1],'FontSize',12,'FontWeight','bold');
 
         lon_b_c=[170 170 -120 -120 170];
         lat_b_c=[ -5 5 5 -5 -5];
-        plotm(lat_b_c,lon_b_c,'-','LineWidth',3,'Color',[.4 .8 .2])  
+        plotm(lat_b_c,lon_b_c,':','LineWidth',2,'Color',[.4 .8 .2])  
 end
 
 %%%%%%%%%%%%%
