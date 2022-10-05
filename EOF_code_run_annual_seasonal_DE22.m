@@ -408,7 +408,7 @@ end
 %%
 %%%%%%  EOF function %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 tic
-eof_alt_nr=1; % (1) James (use) (2) Greene [same result as J] (3) rotate King 
+eof_alt_nr=1; % (1) James (use) (2)  Greene et al. 2019 EOF same result as eof_j 
 if eof_alt_nr==1 
   
 % out = eof(ldata,nsave,scaling,atype)
