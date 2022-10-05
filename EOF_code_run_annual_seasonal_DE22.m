@@ -8,7 +8,8 @@
 % subfunctions
 % * keep_var.m        UoW online archive Atmospheric Science
 % * annave.m          UoW online archive Atmospheric Science
-% * eof_j.m           James R
+% * eof_j.m           Get eigenvectors/values by eig or SVD method from
+% James R code libary
 % * annual_mean_DE.m  DE
 % * HadISST_load_lat_lon.m DE
 % 
@@ -405,12 +406,11 @@ end
  toc
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   
 %%
-%%%%%%  James EOF function %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%  EOF function %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 tic
-eof_alt_nr=1; % (1) James (use) (2) Green [same result as J] (3) rotate King (use) (4) several methods for regular eof
+eof_alt_nr=1; % (1) James (use) (2) Greene [same result as J] (3) rotate King 
 if eof_alt_nr==1 
-    
-    % edit eof_j
+  
 % out = eof(ldata,nsave,scaling,atype)
 %
 % Get eigenvectors/values by eig or SVD method
