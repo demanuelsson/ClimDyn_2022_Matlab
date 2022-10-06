@@ -1,0 +1,155 @@
+Core: Roosevelt Island ice core (RICE) combined record AMJJASON season isotope data
+
+Water Isotopes, GNS Science
+
+B. Daniel Emanuelsson (danem@bas.ac.uk), Nancy A. N. Bertler (n.bertler@gns.cri.nz)
+
+Primary citations: 
+
+(1) Emanuelsson  B. D., J. A. Renwick, N. A. N. Bertler, W. T. Baisden, and E. R. Thomas
+
+The role of large-scale drivers in the Amundsen Sea Low
+
+variability and associated changes in water isotopes from the Roosevelt Island ice core, Antarctica, ClimDyn
+
+(2) Bertler, N. A. N. et al. RICE community paper
+
+The Ross Sea Dipole - Temperature, Snow Accumulation and Sea Ice
+
+Variability in the Ross Sea Region, Antarctica, over the Past 2,700 Years
+
+Climate of the Past (2017).
+
+(3) Emanuelsson, B. D., W. T. Baisden, N. A. N. Bertler, E. D. Keller, and V. Gkinis (2015),
+
+High-resolution continuous-flow analysis setup for water isotopic measurement from ice
+
+cores using laser spectroscopy, Atmos. Meas. Tech., 8(7), 2869–2883, doi:10.5194/amt-8-2869-2015
+
+
+
+
+Deep Location: 79.364°S, 161.706°W, elevation 550 m a.s.l.
+
+12/13B Location: 79.362°S, 161.698°W, elevation 550 m a.s.l.
+
+Core depth 763 m. Depth interval provided here: 1.29 to 38.56 m
+
+NaN = no data
+
+
+
+time (year) d18O (per mil) 
+
+  1900  -22.2995
+   1901  -22.0756
+   1902  -22.8081
+   1903  -22.7506
+   1904  -23.4157
+   1905  -23.5239
+   1906  -22.4560
+   1907  -19.8220
+   1908  -22.6537
+   1909  -22.8663
+   1910  -24.7126
+   1911  -24.2559
+   1912  -22.9246
+   1913  -23.6087
+   1914  -23.1219
+   1915  -23.0439
+   1916  -22.5903
+   1917  -23.9910
+   1918  -23.1863
+   1919  -22.7727
+   1920  -23.4325
+   1921  -23.9560
+   1922  -26.2745
+   1923  -25.2956
+   1924  -22.1099
+   1925  -24.7267
+   1926  -22.6221
+   1927  -21.5354
+   1928  -24.5183
+   1929  -26.2325
+   1930  -22.8791
+   1931  -23.6077
+   1932  -23.8568
+   1933  -22.9540
+   1934  -23.3003
+   1935  -23.5389
+   1936  -23.4958
+   1937  -23.7779
+   1938  -22.6295
+   1939  -24.7389
+   1940  -22.7179
+   1941  -22.8508
+   1942  -22.7623
+   1943  -22.4595
+   1944  -24.1977
+   1945  -24.1161
+   1946  -24.3421
+   1947  -22.5164
+   1948  -23.1989
+   1949  -25.0475
+   1950  -21.3657
+   1951  -22.5412
+   1952  -21.2316
+   1953  -20.8810
+   1954  -24.1770
+   1955  -23.2561
+   1956  -25.2530
+   1957  -22.6722
+   1958  -22.8269
+   1959  -23.1354
+   1960  -25.0752
+   1961  -24.3811
+   1962  -21.2603
+   1963  -23.1812
+   1964  -21.0060
+   1965  -24.6753
+   1966  -23.8947
+   1967  -21.6988
+   1968  -19.6525
+   1969  -18.1200
+   1970  -22.9748
+   1971  -24.0666
+   1972  -20.6129
+   1973  -24.0912
+   1974  -22.5196
+   1975  -24.6214
+   1976  -25.5640
+   1977  -24.9510
+   1978  -22.6002
+   1979  -23.8343
+   1980  -21.7932
+   1981  -22.9935
+   1982  -22.7473
+   1983  -25.0375
+   1984  -22.6210
+   1985  -25.0144
+   1986  -23.0186
+   1987  -23.6729
+   1988  -24.0444
+   1989  -26.4519
+   1990  -23.2072
+   1991  -19.9127
+   1992  -23.9284
+   1993  -25.0491
+   1994  -23.8397
+   1995  -24.1496
+   1996  -24.9343
+   1997  -23.4060
+   1998  -25.9262
+   1999  -26.3498
+   2000  -25.1998
+   2001  -23.8380
+   2002  -23.0183
+   2003  -23.2482
+   2004  -23.3703
+   2005  -23.2813
+   2006  -21.7867
+   2007  -24.8145
+   2008  -24.8619
+   2009  -23.6433
+   2010  -22.1233
+   2011  -19.4047
