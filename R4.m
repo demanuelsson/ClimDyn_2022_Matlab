@@ -1,4 +1,7 @@
 
+% Comparison to NOAA SAM index
+% https://stateoftheocean.osmc.noaa.gov/atm/sam.php
+
 
 % ncdisp('C:\Users\Machine\matlab_lib\Data\samNOAA.nc')% Accessed on 4/10/22
 
