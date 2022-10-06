@@ -815,21 +815,20 @@ s_all_c(p_all>=p_level_rc)=NaN;
 fig('units','inches','width',14,'height',9,'font','Helvetica','fontsize',16,'border','on');
 %%%%%%%%%%%
 if param_nr==1
-   axesm( proj,'MapLatLimit',[lat1+adj_nr lat2],'MapLonLimit',[lon1 lon2],'Grid','off','ParallelLabel','on','Frame','on',... %
-       'MeridianLabel','on','FontWeight','bold','FontSize',14,...
-       'mlabellocation',[0:60:360]);
+   axesm(proj,'MapLatLimit',[lat1+adj_nr lat2],'MapLonLimit',[-230 130],'Grid','off','ParallelLabel','on','Frame','on',... %
+       'MeridianLabel','on','FontWeight','bold','FontSize',14);%% 'mlabellocation',[0:60:239]
    
-elseif param_nr==2 % stereo
-    if proj_nr==1
-      axesm( proj,'MapLatLimit',[lat1 lat2],'Grid','on','ParallelLabel','on','Frame','on',... %
-       'MeridianLabel','on','FontWeight','bold','FontSize',18,...
-       'mlabellocation',[0:30:180,0:-30:-180]); 
-   
-    elseif proj_nr==2 % merc
-       axesm( proj,'MapLatLimit',[lat1+10 lat2+5],'MapLonLimit',[lon1 lon2],'Grid','on','ParallelLabel','on','Frame','on',... %
-       'MeridianLabel','on','FontWeight','bold','FontSize',18,...
-       'mlabellocation',[0:60:180,0:-60:-280]);
-    end
+% elseif param_nr==2 % stereo
+%     if proj_nr==1
+%       axesm( proj,'MapLatLimit',[lat1 lat2],'Grid','on','ParallelLabel','on','Frame','on',... %
+%        'MeridianLabel','on','FontWeight','bold','FontSize',18,...
+%        'mlabellocation',[0:30:180,0:-30:-180]); 
+%    
+%     elseif proj_nr==2 % merc
+%        axesm( proj,'MapLatLimit',[lat1+10 lat2+5],'MapLonLimit',[lon1 lon2],'Grid','on','ParallelLabel','on','Frame','on',... %
+%        'MeridianLabel','on','FontWeight','bold','FontSize',18,...
+%        'mlabellocation',[0:60:180,0:-60:-280]);
+%     end
    
    
 end
@@ -948,12 +947,11 @@ bedmap2('patchshelves','LineWidth', 1.0,'facecolor','none','frame','on','edgecol
 end
 %%%%%%%%%%%%%%%%%%%%
 
-label_size=20;
-label_vert=-300;
-label_across=-64.9;
-mlabel('MLabelParallel',label_across,'PLabelLocation',[-75 -60 -45 -30 -15  0 15 ],'PLabelMeridian',label_vert) 
-% 'MLabelLocation',[ -120 -60  0 60 120 180],
+mlabel('MLabelParallel',label_across,'PLabelLocation',[-75 -60 -45 -30 -15  0 15],'PLabelMeridian',label_vert,'MLabelLocation',[ -180 -120 -60  0 60 120]) 
+% ,
 
+% x_w1=0.65;y_w1=0.0001;
+% a2=axestext_c(x_w1,y_w1, ['120W '] );
     
     if  iso_nr==7
                  
@@ -1040,9 +1038,10 @@ if Nino_34==1 % show nino-3.4 box
 
 %         textm(6,-165,'Niño-3.4','color',[1 1 1],'FontSize',12,'FontWeight','bold');
 
-        lon_b_c=[170 170 -120 -120 170];
+        lon_b_c=[-170 -170 -120 -120 -170]; % Nino 3.4
+     %   lon_b_c=[160 160 -120 -120 160]; % Nino 4
         lat_b_c=[ -5 5 5 -5 -5];
-        plotm(lat_b_c,lon_b_c,':','LineWidth',2,'Color',[.4 .8 .2])  
+        plotm(lat_b_c,lon_b_c,'-','LineWidth',2,'Color',[.4 .8 .2])  
 end
 
 %%%%%%%%%%%%%
@@ -1055,6 +1054,7 @@ orient landscape
    quality_level_str= '-r240';
 cd('G:\My Drive\ISO_CFA\matlab')
   export_fig('-png','-painters', '-depsc','-opengl', quality_level_str, savefilename_c); % PNG-nocrop' '-nocrop',
+  export_fig('-pdf','-painters', '-depsc','-opengl', quality_level_str, savefilename_c);
 cd('G:\My Drive\ClimDyn_oct2022_R4\ClimDyn_R4_2022_Matlab\ClimDyn_R4_2022_Matlab')
 toc
 
