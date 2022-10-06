@@ -47,8 +47,8 @@ SAM_time_c=SAM_time+datenum(1900,1,1);
     yrs=[1979:2015]';
     %plot(yrs,SAM_x,'*-r','linewidth',3)
     
-    plot([1979:2021]',SAM_NOAA_eW,'*-r','linewidth',3)
-    
+  %  plot([1979:2021]',SAM_NOAA_eW,'*-r','linewidth',3)
+     plot([1979:2011]',SAM_NOAA_eW(1:33),'*-r','linewidth',3)
     legend('SAM this study', 'SAM NOAA','Location','northwest')
     
     
@@ -73,7 +73,7 @@ set(ax,'ticklabelinterpreter','none')  %or 'tex' but not 'latex'
 yticklabels(ax, strrep(yticklabels(ax),'-','–'));
 xticklabels(ax, strrep(xticklabels(ax),'-','–'));
       
-    
+set(gca,'XLim',[1978 2012])    
     
     save_fig=1;
 if save_fig==1
