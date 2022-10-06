@@ -479,9 +479,8 @@ if eof_alt_nr==1
           
           
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-% james
-         elseif varimax_alt==2  % for annual more similar
-         %to non rotated than alt 1
+% 
+         elseif varimax_alt==2
          % alt2 varimax        
          E=eof_out.vect;
 %         E=eof_out.series;
