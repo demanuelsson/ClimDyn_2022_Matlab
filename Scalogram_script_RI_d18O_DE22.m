@@ -13,7 +13,7 @@ if alt_nr==1
     title_str='d18O';
     letter='b';
 elseif alt_nr==2
-    load('C:\Users\Machine\matlab_storage_of_output_files\ERA-Interim_PCs_z500_lim0-360_-20_-90_1979-2011_AMJJASON_c52_annual_mean_varimax_c2.mat');  % AMJJASON
+    load('C:\Users\Machine\matlab_storage_of_output_files\ERA-Interim_PCs_Z500_lim0-360_-20_-90_1979-2011_AMJJASON_varimax.mat');  % AMJJASON
     title_str='SAM';
      letter='c';
 elseif alt_nr==3
@@ -25,7 +25,7 @@ elseif alt_nr==3
     y_c=SAM_x(1:33);
      letter='';
 elseif alt_nr==4
-    load('C:\Users\Machine\matlab_storage_of_output_files\ERA-Interim_PCs_z500_lim0-360_-20_-90_1979-2011_AMJJASON_c52_annual_mean_varimax_c2.mat');  % AMJJASON
+    load('C:\Users\Machine\matlab_storage_of_output_files\ERA-Interim_PCs_Z500_lim0-360_-20_-90_1979-2011_AMJJASON_varimax.mat');  % AMJJASON
     title_str='PSA1';
     letter='d'; 
 end
