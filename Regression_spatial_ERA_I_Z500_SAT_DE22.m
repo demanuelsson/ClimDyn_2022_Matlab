@@ -288,9 +288,8 @@ toc
              
       elseif sea_nr==1 && type_nr==1
           
-      elseif sea_nr==7    
-       %  load('C:\Users\benman\matlab_storage_of_output_files\ERA-Interim_PCs_z500_lim0-360_-20_-90_1979-2011_MAMJJASON_c52_annual_mean_varimax_c2.mat');
-         load('C:\Users\Machine\matlab_storage_of_output_files\ERA-Interim_PCs_z500_lim0-360_-20_-90_1979-2011_AMJJASON_c52_annual_mean_varimax_c2.mat');  %  % AMJJASON 
+      elseif sea_nr==7
+         load('C:\Users\Machine\matlab_storage_of_output_files\ERA-Interim_PCs_Z500_lim0-360_-20_-90_1979-2011_AMJJASON_varimax.mat');  %  % AMJJASON 
       end
                
                   label_1='m s.d.^−^1';
