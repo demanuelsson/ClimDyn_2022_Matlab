@@ -269,7 +269,7 @@ for alt=1:4
 
     eof_alt_nr=1;
     if eof_alt_nr==1
-        load('C:\Users\Machine\matlab_storage_of_output_files\ERA-Interim_PCs_z500_lim0-360_-20_-90_1979-2011_AMJJASON_c52_annual_mean_varimax_c2.mat') %Z500
+        load('C:\Users\Machine\matlab_storage_of_output_files\ERA-Interim_PCs_Z500_lim0-360_-20_-90_1979-2011_AMJJASON_varimax.mat') %Z500
     end
         
       if alt==3
@@ -468,7 +468,7 @@ end
 
     eof_alt_nr=1;
     if eof_alt_nr==1
-        load('C:\Users\Machine\matlab_storage_of_output_files\ERA-Interim_PCs_z500_lim0-360_-20_-90_1979-2011_AMJJASON_c52_annual_mean_varimax_c2.mat') %Z500
+        load('C:\Users\Machine\matlab_storage_of_output_files\ERA-Interim_PCs_Z500_lim0-360_-20_-90_1979-2011_AMJJASON_varimax.mat') %Z500
     end
 
 MA_PCs_save_z500=MA_PCs_save;  
