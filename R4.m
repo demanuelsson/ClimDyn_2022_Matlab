@@ -38,7 +38,7 @@ SAM_time_c=SAM_time+datenum(1900,1,1);
     SAM_x=nanmean(SAM_NOAA_2(:,(4:11)),2);% AMJJASON means
     
     
-    load('C:\Users\Machine\matlab_storage_of_output_files\ERA-Interim_PCs_z500_lim0-360_-20_-90_1979-2011_AMJJASON_c52_annual_mean_varimax_c2.mat');  % AMJJASON
+    load('C:\Users\Machine\matlab_storage_of_output_files\ERA-Interim_PCs_Z500_lim0-360_-20_-90_1979-2011_AMJJASON_varimax.mat');  % AMJJASON
     title_str2='SAM';
 
     
