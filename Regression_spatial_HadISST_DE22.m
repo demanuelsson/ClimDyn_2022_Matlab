@@ -337,9 +337,9 @@ end
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 fprintf('[\bLoad Z500 PCs ]\b')
 tic
-if iso_nr==7  % ZPCs
+if iso_nr==7  % PCs
 
-load([filedir,'ERA-Interim_PCs_z500_lim0-360_-20_-90_1979-2011_AMJJASON_c52_annual_mean_varimax_c2.mat']); % 2011
+load([filedir,'ERA-Interim_PCs_Z500_lim0-360_-20_-90_1979-2011_AMJJASON_varimax.mat']); % 2011
         if type_nr==1 
             time_c=MA_PCs_save(:,1);
             yr_2=find( time_c==yr_e);
