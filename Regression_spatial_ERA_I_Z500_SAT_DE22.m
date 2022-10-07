@@ -25,10 +25,8 @@ clearvars -except config ; close all
 if exist('config','var')
     eval(config)
 else 
-    addpath('G:\My Drive\ClimDyn_oct2022_R4\ClimDyn_R4_2022_Matlab\ClimDyn_R4_2022_Matlab\configfiles\')
-    
+ addpath('G:\My Drive\ClimDyn_oct2022_R4\ClimDyn_R4_2022_Matlab\ClimDyn_R4_2022_Matlab\configfiles\')   
  eval('Config_reg_EOF')
-
 end
 toc     
 
@@ -1303,7 +1301,7 @@ ind_psa_sum_c(ind_nan)=9999;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Plot from saved fields (using first section now, as it runs faster on the new PC)
 % 
-clear
+% clear
 close all
 era_name_nr=1; % (1) Z500 (2) 2mT
 PC_nr=1; % 1,2,3,11,12,13
