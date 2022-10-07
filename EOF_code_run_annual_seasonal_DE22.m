@@ -683,8 +683,8 @@ save_data=1;
 if save_data==1
 
   filedir ='C:\Users\Machine\matlab_storage_of_output_files\';
- % name_end_str='_c51'; % BAS PC, same
-  name_end_str='_c52'; % BAS PC, order 
+
+  name_end_str='_c'; %
   
  name_str=[reanalysis_str,'_PCs','_', geo_str,'_lim',num2str(lims(1)),...
      '-',num2str(lims(2)),'_',num2str(lims(4)),'_',num2str(lims(3)),'_',num2str(yr_s),'-',num2str(yr_e),'_',season,...
