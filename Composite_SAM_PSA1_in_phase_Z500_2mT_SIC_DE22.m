@@ -56,8 +56,7 @@ eof_str='varimax';
 
 elseif eof_type==3
     eof_str='varimax';
-    %load('C:\Users\benman\matlab_storage_of_output_files\ERA-Interim_PCs_z500_lim0-360_-20_-90_1979-2011_MAMJJASON_c52_annual_mean_varimax_c2');
-    load('C:\Users\Machine\matlab_storage_of_output_files\ERA-Interim_PCs_z500_lim0-360_-20_-90_1979-2011_AMJJASON_c52_annual_mean_varimax_c2');
+    load('C:\Users\Machine\matlab_storage_of_output_files\ERA-Interim_PCs_Z500_lim0-360_-20_-90_1979-2011_AMJJASON_varimax');
 end
 
 
