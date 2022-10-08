@@ -808,28 +808,11 @@ elseif   type_nr==2 || type_nr==1
 end
 %%%%%%%%%%%%%%%%%%%%%%%
 
-[c_max, c_min, c_limit]=Ma_max_min(s_all_c);
-c_max_c=c_max;
-c_limit_c=c_limit;
+% [c_max, c_min, c_limit]=Ma_max_min(s_all_c);
+% c_max_c=c_max;
+% c_limit_c=c_limit;
 
-    if lock_scalebar==1
-             
-         if    era_name_nr==5 && (cor_nr==4 || cor_nr==6)
-%                  c_limit= 1.7879;% 2mT EOF1 2014 max                  
-            %       c_limit= 1.51;% 2mT EOF1 2014
-                   c_limit= 1.01;% 2mT EOF1 2012
-                                
-         elseif    era_name_nr==1 && cor_nr==4 && (sea_nr==1 || sea_nr==7)
-                        % c_limit= 47.5260;
-                         
-                       % c_limit= 30; 
-                        c_limit= 22.01; 
-         elseif    era_name_nr==3 && cor_nr==1 && yr_nr_s==2         
-                         
-                        c_limit= 1.00; % 1.6590
-         end
-      
-    end
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Fig
 
@@ -1213,483 +1196,484 @@ save(savefilename,'s_all_c');
 
      end
 toc
+%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%    
- %% Alt 2 save surface -= Loads saved surfaces from above =- make contours for overlay on corr plots, Z500, SAT corr
- tic
-p_level_rc=0.05;
-era_name_nr=1; % 1, 5
-% season='annual';
-% type_str='Monthly';
-%season='Annual';
-%season='MAMJJASON';
-season='AMJJASON';
-type_str='Annual';% one value per year
-
-yr_s=1979;
-yr_e=2011;
-%  
-%  folder_c='C:\Users\Machine\matlab_storage_of_output_files\';
-
-    if era_name_nr==5
-%         load([folder_c,'ERA_interim_regression_2mT_PC1_',season,'_',type_str,'_',...
-%             num2str(yr_s),'-',num2str(yr_e),'_c_',num2str(p_level_rc),'_c5.mat']);
-        load([filedir,'ERA_interim_regression_2mT_SAM_',season,'_',type_str,'_',...
-            num2str(yr_s),'-',num2str(yr_e),'_c_',num2str(p_level_rc),'_c5.mat']);
-
-    elseif era_name_nr==1
-        load([filedir,'ERA_interim_regression_z500_SAM_',season,'_',type_str,'_',...
-            num2str(yr_s),'-',num2str(yr_e),'_c_',num2str(p_level_rc),'_c6.mat']);
-    end      
-
-    
-
-s_all_c_pc1=s_all_c;  % this is the p-level surface as rs with lower p-levels are masked above
-
-%%%%%%%%%%%%
- ind_pc1_nonnan=~isnan(s_all_c_pc1);
-%%%%%%%%%%
-
-s_all_c_pc1(find(s_all_c_pc1<0))=-1; % Negative values -1
-s_all_c_pc1(find(s_all_c_pc1>0))=1;  % positive values 1
-
-
-    if era_name_nr==5
-%             load([folder_c,'ERA_interim_regression_2mT_PC2_',season,'_',type_str,'_',...
-%                 num2str(yr_s),'-',num2str(yr_e),'_c_',num2str(p_level_rc),'_c5.mat']);
-            load([filedir,'ERA_interim_regression_2mT_PSA1_',season,'_',type_str,'_',...
-                num2str(yr_s),'-',num2str(yr_e),'_c_',num2str(p_level_rc),'_c6.mat']);
-            
-    elseif era_name_nr==1
-            load([filedir,'ERA_interim_regression_z500_PSA1_',season,'_',type_str,'_',...
-            num2str(yr_s),'-',num2str(yr_e),'_c_',num2str(p_level_rc),'_c6.mat']);
-    end
-
-s_all_c_pc3=s_all_c;
-
-%%%%%%%%%%%%%%%%%
- ind_pc3_nonnan=~isnan(s_all_c_pc3);
-%%%%%%%%%%%%%%%%%
-
-s_all_c_pc3(find(s_all_c_pc3<0))=-1;  % Negative values -1
-s_all_c_pc3(find(s_all_c_pc3>0))=1;  % positive values 1
-
-
-
-% [~,ind_test_c]=ismember(s_all_c_psa1,s_all_c_psa2); % is not member of 
-
-%%%%%%%%%%%%%%
- ind_psa_sum_nonactive=ind_pc1_nonnan+ind_pc3_nonnan;
-%%%%%%%%%%%%%
-
- ind_psa_sum=s_all_c_pc1+s_all_c_pc3;
- ind_psa_sum_c=ind_psa_sum;
- 
-ind_nan= isnan(ind_psa_sum_c); 
-ind_psa_sum_c(ind_nan)=9999; 
-
-    if era_name_nr==5
-        filename=['pc_2mT_ind_psa_sum_',num2str(p_level_rc),'_c5.mat'];
-    elseif era_name_nr==1
-        filename=['pc_z500_ind_psa_sum_',num2str(p_level_rc),'_',season,'_c5.mat'];
-    end
-
-
- savefilename =[filedir,filename]; 
-% save(savefilename,'ind_psa_sum'); 
- save(savefilename,'ind_psa_sum_c','ind_psa_sum_nonactive'); 
- toc
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Plot from saved fields (using first section now, as it runs faster on the new PC)
+%  %% Alt 2 save surface -= Loads saved surfaces from above =- make contours for overlay on corr plots, Z500, SAT corr
+%  tic
+% p_level_rc=0.05;
+% era_name_nr=1; % 1, 5
+% % season='annual';
+% % type_str='Monthly';
+% %season='Annual';
+% %season='MAMJJASON';
+% season='AMJJASON';
+% type_str='Annual';% one value per year
 % 
-% clear
-close all
-era_name_nr=1; % (1) Z500 (2) 2mT
-PC_nr=1; % 1,2,3,11,12,13
-
-cor_nr=4; % (4) Z500 PCs,(6) SAT PCs
-yr_nr_s=1;
-corr_label=1;
-
-
-sea_nr=1;
-if sea_nr==1
-season='annual';
-end
-
-
-%type_str='monthly';
-type_str='Annual';
-proj='stereo';
-lat1=-90;
-yr_s=1979;
-yr_e=2011;
-
-if era_name_nr==1
-   era_name_str='Z500';
-   title_str=era_name_str;
-   lat2=-20;
-   label_1='m s.d.^−^1';
-   if PC_nr==1
-    PC_nr_str='SAM';
-    letter='a';
-   % variance_exp=23;
-     variance_exp=40; % rotate
-%    variance_exp=25; % varimax
-%    variance_exp=30; % varimax
-   elseif PC_nr==2
-    PC_nr_str='PSA1';
-    letter='b';
-    variance_exp=11;
-    %variance_exp=14;
-    % variance_exp=12; % varimax
-   %  variance_exp=20; % varimax
-     
-   elseif PC_nr==3    
-    PC_nr_str='PSA2';
-    letter='c';
-    %variance_exp=10;
-    variance_exp=8;
-   %  variance_exp=9; % varimax
-   %   variance_exp=10; % varimax
-   end   
-   
-   
-   
-elseif era_name_nr==2
-   era_name_str='2mT';
-   lat2=-30;
-   label_1='°C s.d.^−^1';
-   title_str='SAT';
-   if PC_nr==1
-    PC_nr_str='PC1';
-    letter='d';
-    %variance_exp=20;
-    %variance_exp=17;
-    % variance_exp=22; % varimax
-     variance_exp=30; % 
-     
-   elseif PC_nr==2
-    PC_nr_str='PC2';
-  %  letter='e';
-    letter='f';
-    %variance_exp=13;
-    %variance_exp=11;
-    % variance_exp=12; % varimax
-     variance_exp=12;
-   elseif PC_nr==3    
-    PC_nr_str='PC3';
- %   letter='f';
-    letter='e';
-    %variance_exp=8;
-   % variance_exp=6;
-%      variance_exp=8; % varimax
-     variance_exp=7; 
-   elseif PC_nr==11
-     PC_nr_str='SAM'; %? name
-    letter='g';
-      
-   elseif PC_nr==12
-      PC_nr_str='PSA1';
-      letter='h';
-   elseif PC_nr==13    
-     PC_nr_str='PSA2';
-     letter='i';
-   end
-   
-   
-   
-   
-end
-
-
-%folder_c='C:\Users\Machine\matlab_storage_of_output_files\';
-%load([folder_c,'ERA_interim_regression_',era_name_str,'_',PC_nr_str,'_annual_Monthly_1979-2011_c.mat']);
-load([filedir,'ERA_interim_regression_',era_name_str,'_',PC_nr_str,'_Annual_Annual_1979-2011_c.mat']);
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%  Figure
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-tic
-corr_label=1; %(1/0) %%%%%%%%%%% show colorbar and label
-lock_scalebar=1; % (1/0)
-%%%%
-type_nr=2;
-
-if type_nr==2 && cor_nr==1%%% TREND only    Monthly
-    
-    s_all_c=s_all;
-%     s_all_c(p_all>=0.1)=NaN; 
-    s_all_c=s_all_c*10*12; % per decade. %%%%%%  Agree with Bromwich et al. 2012
-    
-
-elseif   type_nr==2 || type_nr==1
-    
-   s_all_c=s_all;  % unit per s.d.   
-end
-%%%%%%%%%%%%%%%%%%%%%%%
-
-[c_max, c_min, c_limit]=Ma_max_min(s_all_c);
-c_max_c=c_max;
-c_limit_c=c_limit;
-
-    if lock_scalebar==1
-             
-         if    era_name_nr==2 && (cor_nr==4 || cor_nr==6)
-%                  c_limit= 1.7879;% 2mT EOF1 2014 max                  
-            %       c_limit= 1.51;% 2mT EOF1 2014
-                   %c_limit= 1.01;% 2mT EOF1 2012
-                   c_limit= 0.75;%             
-         elseif    era_name_nr==1 && cor_nr==4 && sea_nr==1
-                        % c_limit= 50.01;
-                      %   c_limit= 30.01;
-                         c_limit= 25.01;
-                         
-         elseif    era_name_nr==3 && cor_nr==1 && yr_nr_s==2         
-                         
-                        c_limit= 1.00; % 1.6590
-         end
-      
-    end
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Fig
-
-fig('units','inches','width',10,'height',9,'font','Helvetica','fontsize',16,'border','on');
-
-   axesm( proj,'MapLatLimit',[lat1 lat2],'Grid','on','ParallelLabel','on','Frame','on',... %
-       'MeridianLabel','on','FontWeight','bold','FontSize',18,...  % font size of degree labels
-       'mlabellocation',[0:30:180,0:-30:-180]); 
-
-  
-set(gca,'box','off','XColor',[1,1,1],'YColor',[1,1,1]);  % turns off border box and axes  
-hSurf=surfm(double(era_lat),double(era_long),squeeze(s_all_c(:,:,1))');
-hold on
- 
-        if corr_label==1
-            br=colorbar('FontWeight', 'bold', 'FontSize',18);   
-            pos=get(br,'Position');  
-        
-            if cor_nr==4 && era_name_nr==1
-            
-            pos(1)=pos(1)+0.04;      %%%%%%%%%%%%%%%%%%%% x-position of colorbar 
-            pos(2)=pos(2)+0.1;      
-            pos(3)=pos(3)+0.014;  % widthcolorbar
-            pos(4)=pos(4)-0.195;  % height colorbar 
-            
-            
-            elseif cor_nr==4 && era_name_nr==2 || cor_nr==6 && era_name_nr==2
-                
-            
-            pos(1)=pos(1)-0.03;      %%%%%%%%%%%%%%%%%%%% x-position of colorbar 
-            pos(2)=pos(2)+0.15;      
-            pos(3)=pos(3)+ 0.0;  % widthcolorbar
-            pos(4)=pos(4)-0.315;  % height colorbar    
-                
-        
-            end
-        
-        set(br,'Position',pos)     
-        
-        end
-        
-    
-      colormap(b2r(-c_limit,c_limit));
-      
-      
-      if era_name_nr==1 % z500 %%%%%%%%
-        color_alt=6;
-      elseif era_name_nr==5
-        color_alt=1;
-      else
-        color_alt=1;    
-      end
-      
-      
-        if color_alt==1
-            colormap(brewermap(256,'*RdBu'));
-        elseif color_alt==2
-            colormap(flipud(cbrewer2('div','Spectral',10)));
-        elseif color_alt==3
-            colormap(flipud(cbrewer2('div','PiYG',20)));              
-        elseif color_alt==4
-            colormap(flipud(cbrewer2('div','RdYlGn',20)));          
-        elseif color_alt==5    
-             colormap(cbrewer2('div','BrBG',20));
-        elseif color_alt==6    
-            colormap(flipud(cbrewer2('div','PuOr',20))); 
-        elseif  color_alt==7   
-        load('C:\Users\Machine\matlab_storage_of_output_files\cmap_colormap_save_c2.mat')
-        colormap(cmap_colormap_save_c2)     
-            
-             
-        end
-      
-      
- %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
- % p=0.05 significance level contour      
-      
-    if cor_nr==4 || cor_nr==5   || cor_nr==6 || cor_nr==3 || cor_nr==1    
-        co_pa=[.1 .1 .1];
-        
-    else
-        co_pa=[.9 .9 .9];
-    end
-
-
- contour_alt_nr=2;   
-    
-if contour_alt_nr==1
-    h1= contourm( double(era_lat),double(era_long),squeeze(p_all(:,:,1))', [0.05],'--','ShowText','off',...
-    'Linecolor',co_pa,'LineWidth', 2);
-elseif contour_alt_nr==2 % Wilks test
-    h1= contourm( double(era_lat),double(era_long),p_fdr_rej', [0.05],'--','ShowText','off',...
-    'Linecolor',co_pa,'LineWidth', 2);
-end
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-coast_nr=1;%%%%(1/0) on/off %%%%% Coast lines %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-if coast_nr==1
-
-    color_nr=1;
-    if color_nr==1
-       color_code=[.1 .1 .1];   
-    elseif color_nr==2
-       color_code=[.6 .6 .6];  
-    end
-
-load coast
-%%%%%%%%%%%%%
-% to be able to use coastline for continents in combination with ant
-% coastline and grounding line from bedmap
-in_c=find(lat<-60);
-lat_cr=lat;
-lon_cr=long;
-lat_cr(in_c)=NaN;
-lon_cr(in_c)=NaN;
-
-%%%%%%%%%%%%%
-plot3m(lat_cr,lon_cr,'-k','LineWidth', 1.5,'color',color_code);
-%plot3m(lat(in_c),long(in_c),'.k','MarkerSize', 1);
-
-
-%addpath C:\Users\benman\matlab_mapping
-bedmap2('gl','k','LineWidth', 1.5,'color',color_code);
-bedmap2('patchshelves','LineWidth', 1.0,'facecolor','none','frame','on','edgecolor',color_code)
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-end
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% label above colorbar
-label_size=22;
-  
-if cor_nr==1 && era_name_nr==3 %
-    a1=axestext_c(1.101, +0.33, ['(',label_1,')'] );    
-elseif cor_nr==4 && era_name_nr==1
-    a1=axestext_c(0.04, +0.028, ['(',label_1,')'] ); 
-elseif   era_name_nr==2  
-    a1=axestext_c(0.15, +0.10, ['(',label_1,')'] );  
-else
-    a1=axestext_c(0.1, -0.04, ['(',label_1,' ', label_2,')'] );
-end
-
-set(a1,'FontWeight','bold','FontSize',label_size,'rotation',90);
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Variance explained by EOF
-        if cor_nr==4 && era_name_nr==1 
-            a2=axestext_c(0.95, +0.98, [num2str(variance_exp),'%'] );
-            set(a2,'FontWeight','bold','FontSize',label_size+4);
-        elseif cor_nr==6 && era_name_nr==2 && PC_nr<=3    
-            a2=axestext_c(0.9, +0.90, [num2str(variance_exp),'%'] );
-            set(a2,'FontWeight','bold','FontSize',label_size+4);            
-        end
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% lat long labels. Long  at this lat and placement of lat         
-    if era_name_nr==1
-        mlab_par=-28;
-    elseif era_name_nr==2    
-        mlab_par=-38; 
-     %   mlab_par=-42; 
-    else
-        mlab_par=-10;
-    end
-        
-mlabel('MLabelParallel',mlab_par,'PLabelLocation',[-75 -60 -45 -30 -15  0],'PLabelMeridian',100) 
-
-
-%%%%%%%%%%%%%%%%%%%%%%
-%  Title
-show_title=1;
-if show_title==1 && PC_nr==3 && era_name_nr==1 || show_title==1 && PC_nr==2 && era_name_nr==2 || show_title==1 && PC_nr==13 && era_name_nr==2
-t4=title(title_str);       
-pos=get(t4,'Position');
-               
-% move title        
-    if cor_nr==1
-        pos(1)=pos(1)+0.130;
-        pos(2)=pos(2)-0.030;
-    elseif cor_nr==4 && era_name_nr==1
-        pos(1)=pos(1)+1.65;
-        pos(2)=pos(2)-0.30;
-    elseif cor_nr==4 && era_name_nr==2 || cor_nr==6 && era_name_nr==2 
-        pos(1)=pos(1)+1.36;
-        pos(2)=pos(2)-0.59;      
-        
-
-    end
-        set(t4,'Position',pos,'FontSize',26, 'FontWeight', 'bold');  
-
-end
-   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   % Letter
-   if era_name_nr==1
-        letter_pos= [170 710 50 62];
-   elseif era_name_nr==2
-        letter_pos= [230 650 50 62];
-   end
-        letter_size=38;
-    
-
-          TextBox = uicontrol('style','text');
-          set(TextBox,'String',letter,'position',letter_pos,'FontWeight','bold','FontSize',letter_size ); % x position y position xsize ysize
-          set(TextBox,'foregroundcolor', [0 0 0], ...
-         'backgroundcolor', [1 1 1]);
-     
-     %%%%%%%%%%%%%%%%%
-     % colorbar fontsize 
-     if cor_nr==4
-        scalebar_fontsize=22;    
-     else
-        scalebar_fontsize=16;
-     end
-     
-      set(br, 'FontSize',scalebar_fontsize, 'FontWeight', 'bold'); 
-     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
-     % save fig
-        str_end='_c';
-     
-    
-        if cor_nr==4 || cor_nr==6      
-            filename=['ERA_interim_regression_', era_name_str,'_',PC_nr_str,'_',season,...
-                '_',type_str,'_',num2str(yr_s),'-',num2str(yr_e),str_end];
-        
-        end
-        
-
-filedir_c =[filedir,'figures\'];
-
-if corr_label==1
-savefilename_c=strcat(filedir_c,filename,'_crop');
-else
-savefilename_c=strcat(filedir_c,filename);
-
-end
-
-
-% save as png 
-orient landscape
-cd('G:\My Drive\ISO_CFA\matlab')
-export_fig('-png','-nocrop','-painters', '-depsc','-opengl', '-r240',savefilename_c); % PNG-nocrop'
-export_fig('-pdf','-painters', '-depsc','-opengl', '-r240',savefilename_c); % PNG-nocrop'
-cd('G:\My Drive\ClimDyn_oct2022_R4\ClimDyn_R4_2022_Matlab\ClimDyn_R4_2022_Matlab')
+% yr_s=1979;
+% yr_e=2011;
+% %  
+% %  folder_c='C:\Users\Machine\matlab_storage_of_output_files\';
+% 
+%     if era_name_nr==5
+% %         load([folder_c,'ERA_interim_regression_2mT_PC1_',season,'_',type_str,'_',...
+% %             num2str(yr_s),'-',num2str(yr_e),'_c_',num2str(p_level_rc),'_c5.mat']);
+%         load([filedir,'ERA_interim_regression_2mT_SAM_',season,'_',type_str,'_',...
+%             num2str(yr_s),'-',num2str(yr_e),'_c_',num2str(p_level_rc),'_c5.mat']);
+% 
+%     elseif era_name_nr==1
+%         load([filedir,'ERA_interim_regression_z500_SAM_',season,'_',type_str,'_',...
+%             num2str(yr_s),'-',num2str(yr_e),'_c_',num2str(p_level_rc),'_c6.mat']);
+%     end      
+% 
+%     
+% 
+% s_all_c_pc1=s_all_c;  % this is the p-level surface as rs with lower p-levels are masked above
+% 
+% %%%%%%%%%%%%
+%  ind_pc1_nonnan=~isnan(s_all_c_pc1);
+% %%%%%%%%%%
+% 
+% s_all_c_pc1(find(s_all_c_pc1<0))=-1; % Negative values -1
+% s_all_c_pc1(find(s_all_c_pc1>0))=1;  % positive values 1
+% 
+% 
+%     if era_name_nr==5
+% %             load([folder_c,'ERA_interim_regression_2mT_PC2_',season,'_',type_str,'_',...
+% %                 num2str(yr_s),'-',num2str(yr_e),'_c_',num2str(p_level_rc),'_c5.mat']);
+%             load([filedir,'ERA_interim_regression_2mT_PSA1_',season,'_',type_str,'_',...
+%                 num2str(yr_s),'-',num2str(yr_e),'_c_',num2str(p_level_rc),'_c6.mat']);
+%             
+%     elseif era_name_nr==1
+%             load([filedir,'ERA_interim_regression_z500_PSA1_',season,'_',type_str,'_',...
+%             num2str(yr_s),'-',num2str(yr_e),'_c_',num2str(p_level_rc),'_c6.mat']);
+%     end
+% 
+% s_all_c_pc3=s_all_c;
+% 
+% %%%%%%%%%%%%%%%%%
+%  ind_pc3_nonnan=~isnan(s_all_c_pc3);
+% %%%%%%%%%%%%%%%%%
+% 
+% s_all_c_pc3(find(s_all_c_pc3<0))=-1;  % Negative values -1
+% s_all_c_pc3(find(s_all_c_pc3>0))=1;  % positive values 1
+% 
+% 
+% 
+% % [~,ind_test_c]=ismember(s_all_c_psa1,s_all_c_psa2); % is not member of 
+% 
+% %%%%%%%%%%%%%%
+%  ind_psa_sum_nonactive=ind_pc1_nonnan+ind_pc3_nonnan;
+% %%%%%%%%%%%%%
+% 
+%  ind_psa_sum=s_all_c_pc1+s_all_c_pc3;
+%  ind_psa_sum_c=ind_psa_sum;
+%  
+% ind_nan= isnan(ind_psa_sum_c); 
+% ind_psa_sum_c(ind_nan)=9999; 
+% 
+%     if era_name_nr==5
+%         filename=['pc_2mT_ind_psa_sum_',num2str(p_level_rc),'_c5.mat'];
+%     elseif era_name_nr==1
+%         filename=['pc_z500_ind_psa_sum_',num2str(p_level_rc),'_',season,'_c5.mat'];
+%     end
+% 
+% 
+%  savefilename =[filedir,filename]; 
+% % save(savefilename,'ind_psa_sum'); 
+%  save(savefilename,'ind_psa_sum_c','ind_psa_sum_nonactive'); 
+%  toc
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %% Plot from saved fields (using first section now, as it runs faster on the new PC)
+% % 
+% % clear
+% close all
+% era_name_nr=1; % (1) Z500 (2) 2mT
+% PC_nr=1; % 1,2,3,11,12,13
+% 
+% cor_nr=4; % (4) Z500 PCs,(6) SAT PCs
+% yr_nr_s=1;
+% corr_label=1;
+% 
+% 
+% sea_nr=1;
+% if sea_nr==1
+% season='annual';
+% end
+% 
+% 
+% %type_str='monthly';
+% type_str='Annual';
+% proj='stereo';
+% lat1=-90;
+% yr_s=1979;
+% yr_e=2011;
+% 
+% if era_name_nr==1
+%    era_name_str='Z500';
+%    title_str=era_name_str;
+%    lat2=-20;
+%    label_1='m s.d.^−^1';
+%    if PC_nr==1
+%     PC_nr_str='SAM';
+%     letter='a';
+%    % variance_exp=23;
+%      variance_exp=40; % rotate
+% %    variance_exp=25; % varimax
+% %    variance_exp=30; % varimax
+%    elseif PC_nr==2
+%     PC_nr_str='PSA1';
+%     letter='b';
+%     variance_exp=11;
+%     %variance_exp=14;
+%     % variance_exp=12; % varimax
+%    %  variance_exp=20; % varimax
+%      
+%    elseif PC_nr==3    
+%     PC_nr_str='PSA2';
+%     letter='c';
+%     %variance_exp=10;
+%     variance_exp=8;
+%    %  variance_exp=9; % varimax
+%    %   variance_exp=10; % varimax
+%    end   
+%    
+%    
+%    
+% elseif era_name_nr==2
+%    era_name_str='2mT';
+%    lat2=-30;
+%    label_1='°C s.d.^−^1';
+%    title_str='SAT';
+%    if PC_nr==1
+%     PC_nr_str='PC1';
+%     letter='d';
+%     %variance_exp=20;
+%     %variance_exp=17;
+%     % variance_exp=22; % varimax
+%      variance_exp=30; % 
+%      
+%    elseif PC_nr==2
+%     PC_nr_str='PC2';
+%   %  letter='e';
+%     letter='f';
+%     %variance_exp=13;
+%     %variance_exp=11;
+%     % variance_exp=12; % varimax
+%      variance_exp=12;
+%    elseif PC_nr==3    
+%     PC_nr_str='PC3';
+%  %   letter='f';
+%     letter='e';
+%     %variance_exp=8;
+%    % variance_exp=6;
+% %      variance_exp=8; % varimax
+%      variance_exp=7; 
+%    elseif PC_nr==11
+%      PC_nr_str='SAM'; %? name
+%     letter='g';
+%       
+%    elseif PC_nr==12
+%       PC_nr_str='PSA1';
+%       letter='h';
+%    elseif PC_nr==13    
+%      PC_nr_str='PSA2';
+%      letter='i';
+%    end
+%    
+%    
+%    
+%    
+% end
+% 
+% 
+% %folder_c='C:\Users\Machine\matlab_storage_of_output_files\';
+% %load([folder_c,'ERA_interim_regression_',era_name_str,'_',PC_nr_str,'_annual_Monthly_1979-2011_c.mat']);
+% load([filedir,'ERA_interim_regression_',era_name_str,'_',PC_nr_str,'_Annual_Annual_1979-2011_c.mat']);
+% 
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %  Figure
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% tic
+% corr_label=1; %(1/0) %%%%%%%%%%% show colorbar and label
+% lock_scalebar=1; % (1/0)
+% %%%%
+% type_nr=2;
+% 
+% if type_nr==2 && cor_nr==1%%% TREND only    Monthly
+%     
+%     s_all_c=s_all;
+% %     s_all_c(p_all>=0.1)=NaN; 
+%     s_all_c=s_all_c*10*12; % per decade. %%%%%%  Agree with Bromwich et al. 2012
+%     
+% 
+% elseif   type_nr==2 || type_nr==1
+%     
+%    s_all_c=s_all;  % unit per s.d.   
+% end
+% %%%%%%%%%%%%%%%%%%%%%%%
+% 
+% [c_max, c_min, c_limit]=Ma_max_min(s_all_c);
+% c_max_c=c_max;
+% c_limit_c=c_limit;
+% 
+%     if lock_scalebar==1
+%              
+%          if    era_name_nr==2 && (cor_nr==4 || cor_nr==6)
+% %                  c_limit= 1.7879;% 2mT EOF1 2014 max                  
+%             %       c_limit= 1.51;% 2mT EOF1 2014
+%                    %c_limit= 1.01;% 2mT EOF1 2012
+%                    c_limit= 0.75;%             
+%          elseif    era_name_nr==1 && cor_nr==4 && sea_nr==1
+%                         % c_limit= 50.01;
+%                       %   c_limit= 30.01;
+%                          c_limit= 25.01;
+%                          
+%          elseif    era_name_nr==3 && cor_nr==1 && yr_nr_s==2         
+%                          
+%                         c_limit= 1.00; % 1.6590
+%          end
+%       
+%     end
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% % Fig
+% 
+% fig('units','inches','width',10,'height',9,'font','Helvetica','fontsize',16,'border','on');
+% 
+%    axesm( proj,'MapLatLimit',[lat1 lat2],'Grid','on','ParallelLabel','on','Frame','on',... %
+%        'MeridianLabel','on','FontWeight','bold','FontSize',18,...  % font size of degree labels
+%        'mlabellocation',[0:30:180,0:-30:-180]); 
+% 
+%   
+% set(gca,'box','off','XColor',[1,1,1],'YColor',[1,1,1]);  % turns off border box and axes  
+% hSurf=surfm(double(era_lat),double(era_long),squeeze(s_all_c(:,:,1))');
+% hold on
+%  
+%         if corr_label==1
+%             br=colorbar('FontWeight', 'bold', 'FontSize',18);   
+%             pos=get(br,'Position');  
+%         
+%             if cor_nr==4 && era_name_nr==1
+%             
+%             pos(1)=pos(1)+0.04;      %%%%%%%%%%%%%%%%%%%% x-position of colorbar 
+%             pos(2)=pos(2)+0.1;      
+%             pos(3)=pos(3)+0.014;  % widthcolorbar
+%             pos(4)=pos(4)-0.195;  % height colorbar 
+%             
+%             
+%             elseif cor_nr==4 && era_name_nr==2 || cor_nr==6 && era_name_nr==2
+%                 
+%             
+%             pos(1)=pos(1)-0.03;      %%%%%%%%%%%%%%%%%%%% x-position of colorbar 
+%             pos(2)=pos(2)+0.15;      
+%             pos(3)=pos(3)+ 0.0;  % widthcolorbar
+%             pos(4)=pos(4)-0.315;  % height colorbar    
+%                 
+%         
+%             end
+%         
+%         set(br,'Position',pos)     
+%         
+%         end
+%         
+%     
+%       colormap(b2r(-c_limit,c_limit));
+%       
+%       
+%       if era_name_nr==1 % z500 %%%%%%%%
+%         color_alt=6;
+%       elseif era_name_nr==5
+%         color_alt=1;
+%       else
+%         color_alt=1;    
+%       end
+%       
+%       
+%         if color_alt==1
+%             colormap(brewermap(256,'*RdBu'));
+%         elseif color_alt==2
+%             colormap(flipud(cbrewer2('div','Spectral',10)));
+%         elseif color_alt==3
+%             colormap(flipud(cbrewer2('div','PiYG',20)));              
+%         elseif color_alt==4
+%             colormap(flipud(cbrewer2('div','RdYlGn',20)));          
+%         elseif color_alt==5    
+%              colormap(cbrewer2('div','BrBG',20));
+%         elseif color_alt==6    
+%             colormap(flipud(cbrewer2('div','PuOr',20))); 
+%         elseif  color_alt==7   
+%         load('C:\Users\Machine\matlab_storage_of_output_files\cmap_colormap_save_c2.mat')
+%         colormap(cmap_colormap_save_c2)     
+%             
+%              
+%         end
+%       
+%       
+%  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  % p=0.05 significance level contour      
+%       
+%     if cor_nr==4 || cor_nr==5   || cor_nr==6 || cor_nr==3 || cor_nr==1    
+%         co_pa=[.1 .1 .1];
+%         
+%     else
+%         co_pa=[.9 .9 .9];
+%     end
+% 
+% 
+%  contour_alt_nr=2;   
+%     
+% if contour_alt_nr==1
+%     h1= contourm( double(era_lat),double(era_long),squeeze(p_all(:,:,1))', [0.05],'--','ShowText','off',...
+%     'Linecolor',co_pa,'LineWidth', 2);
+% elseif contour_alt_nr==2 % Wilks test
+%     h1= contourm( double(era_lat),double(era_long),p_fdr_rej', [0.05],'--','ShowText','off',...
+%     'Linecolor',co_pa,'LineWidth', 2);
+% end
+% 
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% coast_nr=1;%%%%(1/0) on/off %%%%% Coast lines %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 
+% if coast_nr==1
+% 
+%     color_nr=1;
+%     if color_nr==1
+%        color_code=[.1 .1 .1];   
+%     elseif color_nr==2
+%        color_code=[.6 .6 .6];  
+%     end
+% 
+% load coast
+% %%%%%%%%%%%%%
+% % to be able to use coastline for continents in combination with ant
+% % coastline and grounding line from bedmap
+% in_c=find(lat<-60);
+% lat_cr=lat;
+% lon_cr=long;
+% lat_cr(in_c)=NaN;
+% lon_cr(in_c)=NaN;
+% 
+% %%%%%%%%%%%%%
+% plot3m(lat_cr,lon_cr,'-k','LineWidth', 1.5,'color',color_code);
+% %plot3m(lat(in_c),long(in_c),'.k','MarkerSize', 1);
+% 
+% 
+% %addpath C:\Users\benman\matlab_mapping
+% bedmap2('gl','k','LineWidth', 1.5,'color',color_code);
+% bedmap2('patchshelves','LineWidth', 1.0,'facecolor','none','frame','on','edgecolor',color_code)
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+% end
+% 
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% % label above colorbar
+% label_size=22;
+%   
+% if cor_nr==1 && era_name_nr==3 %
+%     a1=axestext_c(1.101, +0.33, ['(',label_1,')'] );    
+% elseif cor_nr==4 && era_name_nr==1
+%     a1=axestext_c(0.04, +0.028, ['(',label_1,')'] ); 
+% elseif   era_name_nr==2  
+%     a1=axestext_c(0.15, +0.10, ['(',label_1,')'] );  
+% else
+%     a1=axestext_c(0.1, -0.04, ['(',label_1,' ', label_2,')'] );
+% end
+% 
+% set(a1,'FontWeight','bold','FontSize',label_size,'rotation',90);
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% % Variance explained by EOF
+%         if cor_nr==4 && era_name_nr==1 
+%             a2=axestext_c(0.95, +0.98, [num2str(variance_exp),'%'] );
+%             set(a2,'FontWeight','bold','FontSize',label_size+4);
+%         elseif cor_nr==6 && era_name_nr==2 && PC_nr<=3    
+%             a2=axestext_c(0.9, +0.90, [num2str(variance_exp),'%'] );
+%             set(a2,'FontWeight','bold','FontSize',label_size+4);            
+%         end
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% % lat long labels. Long  at this lat and placement of lat         
+%     if era_name_nr==1
+%         mlab_par=-28;
+%     elseif era_name_nr==2    
+%         mlab_par=-38; 
+%      %   mlab_par=-42; 
+%     else
+%         mlab_par=-10;
+%     end
+%         
+% mlabel('MLabelParallel',mlab_par,'PLabelLocation',[-75 -60 -45 -30 -15  0],'PLabelMeridian',100) 
+% 
+% 
+% %%%%%%%%%%%%%%%%%%%%%%
+% %  Title
+% show_title=1;
+% if show_title==1 && PC_nr==3 && era_name_nr==1 || show_title==1 && PC_nr==2 && era_name_nr==2 || show_title==1 && PC_nr==13 && era_name_nr==2
+% t4=title(title_str);       
+% pos=get(t4,'Position');
+%                
+% % move title        
+%     if cor_nr==1
+%         pos(1)=pos(1)+0.130;
+%         pos(2)=pos(2)-0.030;
+%     elseif cor_nr==4 && era_name_nr==1
+%         pos(1)=pos(1)+1.65;
+%         pos(2)=pos(2)-0.30;
+%     elseif cor_nr==4 && era_name_nr==2 || cor_nr==6 && era_name_nr==2 
+%         pos(1)=pos(1)+1.36;
+%         pos(2)=pos(2)-0.59;      
+%         
+% 
+%     end
+%         set(t4,'Position',pos,'FontSize',26, 'FontWeight', 'bold');  
+% 
+% end
+%    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%    % Letter
+%    if era_name_nr==1
+%         letter_pos= [170 710 50 62];
+%    elseif era_name_nr==2
+%         letter_pos= [230 650 50 62];
+%    end
+%         letter_size=38;
+%     
+% 
+%           TextBox = uicontrol('style','text');
+%           set(TextBox,'String',letter,'position',letter_pos,'FontWeight','bold','FontSize',letter_size ); % x position y position xsize ysize
+%           set(TextBox,'foregroundcolor', [0 0 0], ...
+%          'backgroundcolor', [1 1 1]);
+%      
+%      %%%%%%%%%%%%%%%%%
+%      % colorbar fontsize 
+%      if cor_nr==4
+%         scalebar_fontsize=22;    
+%      else
+%         scalebar_fontsize=16;
+%      end
+%      
+%       set(br, 'FontSize',scalebar_fontsize, 'FontWeight', 'bold'); 
+%      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+%      % save fig
+%         str_end='_c';
+%      
+%     
+%         if cor_nr==4 || cor_nr==6      
+%             filename=['ERA_interim_regression_', era_name_str,'_',PC_nr_str,'_',season,...
+%                 '_',type_str,'_',num2str(yr_s),'-',num2str(yr_e),str_end];
+%         
+%         end
+%         
+% 
+% filedir_c =[filedir,'figures\'];
+% 
+% if corr_label==1
+% savefilename_c=strcat(filedir_c,filename,'_crop');
+% else
+% savefilename_c=strcat(filedir_c,filename);
+% 
+% end
+% 
+% 
+% % save as png 
+% orient landscape
+% cd('G:\My Drive\ISO_CFA\matlab')
+% export_fig('-png','-nocrop','-painters', '-depsc','-opengl', '-r240',savefilename_c); % PNG-nocrop'
+% export_fig('-pdf','-painters', '-depsc','-opengl', '-r240',savefilename_c); % PNG-nocrop'
+% cd('G:\My Drive\ClimDyn_oct2022_R4\ClimDyn_R4_2022_Matlab\ClimDyn_R4_2022_Matlab')
 toc
