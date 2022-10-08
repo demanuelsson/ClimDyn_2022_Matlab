@@ -10,3 +10,5 @@ sea_nr=7; %%%%%% (1) Annual (4) JJA (5) SON (6) MAMJJASON (7) AMJJASON
 
 proj='stereo';
 color_alt=6;
+
+c_limit= 22.01;
