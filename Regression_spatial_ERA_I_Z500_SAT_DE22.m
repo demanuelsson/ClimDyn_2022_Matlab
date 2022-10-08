@@ -49,7 +49,7 @@ cor_nr=4;  % (1) just trend, (4) PCs from EOF Z500, (6) PCs from EOF 2mT
 type_nr=1; %(0) if seasonaly(1) annual use for PCs (2) monthly, for trends
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-era_name_nr=1; %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+% era_name_nr=1; %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
 % 1. Z500 **** (Fig 2)
 % 3. v850 **** (Fig. 11c) trend
@@ -81,7 +81,7 @@ end
         
     
 
-        sea_nr=7; %%%%%% (1) Annual (4) JJA (5) SON (6) MAMJJASON (7) AMJJASON
+%         sea_nr=7; %%%%%% (1) Annual (4) JJA (5) SON (6) MAMJJASON (7) AMJJASON
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         
          if sea_nr==1
@@ -102,9 +102,9 @@ end
 
 
 %%%%%%%%%%Figure format
- figure_format=2; % (1) - EPS, (2) - PNG 
+%  figure_format=2; % (1) - EPS, (2) - PNG 
 %%%%%%%%%%
-proj='stereo';
+% proj='stereo';
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Read in ERA-interim data
@@ -889,14 +889,14 @@ hold on
       colormap(b2r(-c_limit,c_limit));
       
       
-      if era_name_nr==1 % z500 %%%%%%%%
-       % color_alt=4;
-        color_alt=6;
-      elseif era_name_nr==5
-        color_alt=1;
-      else
-        color_alt=1;    
-      end
+%       if era_name_nr==1 % Z500 %%%%%%%%
+%        % color_alt=4;
+%         color_alt=6;
+%       elseif era_name_nr==5
+%         color_alt=1;
+%       else
+%         color_alt=1;    
+%       end
       
       
         if color_alt==1
@@ -910,7 +910,7 @@ hold on
         elseif color_alt==5    
              colormap(cbrewer2('div','BrBG',20));     
         elseif color_alt==6    
-            colormap(flipud(cbrewer2('div','PuOr',20))); 
+            colormap(flipud(cbrewer2('div','PuOr',30))); 
         end
       
   %%%%%%%%%%%%%%%%%%%%%
